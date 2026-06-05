@@ -1,0 +1,1036 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Panel — MedQ</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="../css/style.css"/>
+  <link rel="stylesheet" href="../css/display.css"/>
+  <style>
+    @keyframes fadeInUp { from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);} }
+    .anim { animation: fadeInUp 0.3s ease; }
+    @keyframes pulse-live { 0%,100%{opacity:1;transform:scale(1);}50%{opacity:0.4;transform:scale(1.4);} }
+    .dot-live { animation: pulse-live 1.2s infinite; }
+    ::-webkit-scrollbar{width:5px;} ::-webkit-scrollbar-track{background:#eff6ff;} ::-webkit-scrollbar-thumb{background:#93c5fd;border-radius:4px;}
+  </style>
+</head>
+<body class="bg-blue-50 font-sans min-h-screen flex">
+
+<!-- TOAST -->
+<div id="toast" style="display:none;" class="fixed top-4 right-4 z-50">
+  <div class="px-5 py-3 rounded-xl shadow-lg text-sm font-semibold text-white bg-blue-700">
+    <span id="toast-msg"></span>
+  </div>
+</div>
+
+<div class="flex w-full min-h-screen">
+
+  <!-- ===== SIDEBAR ===== -->
+  <aside class="w-52 bg-blue-900 flex flex-col flex-shrink-0 min-h-screen">
+    <div class="px-4 py-5 border-b border-blue-800 flex items-center gap-3">
+      <div class="bg-blue-600 rounded-xl w-9 h-9 flex items-center justify-center flex-shrink-0">
+        <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V7a2 2 0 00-2-2H7a2 2 0 00-2 2v14M3 21h18M9 21v-4h6v4M12 3v4M10 7h4"/></svg>
+      </div>
+      <div>
+        <p class="text-white font-bold text-sm leading-tight">MedQ Admin</p>
+        <p class="text-blue-400 text-xs">RSUD Pelayanan Prima</p>
+      </div>
+    </div>
+    <nav class="flex-1 py-3">
+      <a href="#" class="nav-item active-nav flex items-center gap-3 px-4 py-2.5 text-sm" data-target="dashboard">
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7h18M3 12h18M3 17h18"/></svg> Dashboard
+      </a>
+      <a href="#" class="nav-item flex items-center gap-3 px-4 py-2.5 text-blue-300 hover:bg-blue-800 hover:text-white text-sm transition-colors" data-target="antrian">
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg> Antrian
+      </a>
+      <a href="#" class="nav-item flex items-center gap-3 px-4 py-2.5 text-blue-300 hover:bg-blue-800 hover:text-white text-sm transition-colors" data-target="pasien">
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.768-.231-1.48-.632-2.073M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.768.231-1.48.632-2.073M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg> Pasien
+      </a>
+      <a href="#" class="nav-item flex items-center gap-3 px-4 py-2.5 text-blue-300 hover:bg-blue-800 hover:text-white text-sm transition-colors" data-target="poli">
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg> Poli
+      </a>
+      <a href="#" class="nav-item flex items-center gap-3 px-4 py-2.5 text-blue-300 hover:bg-blue-800 hover:text-white text-sm transition-colors" data-target="dokter">
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0z"/></svg> Dokter
+      </a>
+      <a href="#" class="nav-item flex items-center gap-3 px-4 py-2.5 text-blue-300 hover:bg-blue-800 hover:text-white text-sm transition-colors" data-target="jadwal">
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg> Jadwal Dokter
+      </a>
+      <a href="#" class="nav-item flex items-center gap-3 px-4 py-2.5 text-blue-300 hover:bg-blue-800 hover:text-white text-sm transition-colors" data-target="panggil">
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"/></svg> Panggil Antrian
+      </a>
+      <p class="px-4 pt-4 pb-1 text-blue-600 text-xs font-bold tracking-widest uppercase">Laporan</p>
+      <a href="#" class="nav-item flex items-center gap-3 px-4 py-2.5 text-blue-300 hover:bg-blue-800 hover:text-white text-sm transition-colors" data-target="kunjungan">
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg> Kunjungan
+      </a>
+      <a href="#" class="nav-item flex items-center gap-3 px-4 py-2.5 text-blue-300 hover:bg-blue-800 hover:text-white text-sm transition-colors" data-target="statistik">
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg> Statistik
+      </a>
+    </nav>
+    <div class="px-4 py-3 border-t border-blue-800 flex items-center gap-3">
+      <div class="bg-blue-600 w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0">AD</div>
+      <div class="overflow-hidden">
+        <p class="text-white text-xs font-semibold truncate">Admin Loket</p>
+        <p class="text-blue-400 text-xs truncate">admin@rsud.go.id</p>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ===== MAIN ===== -->
+  <div class="flex-1 flex flex-col overflow-auto">
+    <header class="bg-white border-b border-blue-100 px-6 py-3 flex items-center justify-between sticky top-0 z-10">
+      <div>
+        <p class="text-blue-900 font-bold text-base" id="page-title">Dashboard</p>
+        <p class="text-gray-400 text-xs" id="admin-tgl"></p>
+      </div>
+      <div class="flex gap-2">
+        <button onclick="refreshData()" class="flex items-center gap-2 px-3 py-2 border border-blue-200 rounded-lg text-blue-700 text-xs hover:bg-blue-50 transition-colors">🔄 Refresh</button>
+        <button onclick="panggilBerikutnya()" class="flex items-center gap-2 px-4 py-2 bg-blue-700 rounded-lg text-white text-xs font-semibold hover:bg-blue-800 transition-colors">📢 Panggil Berikutnya</button>
+      </div>
+    </header>
+
+    <main class="flex-1 p-5">
+
+      <!-- ====== DASHBOARD ====== -->
+      <div id="section-dashboard" class="admin-section anim">
+        <div class="grid grid-cols-4 gap-3 mb-5">
+          <div class="bg-white rounded-xl border border-blue-100 p-4">
+            <div class="bg-blue-100 w-9 h-9 rounded-lg flex items-center justify-center mb-3 text-lg">🏥</div>
+            <p class="text-blue-900 font-black text-2xl" id="s-total">0</p>
+            <p class="text-gray-400 text-xs mt-0.5">Total Antrian Hari Ini</p>
+          </div>
+          <div class="bg-white rounded-xl border border-blue-100 p-4">
+            <div class="bg-yellow-100 w-9 h-9 rounded-lg flex items-center justify-center mb-3 text-lg">⏳</div>
+            <p class="text-blue-900 font-black text-2xl" id="s-tunggu">0</p>
+            <p class="text-gray-400 text-xs mt-0.5">Menunggu</p>
+          </div>
+          <div class="bg-white rounded-xl border border-blue-100 p-4">
+            <div class="bg-green-100 w-9 h-9 rounded-lg flex items-center justify-center mb-3 text-lg">✅</div>
+            <p class="text-blue-900 font-black text-2xl" id="s-selesai">0</p>
+            <p class="text-gray-400 text-xs mt-0.5">Selesai</p>
+          </div>
+          <div class="bg-white rounded-xl border border-blue-100 p-4">
+            <div class="bg-red-100 w-9 h-9 rounded-lg flex items-center justify-center mb-3 text-lg">🚫</div>
+            <p class="text-blue-900 font-black text-2xl" id="s-batal">0</p>
+            <p class="text-gray-400 text-xs mt-0.5">Batal</p>
+          </div>
+        </div>
+        <div class="grid grid-cols-3 gap-4">
+          <div class="col-span-2 bg-white rounded-xl border border-blue-100 p-4">
+            <div class="flex items-center justify-between mb-3">
+              <p class="text-blue-900 font-bold text-sm">Antrian Hari Ini</p>
+              <span id="badge-tunggu" class="bg-yellow-100 text-yellow-700 text-xs font-semibold px-3 py-1 rounded-full"></span>
+            </div>
+            <div class="overflow-auto max-h-64">
+              <table class="w-full text-xs">
+                <thead class="sticky top-0 bg-white">
+                  <tr class="border-b border-gray-100">
+                    <th class="text-left text-gray-400 font-semibold pb-2 pr-2">No. Antrian</th>
+                    <th class="text-left text-gray-400 font-semibold pb-2 pr-2">Nama Pasien</th>
+                    <th class="text-left text-gray-400 font-semibold pb-2 pr-2">Poli</th>
+                    <th class="text-left text-gray-400 font-semibold pb-2 pr-2">Dokter</th>
+                    <th class="text-left text-gray-400 font-semibold pb-2 pr-2">Status</th>
+                    <th class="text-left text-gray-400 font-semibold pb-2">Aksi</th>
+                  </tr>
+                </thead>
+                <tbody id="tabel-dashboard"></tbody>
+              </table>
+            </div>
+          </div>
+          <div class="flex flex-col gap-3">
+            <div class="bg-blue-900 rounded-xl p-4 text-center">
+              <p class="text-blue-300 text-xs tracking-widest uppercase mb-1">Sedang Dilayani</p>
+              <p class="text-white font-black text-4xl leading-none" id="display-nomor">—</p>
+              <p class="text-blue-200 text-xs mt-1" id="display-nama">Belum ada</p>
+              <p class="text-blue-400 text-xs mt-0.5" id="display-poli">—</p>
+              <p class="text-blue-500 text-xs mt-0.5" id="display-dokter">—</p>
+              <div class="flex items-center justify-center gap-1.5 mt-2">
+                <span class="w-2 h-2 rounded-full bg-green-400 dot-live"></span>
+                <span class="text-green-400 text-xs font-bold">LIVE</span>
+              </div>
+            </div>
+            <div class="bg-white rounded-xl border border-blue-100 p-4">
+              <p class="text-blue-900 font-bold text-sm mb-2">Antrian Per Poli</p>
+              <div id="list-poli-dash" class="flex flex-col gap-1.5"></div>
+              <button onclick="panggilBerikutnya()" class="mt-3 w-full bg-blue-700 hover:bg-blue-800 text-white text-xs font-semibold py-2 rounded-xl transition-colors">📢 Panggil Berikutnya</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ====== ANTRIAN ====== -->
+      <div id="section-antrian" class="admin-section hidden anim">
+        <div class="bg-white rounded-xl border border-blue-100 p-5">
+          <div class="flex items-center justify-between mb-4">
+            <p class="text-blue-900 font-bold">Manajemen Antrian</p>
+            <button onclick="bukaModalAntrian()" class="flex items-center gap-2 px-4 py-2 bg-blue-700 rounded-lg text-white text-xs font-semibold hover:bg-blue-800">➕ Tambah Antrian</button>
+          </div>
+          <div class="flex gap-2 mb-4 flex-wrap">
+            <button onclick="filterAntrian('Semua')" class="filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold border border-blue-200 text-blue-700 bg-blue-50">Semua</button>
+            <button onclick="filterAntrian('Menunggu')" class="filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold border border-gray-200 text-gray-500 hover:bg-gray-50">Menunggu</button>
+            <button onclick="filterAntrian('Dipanggil')" class="filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold border border-gray-200 text-gray-500 hover:bg-gray-50">Dipanggil</button>
+            <button onclick="filterAntrian('Diperiksa')" class="filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold border border-gray-200 text-gray-500 hover:bg-gray-50">Diperiksa</button>
+            <button onclick="filterAntrian('Selesai')" class="filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold border border-gray-200 text-gray-500 hover:bg-gray-50">Selesai</button>
+            <button onclick="filterAntrian('Batal')" class="filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold border border-gray-200 text-gray-500 hover:bg-gray-50">Batal</button>
+          </div>
+          <div class="overflow-auto">
+            <table class="w-full text-xs">
+              <thead>
+                <tr class="border-b border-gray-100">
+                  <th class="text-left text-gray-400 font-semibold pb-2 pr-2">No. Antrian</th>
+                  <th class="text-left text-gray-400 font-semibold pb-2 pr-2">No. RM</th>
+                  <th class="text-left text-gray-400 font-semibold pb-2 pr-2">Nama Pasien</th>
+                  <th class="text-left text-gray-400 font-semibold pb-2 pr-2">Poli</th>
+                  <th class="text-left text-gray-400 font-semibold pb-2 pr-2">Dokter</th>
+                  <th class="text-left text-gray-400 font-semibold pb-2 pr-2">Tanggal</th>
+                  <th class="text-left text-gray-400 font-semibold pb-2 pr-2">Status</th>
+                  <th class="text-left text-gray-400 font-semibold pb-2">Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="tabel-antrian-full"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ====== PASIEN ====== -->
+      <div id="section-pasien" class="admin-section hidden anim">
+        <div class="bg-white rounded-xl border border-blue-100 p-5">
+          <div class="flex items-center justify-between mb-4">
+            <p class="text-blue-900 font-bold">Data Pasien</p>
+            <div class="flex gap-2">
+              <input type="text" id="cari-pasien" onkeyup="cariPasien()" placeholder="Cari nama / NIK / No. RM..." class="border border-blue-200 rounded-lg px-3 py-1.5 text-xs focus:outline-none focus:border-blue-500 w-56"/>
+              <button onclick="bukaModalPasien()" class="flex items-center gap-2 px-4 py-2 bg-blue-700 rounded-lg text-white text-xs font-semibold hover:bg-blue-800">➕ Tambah Pasien</button>
+            </div>
+          </div>
+          <div class="overflow-auto">
+            <table class="w-full text-xs">
+              <thead>
+                <tr class="border-b border-gray-100">
+                  <th class="text-left text-gray-400 font-semibold pb-2 pr-2">No. RM</th>
+                  <th class="text-left text-gray-400 font-semibold pb-2 pr-2">Nama Lengkap</th>
+                  <th class="text-left text-gray-400 font-semibold pb-2 pr-2">NIK</th>
+                  <th class="text-left text-gray-400 font-semibold pb-2 pr-2">Tgl. Lahir</th>
+                  <th class="text-left text-gray-400 font-semibold pb-2 pr-2">No. HP</th>
+                  <th class="text-left text-gray-400 font-semibold pb-2 pr-2">Alamat</th>
+                  <th class="text-left text-gray-400 font-semibold pb-2">Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="tabel-pasien"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ====== POLI ====== -->
+      <div id="section-poli" class="admin-section hidden anim">
+        <div class="grid grid-cols-2 gap-4">
+          <div class="bg-white rounded-xl border border-blue-100 p-5">
+            <div class="flex items-center justify-between mb-4">
+              <p class="text-blue-900 font-bold">Daftar Poli</p>
+              <button onclick="bukaModalPoli()" class="flex items-center gap-2 px-4 py-2 bg-blue-700 rounded-lg text-white text-xs font-semibold hover:bg-blue-800">➕ Tambah Poli</button>
+            </div>
+            <div class="flex flex-col gap-2" id="list-poli-full"></div>
+          </div>
+          <div class="bg-white rounded-xl border border-blue-100 p-5">
+            <p class="text-blue-900 font-bold mb-4">Statistik Poli Hari Ini</p>
+            <div id="stat-poli-section" class="flex flex-col gap-3"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ====== DOKTER ====== -->
+      <div id="section-dokter" class="admin-section hidden anim">
+        <div class="bg-white rounded-xl border border-blue-100 p-5">
+          <div class="flex items-center justify-between mb-4">
+            <p class="text-blue-900 font-bold">Data Dokter</p>
+            <button onclick="bukaModalDokter()" class="flex items-center gap-2 px-4 py-2 bg-blue-700 rounded-lg text-white text-xs font-semibold hover:bg-blue-800">➕ Tambah Dokter</button>
+          </div>
+          <div class="grid grid-cols-3 gap-3" id="grid-dokter"></div>
+        </div>
+      </div>
+
+      <!-- ====== JADWAL ====== -->
+      <div id="section-jadwal" class="admin-section hidden anim">
+        <div class="bg-white rounded-xl border border-blue-100 p-5">
+          <p class="text-blue-900 font-bold mb-4">Jadwal Praktek Dokter</p>
+          <div class="overflow-auto">
+            <table class="w-full text-xs">
+              <thead>
+                <tr class="border-b border-gray-100">
+                  <th class="text-left text-gray-400 font-semibold pb-2 pr-2">Dokter</th>
+                  <th class="text-left text-gray-400 font-semibold pb-2 pr-2">Spesialisasi</th>
+                  <th class="text-left text-gray-400 font-semibold pb-2 pr-2">Poli</th>
+                  <th class="text-left text-gray-400 font-semibold pb-2 pr-2">Hari</th>
+                  <th class="text-left text-gray-400 font-semibold pb-2 pr-2">Jam Mulai</th>
+                  <th class="text-left text-gray-400 font-semibold pb-2">Jam Selesai</th>
+                </tr>
+              </thead>
+              <tbody id="tabel-jadwal"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ====== PANGGIL ====== -->
+      <div id="section-panggil" class="admin-section hidden anim">
+        <div class="grid grid-cols-2 gap-4">
+          <div class="bg-white rounded-xl border border-blue-100 p-5">
+            <p class="text-blue-900 font-bold mb-4">Panel Pemanggilan</p>
+            <div class="bg-blue-900 rounded-xl p-6 text-center mb-4">
+              <p class="text-blue-300 text-xs tracking-widest uppercase mb-2">Sedang Dipanggil</p>
+              <p class="text-white font-black text-6xl leading-none" id="panggil-nomor">—</p>
+              <p class="text-blue-200 text-sm mt-2" id="panggil-nama">Belum ada</p>
+              <p class="text-blue-400 text-xs mt-1" id="panggil-poli">—</p>
+              <p class="text-blue-500 text-xs mt-0.5" id="panggil-dokter">—</p>
+            </div>
+            <div class="grid grid-cols-2 gap-2">
+              <button onclick="panggilBerikutnya()" class="bg-blue-700 hover:bg-blue-800 text-white font-semibold py-3 rounded-xl text-sm transition-colors">📢 Panggil Berikutnya</button>
+              <button onclick="aksiDiperiksa()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 rounded-xl text-sm transition-colors">🩺 Diperiksa</button>
+              <button onclick="aksiSelesaiAktif()" class="bg-green-600 hover:bg-green-700 text-white font-semibold py-3 rounded-xl text-sm transition-colors">✅ Selesai</button>
+              <button onclick="aksiBatalAktif()" class="bg-red-500 hover:bg-red-600 text-white font-semibold py-3 rounded-xl text-sm transition-colors">🚫 Batalkan</button>
+            </div>
+          </div>
+          <div class="bg-white rounded-xl border border-blue-100 p-5">
+            <p class="text-blue-900 font-bold mb-4">Antrian Menunggu</p>
+            <div id="list-menunggu" class="flex flex-col gap-2 max-h-96 overflow-auto"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ====== KUNJUNGAN ====== -->
+      <div id="section-kunjungan" class="admin-section hidden anim">
+        <div class="bg-white rounded-xl border border-blue-100 p-5">
+          <p class="text-blue-900 font-bold mb-4">Riwayat Kunjungan</p>
+          <div class="overflow-auto">
+            <table class="w-full text-xs">
+              <thead>
+                <tr class="border-b border-gray-100">
+                  <th class="text-left text-gray-400 font-semibold pb-2 pr-2">No. Antrian</th>
+                  <th class="text-left text-gray-400 font-semibold pb-2 pr-2">Nama Pasien</th>
+                  <th class="text-left text-gray-400 font-semibold pb-2 pr-2">Dokter</th>
+                  <th class="text-left text-gray-400 font-semibold pb-2 pr-2">Poli</th>
+                  <th class="text-left text-gray-400 font-semibold pb-2 pr-2">Waktu Daftar</th>
+                  <th class="text-left text-gray-400 font-semibold pb-2">Status</th>
+                </tr>
+              </thead>
+              <tbody id="tabel-kunjungan"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ====== STATISTIK ====== -->
+      <div id="section-statistik" class="admin-section hidden anim">
+        <div class="grid grid-cols-2 gap-4 mb-4">
+          <div class="bg-white rounded-xl border border-blue-100 p-5">
+            <p class="text-blue-900 font-bold mb-4">Ringkasan Hari Ini</p>
+            <div class="grid grid-cols-2 gap-3">
+              <div class="bg-blue-50 rounded-xl p-4 text-center"><p class="text-blue-700 font-black text-3xl" id="st-total">0</p><p class="text-gray-500 text-xs mt-1">Total Antrian</p></div>
+              <div class="bg-green-50 rounded-xl p-4 text-center"><p class="text-green-700 font-black text-3xl" id="st-selesai">0</p><p class="text-gray-500 text-xs mt-1">Selesai</p></div>
+              <div class="bg-yellow-50 rounded-xl p-4 text-center"><p class="text-yellow-700 font-black text-3xl" id="st-tunggu">0</p><p class="text-gray-500 text-xs mt-1">Menunggu</p></div>
+              <div class="bg-red-50 rounded-xl p-4 text-center"><p class="text-red-600 font-black text-3xl" id="st-batal">0</p><p class="text-gray-500 text-xs mt-1">Batal</p></div>
+            </div>
+          </div>
+          <div class="bg-white rounded-xl border border-blue-100 p-5">
+            <p class="text-blue-900 font-bold mb-4">Antrian Per Poli</p>
+            <div id="stat-bar-poli" class="flex flex-col gap-3"></div>
+          </div>
+        </div>
+        <div class="bg-white rounded-xl border border-blue-100 p-5">
+          <p class="text-blue-900 font-bold mb-4">Antrian Per Dokter</p>
+          <div id="stat-bar-dokter" class="flex flex-col gap-3"></div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<!-- ===== MODAL TAMBAH ANTRIAN ===== -->
+<div id="modal-antrian" class="fixed inset-0 bg-black bg-opacity-40 z-50 hidden flex items-center justify-center">
+  <div class="bg-white rounded-2xl p-6 w-96 shadow-2xl">
+    <div class="flex items-center justify-between mb-4">
+      <p class="text-blue-900 font-bold">Tambah Antrian</p>
+      <button onclick="tutupModal('modal-antrian')" class="text-gray-400 hover:text-gray-600 text-xl">✕</button>
+    </div>
+    <div class="flex flex-col gap-3">
+      <div>
+        <label class="text-xs text-gray-500 font-semibold block mb-1">Pasien</label>
+        <select id="form-antrian-pasien" class="w-full border border-blue-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500"></select>
+      </div>
+      <div>
+        <label class="text-xs text-gray-500 font-semibold block mb-1">Poli</label>
+        <select id="form-antrian-poli" onchange="updateDokterByPoli()" class="w-full border border-blue-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500"></select>
+      </div>
+      <div>
+        <label class="text-xs text-gray-500 font-semibold block mb-1">Dokter</label>
+        <select id="form-antrian-dokter" class="w-full border border-blue-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500"></select>
+      </div>
+      <div>
+        <label class="text-xs text-gray-500 font-semibold block mb-1">Tanggal</label>
+        <input type="date" id="form-antrian-tgl" class="w-full border border-blue-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500"/>
+      </div>
+    </div>
+    <div class="flex gap-2 mt-4">
+      <button onclick="tutupModal('modal-antrian')" class="flex-1 border border-gray-200 text-gray-500 py-2 rounded-xl text-sm hover:bg-gray-50">Batal</button>
+      <button onclick="simpanAntrian()" class="flex-1 bg-blue-700 text-white py-2 rounded-xl text-sm font-semibold hover:bg-blue-800">Simpan</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MODAL TAMBAH PASIEN ===== -->
+<div id="modal-pasien" class="fixed inset-0 bg-black bg-opacity-40 z-50 hidden flex items-center justify-center">
+  <div class="bg-white rounded-2xl p-6 w-96 shadow-2xl">
+    <div class="flex items-center justify-between mb-4">
+      <p class="text-blue-900 font-bold">Tambah Pasien</p>
+      <button onclick="tutupModal('modal-pasien')" class="text-gray-400 hover:text-gray-600 text-xl">✕</button>
+    </div>
+    <div class="flex flex-col gap-3">
+      <div><label class="text-xs text-gray-500 font-semibold block mb-1">Nama Lengkap</label><input type="text" id="form-pasien-nama" class="w-full border border-blue-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500" placeholder="Nama lengkap pasien"/></div>
+      <div><label class="text-xs text-gray-500 font-semibold block mb-1">NIK</label><input type="text" id="form-pasien-nik" class="w-full border border-blue-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500" placeholder="16 digit NIK"/></div>
+      <div><label class="text-xs text-gray-500 font-semibold block mb-1">Tanggal Lahir</label><input type="date" id="form-pasien-tgl" class="w-full border border-blue-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500"/></div>
+      <div><label class="text-xs text-gray-500 font-semibold block mb-1">No. HP</label><input type="text" id="form-pasien-hp" class="w-full border border-blue-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500" placeholder="08xxxxxxxxxx"/></div>
+      <div><label class="text-xs text-gray-500 font-semibold block mb-1">Alamat</label><textarea id="form-pasien-alamat" rows="2" class="w-full border border-blue-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500" placeholder="Alamat lengkap"></textarea></div>
+    </div>
+    <div class="flex gap-2 mt-4">
+      <button onclick="tutupModal('modal-pasien')" class="flex-1 border border-gray-200 text-gray-500 py-2 rounded-xl text-sm hover:bg-gray-50">Batal</button>
+      <button onclick="simpanPasien()" class="flex-1 bg-blue-700 text-white py-2 rounded-xl text-sm font-semibold hover:bg-blue-800">Simpan</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MODAL TAMBAH DOKTER ===== -->
+<div id="modal-dokter" class="fixed inset-0 bg-black bg-opacity-40 z-50 hidden flex items-center justify-center">
+  <div class="bg-white rounded-2xl p-6 w-96 shadow-2xl">
+    <div class="flex items-center justify-between mb-4">
+      <p class="text-blue-900 font-bold">Tambah Dokter</p>
+      <button onclick="tutupModal('modal-dokter')" class="text-gray-400 hover:text-gray-600 text-xl">✕</button>
+    </div>
+    <div class="flex flex-col gap-3">
+      <div><label class="text-xs text-gray-500 font-semibold block mb-1">Nama Dokter</label><input type="text" id="form-dokter-nama" class="w-full border border-blue-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500" placeholder="dr. Nama Dokter"/></div>
+      <div><label class="text-xs text-gray-500 font-semibold block mb-1">Spesialisasi</label><input type="text" id="form-dokter-spesialis" class="w-full border border-blue-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500" placeholder="Umum, Gigi, Anak..."/></div>
+      <div>
+        <label class="text-xs text-gray-500 font-semibold block mb-1">Poli</label>
+        <select id="form-dokter-poli" class="w-full border border-blue-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500"></select>
+      </div>
+    </div>
+    <div class="flex gap-2 mt-4">
+      <button onclick="tutupModal('modal-dokter')" class="flex-1 border border-gray-200 text-gray-500 py-2 rounded-xl text-sm hover:bg-gray-50">Batal</button>
+      <button onclick="simpanDokter()" class="flex-1 bg-blue-700 text-white py-2 rounded-xl text-sm font-semibold hover:bg-blue-800">Simpan</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MODAL TAMBAH POLI ===== -->
+<div id="modal-poli" class="fixed inset-0 bg-black bg-opacity-40 z-50 hidden flex items-center justify-center">
+  <div class="bg-white rounded-2xl p-6 w-80 shadow-2xl">
+    <div class="flex items-center justify-between mb-4">
+      <p class="text-blue-900 font-bold">Tambah Poli</p>
+      <button onclick="tutupModal('modal-poli')" class="text-gray-400 hover:text-gray-600 text-xl">✕</button>
+    </div>
+    <div class="flex flex-col gap-3">
+      <div><label class="text-xs text-gray-500 font-semibold block mb-1">Kode Poli</label><input type="text" id="form-poli-kode" class="w-full border border-blue-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500" placeholder="UMUM, GIGI..."/></div>
+      <div><label class="text-xs text-gray-500 font-semibold block mb-1">Nama Poli</label><input type="text" id="form-poli-nama" class="w-full border border-blue-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500" placeholder="Poli Umum..."/></div>
+    </div>
+    <div class="flex gap-2 mt-4">
+      <button onclick="tutupModal('modal-poli')" class="flex-1 border border-gray-200 text-gray-500 py-2 rounded-xl text-sm hover:bg-gray-50">Batal</button>
+      <button onclick="simpanPoli()" class="flex-1 bg-blue-700 text-white py-2 rounded-xl text-sm font-semibold hover:bg-blue-800">Simpan</button>
+    </div>
+  </div>
+</div>
+
+<script src="../js/admin.js"></script>
+<script>
+// ============================================================
+// DATA DUMMY — Sesuai struktur database dbmedq
+// Ganti dengan fetch() ke API saat backend sudah siap
+// ============================================================
+
+let dbPoli = [
+  { id_poli:1, kode_poli:'UMUM',    nama_poli:'Poli Umum',    is_active:1 },
+  { id_poli:2, kode_poli:'GIGI',    nama_poli:'Poli Gigi',    is_active:1 },
+  { id_poli:3, kode_poli:'JANTUNG', nama_poli:'Poli Jantung', is_active:1 },
+  { id_poli:4, kode_poli:'ANAK',    nama_poli:'Poli Anak',    is_active:1 },
+  { id_poli:5, kode_poli:'MATA',    nama_poli:'Poli Mata',    is_active:1 },
+];
+
+let dbDokter = [
+  { id_dokter:1, nama_dokter:'dr. Budi Santoso',    spesialisasi:'Umum',    id_poli:1, is_available:1 },
+  { id_dokter:2, nama_dokter:'dr. Siti Rahayu',     spesialisasi:'Umum',    id_poli:1, is_available:1 },
+  { id_dokter:3, nama_dokter:'drg. Ahmad Fauzi',    spesialisasi:'Gigi',    id_poli:2, is_available:1 },
+  { id_dokter:4, nama_dokter:'dr. Hendra Wijaya',   spesialisasi:'Jantung', id_poli:3, is_available:1 },
+  { id_dokter:5, nama_dokter:'dr. Dewi Kusuma',     spesialisasi:'Anak',    id_poli:4, is_available:1 },
+  { id_dokter:6, nama_dokter:'dr. Retno Wulandari', spesialisasi:'Mata',    id_poli:5, is_available:1 },
+];
+
+let dbJadwal = [
+  { id_jadwal:1, id_dokter:1, hari:'Senin',  jam_mulai:'08:00', jam_selesai:'12:00' },
+  { id_jadwal:2, id_dokter:1, hari:'Rabu',   jam_mulai:'08:00', jam_selesai:'12:00' },
+  { id_jadwal:3, id_dokter:2, hari:'Selasa', jam_mulai:'13:00', jam_selesai:'17:00' },
+  { id_jadwal:4, id_dokter:2, hari:'Kamis',  jam_mulai:'13:00', jam_selesai:'17:00' },
+  { id_jadwal:5, id_dokter:3, hari:'Senin',  jam_mulai:'09:00', jam_selesai:'13:00' },
+  { id_jadwal:6, id_dokter:4, hari:'Selasa', jam_mulai:'08:00', jam_selesai:'14:00' },
+  { id_jadwal:7, id_dokter:5, hari:'Rabu',   jam_mulai:'08:00', jam_selesai:'12:00' },
+  { id_jadwal:8, id_dokter:6, hari:'Jumat',  jam_mulai:'10:00', jam_selesai:'15:00' },
+];
+
+let dbPasien = [
+  { id_pasien:1, nomor_rm:'RM-2026-00710', nama_lengkap:'Galang', nik:'1234567891011121', tanggal_lahir:'2026-06-01', alamat:'Jl. Contoh No.1', nomor_hp:'08123456789' },
+  { id_pasien:2, nomor_rm:'RM-2026-00711', nama_lengkap:'Budi Santoso', nik:'3201234567890001', tanggal_lahir:'1990-03-15', alamat:'Jl. Merdeka No.5', nomor_hp:'08211234567' },
+  { id_pasien:3, nomor_rm:'RM-2026-00712', nama_lengkap:'Siti Rahma', nik:'3201234567890002', tanggal_lahir:'1985-07-22', alamat:'Jl. Sudirman No.10', nomor_hp:'08561234567' },
+];
+
+let dbAntrian = [
+  { id_antrian:1, nomor_antrian:'MATA-001', id_pasien:1, id_poli:5, id_dokter:6, tanggal:'2026-06-05', status:'Menunggu', waktu_daftar:'2026-06-05 08:03:54', waktu_dipanggil:null },
+  { id_antrian:2, nomor_antrian:'UMUM-001', id_pasien:2, id_poli:1, id_dokter:1, tanggal:'2026-06-05', status:'Selesai',   waktu_daftar:'2026-06-05 07:30:00', waktu_dipanggil:'2026-06-05 08:00:00' },
+  { id_antrian:3, nomor_antrian:'GIGI-001', id_pasien:3, id_poli:2, id_dokter:3, tanggal:'2026-06-05', status:'Menunggu', waktu_daftar:'2026-06-05 08:10:00', waktu_dipanggil:null },
+];
+
+let filterStatus = 'Semua';
+
+// ============================================================
+// HELPER
+// ============================================================
+function getPoli(id)   { return dbPoli.find(p => p.id_poli === id) || {}; }
+function getDokter(id) { return dbDokter.find(d => d.id_dokter === id) || {}; }
+function getPasien(id) { return dbPasien.find(p => p.id_pasien === id) || {}; }
+
+function statusBadge(s) {
+  const map = {
+    'Menunggu':  'bg-yellow-100 text-yellow-700',
+    'Dipanggil': 'bg-blue-100 text-blue-700',
+    'Diperiksa': 'bg-indigo-100 text-indigo-700',
+    'Selesai':   'bg-green-100 text-green-700',
+    'Batal':     'bg-red-100 text-red-600',
+  };
+  return `<span class="${map[s]||'bg-gray-100 text-gray-500'} font-semibold px-2 py-0.5 rounded-full text-xs">${s}</span>`;
+}
+
+// ============================================================
+// NAVIGASI SIDEBAR
+// ============================================================
+const pageTitles = {
+  dashboard:'Dashboard', antrian:'Manajemen Antrian', pasien:'Data Pasien',
+  poli:'Poli', dokter:'Dokter', jadwal:'Jadwal Dokter',
+  panggil:'Panggil Antrian', kunjungan:'Kunjungan', statistik:'Statistik'
+};
+
+document.querySelectorAll('.nav-item').forEach(item => {
+  item.addEventListener('click', function(e) {
+    e.preventDefault();
+    const target = this.getAttribute('data-target');
+    document.querySelectorAll('.nav-item').forEach(m => {
+      m.classList.remove('active-nav','bg-blue-600','text-white','border-l-4','border-blue-300');
+      m.classList.add('text-blue-300');
+    });
+    this.classList.add('active-nav','bg-blue-600','text-white','border-l-4','border-blue-300');
+    this.classList.remove('text-blue-300');
+    document.querySelectorAll('.admin-section').forEach(s => s.classList.add('hidden'));
+    const sec = document.getElementById('section-'+target);
+    if (sec) { sec.classList.remove('hidden'); sec.classList.add('anim'); }
+    document.getElementById('page-title').textContent = pageTitles[target]||target;
+    const renders = {
+      dashboard: renderDashboard, antrian: renderAntrian, pasien: renderPasien,
+      poli: renderPoliSection, dokter: renderDokter, jadwal: renderJadwal,
+      panggil: renderPanggil, kunjungan: renderKunjungan, statistik: renderStatistik
+    };
+    if (renders[target]) renders[target]();
+  });
+});
+
+// ============================================================
+// DASHBOARD
+// ============================================================
+function renderDashboard() {
+  const today = dbAntrian;
+  const total   = today.length;
+  const tunggu  = today.filter(a => a.status === 'Menunggu').length;
+  const selesai = today.filter(a => a.status === 'Selesai').length;
+  const batal   = today.filter(a => a.status === 'Batal').length;
+  ['s-total','s-tunggu','s-selesai','s-batal'].forEach((id,i) => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = [total,tunggu,selesai,batal][i];
+  });
+  const elBadge = document.getElementById('badge-tunggu');
+  if (elBadge) elBadge.textContent = tunggu + ' menunggu';
+  renderTabelDashboard();
+  updateDisplayLive();
+  renderPoliDash();
+}
+
+function renderTabelDashboard() {
+  const tbody = document.getElementById('tabel-dashboard');
+  if (!tbody) return;
+  tbody.innerHTML = '';
+  dbAntrian.slice(0,6).forEach(a => { tbody.innerHTML += buatRowAntrian(a, false); });
+}
+
+// ============================================================
+// ANTRIAN
+// ============================================================
+function renderAntrian() {
+  const tbody = document.getElementById('tabel-antrian-full');
+  if (!tbody) return;
+  tbody.innerHTML = '';
+  const data = filterStatus === 'Semua' ? dbAntrian : dbAntrian.filter(a => a.status === filterStatus);
+  data.forEach(a => { tbody.innerHTML += buatRowAntrian(a, true); });
+}
+
+function buatRowAntrian(a, showRM) {
+  const pasien = getPasien(a.id_pasien);
+  const poli   = getPoli(a.id_poli);
+  const dokter = getDokter(a.id_dokter);
+  let aksi = '';
+  if (a.status === 'Menunggu')  aksi = `<button onclick="aksiPanggil(${a.id_antrian})" class="border border-blue-200 text-blue-700 px-2 py-1 rounded-lg hover:bg-blue-50 text-xs">📢 Panggil</button>`;
+  if (a.status === 'Dipanggil') aksi = `<button onclick="aksiDiperiksa2(${a.id_antrian})" class="border border-indigo-200 text-indigo-700 px-2 py-1 rounded-lg hover:bg-indigo-50 text-xs mr-1">🩺 Periksa</button><button onclick="aksiBatal(${a.id_antrian})" class="border border-red-200 text-red-500 px-2 py-1 rounded-lg hover:bg-red-50 text-xs">🚫</button>`;
+  if (a.status === 'Diperiksa') aksi = `<button onclick="aksiSelesai2(${a.id_antrian})" class="border border-green-300 text-green-700 px-2 py-1 rounded-lg hover:bg-green-50 text-xs">✅ Selesai</button>`;
+  if (a.status === 'Selesai' || a.status === 'Batal') aksi = `<button onclick="hapusAntrian(${a.id_antrian})" class="border border-red-200 text-red-500 px-2 py-1 rounded-lg hover:bg-red-50 text-xs">🗑</button>`;
+  const rmCol = showRM ? `<td class="py-2 pr-2 text-gray-400">${pasien.nomor_rm||'—'}</td>` : '';
+  return `<tr class="border-b border-gray-50">
+    <td class="py-2 pr-2 text-blue-800 font-extrabold text-sm">${a.nomor_antrian}</td>
+    ${rmCol}
+    <td class="py-2 pr-2 text-gray-700">${pasien.nama_lengkap||'—'}</td>
+    <td class="py-2 pr-2 text-gray-500">${poli.nama_poli||'—'}</td>
+    <td class="py-2 pr-2 text-gray-500">${dokter.nama_dokter||'—'}</td>
+    ${showRM ? `<td class="py-2 pr-2 text-gray-400">${a.tanggal||'—'}</td>` : `<td class="py-2 pr-2 text-gray-400">${(a.waktu_daftar||'').substring(11,16)||'—'}</td>`}
+    <td class="py-2 pr-2">${statusBadge(a.status)}</td>
+    <td class="py-2">${aksi}</td>
+  </tr>`;
+}
+
+function filterAntrian(s) {
+  filterStatus = s;
+  document.querySelectorAll('.filter-btn').forEach(b => {
+    b.classList.remove('bg-blue-50','text-blue-700','border-blue-200');
+    b.classList.add('text-gray-500','border-gray-200');
+  });
+  event.target.classList.add('bg-blue-50','text-blue-700','border-blue-200');
+  event.target.classList.remove('text-gray-500','border-gray-200');
+  renderAntrian();
+}
+
+// ============================================================
+// AKSI ANTRIAN
+// ============================================================
+function getAntrian(id) { return dbAntrian.find(a => a.id_antrian === id); }
+
+function aksiPanggil(id) {
+  if (dbAntrian.find(a => a.status === 'Dipanggil')) { showToast('⚠️ Selesaikan antrian yang sedang dipanggil dulu!','yellow'); return; }
+  const a = getAntrian(id);
+  if (a) { a.status = 'Dipanggil'; a.waktu_dipanggil = new Date().toISOString(); renderSemua(); showToast(`📢 Memanggil ${a.nomor_antrian}`); }
+}
+function aksiDiperiksa2(id) {
+  const a = getAntrian(id);
+  if (a) { a.status = 'Diperiksa'; renderSemua(); showToast(`🩺 ${a.nomor_antrian} sedang diperiksa`,'blue'); }
+}
+function aksiSelesai2(id) {
+  const a = getAntrian(id);
+  if (a) { a.status = 'Selesai'; renderSemua(); showToast(`✅ ${a.nomor_antrian} selesai`,'green'); }
+}
+function aksiBatal(id) {
+  const a = getAntrian(id);
+  if (a) { a.status = 'Batal'; renderSemua(); showToast(`🚫 ${a.nomor_antrian} dibatalkan`,'red'); }
+}
+function hapusAntrian(id) {
+  dbAntrian = dbAntrian.filter(a => a.id_antrian !== id);
+  renderSemua(); showToast('🗑 Antrian dihapus');
+}
+function panggilBerikutnya() {
+  if (dbAntrian.find(a => a.status === 'Dipanggil')) { showToast('⚠️ Selesaikan antrian yang sedang dipanggil dulu!','yellow'); return; }
+  const next = dbAntrian.find(a => a.status === 'Menunggu');
+  if (next) { next.status = 'Dipanggil'; next.waktu_dipanggil = new Date().toISOString(); renderSemua(); showToast(`📢 Memanggil ${next.nomor_antrian}`); }
+  else showToast('ℹ️ Tidak ada antrian menunggu','gray');
+}
+function aksiDiperiksa() {
+  const a = dbAntrian.find(x => x.status === 'Dipanggil');
+  if (a) aksiDiperiksa2(a.id_antrian); else showToast('ℹ️ Tidak ada yang dipanggil','gray');
+}
+function aksiSelesaiAktif() {
+  const a = dbAntrian.find(x => x.status === 'Diperiksa' || x.status === 'Dipanggil');
+  if (a) aksiSelesai2(a.id_antrian); else showToast('ℹ️ Tidak ada antrian aktif','gray');
+}
+function aksiBatalAktif() {
+  const a = dbAntrian.find(x => x.status === 'Dipanggil' || x.status === 'Diperiksa');
+  if (a) aksiBatal(a.id_antrian); else showToast('ℹ️ Tidak ada antrian aktif','gray');
+}
+
+// ============================================================
+// PASIEN
+// ============================================================
+function renderPasien() {
+  const tbody = document.getElementById('tabel-pasien');
+  if (!tbody) return;
+  tbody.innerHTML = '';
+  dbPasien.forEach(p => {
+    tbody.innerHTML += `<tr class="border-b border-gray-50">
+      <td class="py-2 pr-2 text-blue-700 font-semibold">${p.nomor_rm}</td>
+      <td class="py-2 pr-2 text-gray-700 font-medium">${p.nama_lengkap}</td>
+      <td class="py-2 pr-2 text-gray-500">${p.nik}</td>
+      <td class="py-2 pr-2 text-gray-400">${p.tanggal_lahir}</td>
+      <td class="py-2 pr-2 text-gray-500">${p.nomor_hp||'—'}</td>
+      <td class="py-2 pr-2 text-gray-400 max-w-xs truncate">${p.alamat||'—'}</td>
+      <td class="py-2"><button onclick="hapusPasien(${p.id_pasien})" class="border border-red-200 text-red-500 px-2 py-1 rounded-lg hover:bg-red-50 text-xs">🗑</button></td>
+    </tr>`;
+  });
+}
+
+function cariPasien() {
+  const q = document.getElementById('cari-pasien').value.toLowerCase();
+  const tbody = document.getElementById('tabel-pasien');
+  if (!tbody) return;
+  tbody.innerHTML = '';
+  dbPasien.filter(p => p.nama_lengkap.toLowerCase().includes(q) || p.nik.includes(q) || p.nomor_rm.toLowerCase().includes(q))
+    .forEach(p => {
+      tbody.innerHTML += `<tr class="border-b border-gray-50">
+        <td class="py-2 pr-2 text-blue-700 font-semibold">${p.nomor_rm}</td>
+        <td class="py-2 pr-2 text-gray-700 font-medium">${p.nama_lengkap}</td>
+        <td class="py-2 pr-2 text-gray-500">${p.nik}</td>
+        <td class="py-2 pr-2 text-gray-400">${p.tanggal_lahir}</td>
+        <td class="py-2 pr-2 text-gray-500">${p.nomor_hp||'—'}</td>
+        <td class="py-2 pr-2 text-gray-400">${p.alamat||'—'}</td>
+        <td class="py-2"><button onclick="hapusPasien(${p.id_pasien})" class="border border-red-200 text-red-500 px-2 py-1 rounded-lg hover:bg-red-50 text-xs">🗑</button></td>
+      </tr>`;
+    });
+}
+
+function hapusPasien(id) {
+  dbPasien = dbPasien.filter(p => p.id_pasien !== id);
+  renderPasien(); showToast('🗑 Pasien dihapus');
+}
+
+// ============================================================
+// POLI
+// ============================================================
+function renderPoliSection() {
+  const el = document.getElementById('list-poli-full');
+  if (!el) return;
+  el.innerHTML = '';
+  const colors = ['bg-blue-500','bg-cyan-500','bg-red-500','bg-violet-500','bg-emerald-500'];
+  dbPoli.forEach((p,i) => {
+    const jml = dbDokter.filter(d => d.id_poli === p.id_poli).length;
+    el.innerHTML += `<div class="flex items-center justify-between bg-blue-50 border border-blue-100 rounded-xl px-4 py-3">
+      <div class="flex items-center gap-3">
+        <div class="w-3 h-3 rounded-full ${colors[i%colors.length]}"></div>
+        <div>
+          <p class="text-blue-900 font-semibold text-sm">${p.nama_poli}</p>
+          <p class="text-gray-400 text-xs">Kode: ${p.kode_poli} • ${jml} dokter</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="${p.is_active ? 'bg-green-100 text-green-700':'bg-red-100 text-red-600'} text-xs font-semibold px-2 py-0.5 rounded-full">${p.is_active?'Aktif':'Nonaktif'}</span>
+        <button onclick="togglePoli(${p.id_poli})" class="border border-gray-200 text-gray-500 px-2 py-1 rounded-lg hover:bg-gray-50 text-xs">${p.is_active?'Nonaktifkan':'Aktifkan'}</button>
+      </div>
+    </div>`;
+  });
+  const el2 = document.getElementById('stat-poli-section');
+  if (!el2) return;
+  el2.innerHTML = '';
+  dbPoli.forEach(p => {
+    const jml    = dbAntrian.filter(a => a.id_poli === p.id_poli).length;
+    const selesai= dbAntrian.filter(a => a.id_poli === p.id_poli && a.status==='Selesai').length;
+    const persen = jml > 0 ? Math.round((selesai/jml)*100) : 0;
+    el2.innerHTML += `<div class="bg-gray-50 border border-gray-100 rounded-xl px-4 py-3">
+      <div class="flex items-center justify-between mb-1">
+        <p class="text-blue-900 font-semibold text-sm">${p.nama_poli}</p>
+        <p class="text-gray-500 text-xs">${selesai}/${jml} selesai</p>
+      </div>
+      <div class="w-full bg-gray-200 rounded-full h-2">
+        <div class="bg-blue-600 h-2 rounded-full" style="width:${persen}%"></div>
+      </div>
+    </div>`;
+  });
+}
+
+function togglePoli(id) {
+  const p = dbPoli.find(x => x.id_poli === id);
+  if (p) { p.is_active = p.is_active ? 0 : 1; renderPoliSection(); showToast(`${p.is_active?'✅ Poli diaktifkan':'⛔ Poli dinonaktifkan'}`); }
+}
+
+// ============================================================
+// DOKTER
+// ============================================================
+function renderDokter() {
+  const el = document.getElementById('grid-dokter');
+  if (!el) return;
+  el.innerHTML = '';
+  dbDokter.forEach(d => {
+    const poli = getPoli(d.id_poli);
+    const jadwal = dbJadwal.filter(j => j.id_dokter === d.id_dokter);
+    el.innerHTML += `<div class="bg-blue-50 border border-blue-100 rounded-xl p-4">
+      <div class="flex items-center gap-3 mb-3">
+        <div class="bg-blue-700 w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm flex-shrink-0">${d.nama_dokter.split(' ').slice(-1)[0][0]}</div>
+        <div>
+          <p class="text-blue-900 font-bold text-sm">${d.nama_dokter}</p>
+          <p class="text-gray-400 text-xs">${d.spesialisasi} • ${poli.nama_poli||'—'}</p>
+        </div>
+      </div>
+      <div class="flex items-center justify-between">
+        <span class="${d.is_available?'bg-green-100 text-green-700':'bg-red-100 text-red-600'} text-xs font-semibold px-2 py-0.5 rounded-full">${d.is_available?'Tersedia':'Tidak Tersedia'}</span>
+        <p class="text-gray-400 text-xs">${jadwal.length} jadwal</p>
+      </div>
+      <button onclick="toggleDokter(${d.id_dokter})" class="mt-2 w-full border border-gray-200 text-gray-500 py-1.5 rounded-lg text-xs hover:bg-gray-50 transition-colors">${d.is_available?'Set Tidak Tersedia':'Set Tersedia'}</button>
+    </div>`;
+  });
+}
+
+function toggleDokter(id) {
+  const d = dbDokter.find(x => x.id_dokter === id);
+  if (d) { d.is_available = d.is_available ? 0 : 1; renderDokter(); showToast(`👨‍⚕️ Status dokter diperbarui`); }
+}
+
+// ============================================================
+// JADWAL
+// ============================================================
+function renderJadwal() {
+  const tbody = document.getElementById('tabel-jadwal');
+  if (!tbody) return;
+  tbody.innerHTML = '';
+  dbJadwal.forEach(j => {
+    const d = getDokter(j.id_dokter);
+    const p = getPoli(d.id_poli);
+    tbody.innerHTML += `<tr class="border-b border-gray-50">
+      <td class="py-2 pr-2 text-blue-800 font-semibold">${d.nama_dokter||'—'}</td>
+      <td class="py-2 pr-2 text-gray-500">${d.spesialisasi||'—'}</td>
+      <td class="py-2 pr-2 text-gray-500">${p.nama_poli||'—'}</td>
+      <td class="py-2 pr-2"><span class="bg-blue-100 text-blue-700 font-semibold px-2 py-0.5 rounded-full text-xs">${j.hari}</span></td>
+      <td class="py-2 pr-2 text-gray-600 font-mono">${j.jam_mulai}</td>
+      <td class="py-2 text-gray-600 font-mono">${j.jam_selesai}</td>
+    </tr>`;
+  });
+}
+
+// ============================================================
+// PANGGIL
+// ============================================================
+function renderPanggil() {
+  const aktif = dbAntrian.find(a => a.status === 'Dipanggil' || a.status === 'Diperiksa');
+  const set = (id,v) => { const el=document.getElementById(id); if(el) el.textContent=v; };
+  if (aktif) {
+    const pasien=getPasien(aktif.id_pasien), poli=getPoli(aktif.id_poli), dokter=getDokter(aktif.id_dokter);
+    set('panggil-nomor', aktif.nomor_antrian);
+    set('panggil-nama',  pasien.nama_lengkap||'—');
+    set('panggil-poli',  poli.nama_poli||'—');
+    set('panggil-dokter',dokter.nama_dokter||'—');
+  } else {
+    set('panggil-nomor','—'); set('panggil-nama','Belum ada'); set('panggil-poli','—'); set('panggil-dokter','—');
+  }
+  const el = document.getElementById('list-menunggu');
+  if (!el) return;
+  el.innerHTML = '';
+  const menunggu = dbAntrian.filter(a => a.status === 'Menunggu');
+  if (!menunggu.length) { el.innerHTML='<p class="text-gray-400 text-sm text-center py-4">Tidak ada antrian menunggu</p>'; return; }
+  menunggu.forEach(a => {
+    const pasien=getPasien(a.id_pasien), poli=getPoli(a.id_poli), dokter=getDokter(a.id_dokter);
+    el.innerHTML += `<div class="flex items-center justify-between bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5">
+      <div>
+        <p class="text-blue-800 font-extrabold">${a.nomor_antrian}</p>
+        <p class="text-gray-500 text-xs">${pasien.nama_lengkap||'—'} • ${poli.nama_poli||'—'}</p>
+        <p class="text-gray-400 text-xs">${dokter.nama_dokter||'—'}</p>
+      </div>
+      <button onclick="aksiPanggil(${a.id_antrian})" class="border border-blue-200 text-blue-700 px-3 py-1 rounded-lg text-xs hover:bg-blue-50">📢 Panggil</button>
+    </div>`;
+  });
+}
+
+// ============================================================
+// KUNJUNGAN
+// ============================================================
+function renderKunjungan() {
+  const tbody = document.getElementById('tabel-kunjungan');
+  if (!tbody) return;
+  tbody.innerHTML = '';
+  const selesai = dbAntrian.filter(a => a.status === 'Selesai' || a.status === 'Batal');
+  if (!selesai.length) { tbody.innerHTML='<tr><td colspan="6" class="py-4 text-center text-gray-400">Belum ada kunjungan</td></tr>'; return; }
+  selesai.forEach(a => {
+    const pasien=getPasien(a.id_pasien), dokter=getDokter(a.id_dokter), poli=getPoli(a.id_poli);
+    tbody.innerHTML += `<tr class="border-b border-gray-50">
+      <td class="py-2 pr-2 text-blue-800 font-extrabold text-sm">${a.nomor_antrian}</td>
+      <td class="py-2 pr-2 text-gray-700">${pasien.nama_lengkap||'—'}</td>
+      <td class="py-2 pr-2 text-gray-500">${dokter.nama_dokter||'—'}</td>
+      <td class="py-2 pr-2 text-gray-500">${poli.nama_poli||'—'}</td>
+      <td class="py-2 pr-2 text-gray-400">${a.waktu_daftar||'—'}</td>
+      <td class="py-2">${statusBadge(a.status)}</td>
+    </tr>`;
+  });
+}
+
+// ============================================================
+// STATISTIK
+// ============================================================
+function renderStatistik() {
+  const total   = dbAntrian.length;
+  const selesai = dbAntrian.filter(a => a.status==='Selesai').length;
+  const tunggu  = dbAntrian.filter(a => a.status==='Menunggu').length;
+  const batal   = dbAntrian.filter(a => a.status==='Batal').length;
+  ['st-total','st-selesai','st-tunggu','st-batal'].forEach((id,i) => {
+    const el=document.getElementById(id); if(el) el.textContent=[total,selesai,tunggu,batal][i];
+  });
+  const colors=['bg-blue-500','bg-cyan-500','bg-red-500','bg-violet-500','bg-emerald-500'];
+  const elP = document.getElementById('stat-bar-poli');
+  if (elP) {
+    elP.innerHTML='';
+    dbPoli.forEach((p,i) => {
+      const jml=dbAntrian.filter(a=>a.id_poli===p.id_poli).length;
+      const persen=total>0?Math.round((jml/total)*100):0;
+      elP.innerHTML+=`<div><div class="flex justify-between mb-1"><span class="text-sm text-blue-900 font-medium">${p.nama_poli}</span><span class="text-xs text-gray-400">${jml} antrian</span></div>
+        <div class="w-full bg-gray-100 rounded-full h-2.5"><div class="${colors[i%colors.length]} h-2.5 rounded-full" style="width:${persen}%"></div></div></div>`;
+    });
+  }
+  const elD = document.getElementById('stat-bar-dokter');
+  if (elD) {
+    elD.innerHTML='';
+    dbDokter.forEach((d,i) => {
+      const jml=dbAntrian.filter(a=>a.id_dokter===d.id_dokter).length;
+      const persen=total>0?Math.round((jml/total)*100):0;
+      elD.innerHTML+=`<div><div class="flex justify-between mb-1"><span class="text-sm text-blue-900 font-medium">${d.nama_dokter}</span><span class="text-xs text-gray-400">${jml} antrian</span></div>
+        <div class="w-full bg-gray-100 rounded-full h-2.5"><div class="${colors[i%colors.length]} h-2.5 rounded-full" style="width:${persen}%"></div></div></div>`;
+    });
+  }
+}
+
+// ============================================================
+// DISPLAY LIVE & POLI DASH
+// ============================================================
+function updateDisplayLive() {
+  const aktif = dbAntrian.find(a => a.status==='Dipanggil'||a.status==='Diperiksa');
+  const set=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v;};
+  if (aktif) {
+    const pasien=getPasien(aktif.id_pasien),poli=getPoli(aktif.id_poli),dokter=getDokter(aktif.id_dokter);
+    set('display-nomor',aktif.nomor_antrian); set('display-nama',pasien.nama_lengkap||'—');
+    set('display-poli',poli.nama_poli||'—'); set('display-dokter',dokter.nama_dokter||'—');
+  } else { set('display-nomor','—'); set('display-nama','Belum ada'); set('display-poli','—'); set('display-dokter','—'); }
+}
+
+function renderPoliDash() {
+  const el = document.getElementById('list-poli-dash');
+  if (!el) return;
+  el.innerHTML='';
+  const colors=['bg-blue-500','bg-cyan-500','bg-red-500','bg-violet-500','bg-emerald-500'];
+  dbPoli.forEach((p,i) => {
+    const jml=dbAntrian.filter(a=>a.id_poli===p.id_poli&&a.status==='Menunggu').length;
+    el.innerHTML+=`<div class="flex items-center justify-between bg-blue-50 border border-blue-100 rounded-xl px-3 py-2">
+      <div class="flex items-center gap-2"><div class="w-2 h-2 rounded-full ${colors[i%colors.length]}"></div>
+        <div><p class="text-blue-900 font-semibold text-xs">${p.nama_poli}</p></div>
+      </div>
+      <div class="text-right"><p class="text-blue-700 font-black text-lg">${jml}</p><p class="text-gray-400 text-xs">menunggu</p></div>
+    </div>`;
+  });
+}
+
+// ============================================================
+// MODAL
+// ============================================================
+function bukaModal(id) { document.getElementById(id).classList.remove('hidden'); }
+function tutupModal(id) { document.getElementById(id).classList.add('hidden'); }
+
+function bukaModalAntrian() {
+  const selPasien = document.getElementById('form-antrian-pasien');
+  const selPoli   = document.getElementById('form-antrian-poli');
+  const tgl       = document.getElementById('form-antrian-tgl');
+  if (selPasien) { selPasien.innerHTML=''; dbPasien.forEach(p => selPasien.innerHTML+=`<option value="${p.id_pasien}">${p.nama_lengkap} (${p.nomor_rm})</option>`); }
+  if (selPoli)   { selPoli.innerHTML='';   dbPoli.forEach(p => selPoli.innerHTML+=`<option value="${p.id_poli}">${p.nama_poli}</option>`); }
+  if (tgl)         tgl.value = new Date().toISOString().split('T')[0];
+  updateDokterByPoli();
+  bukaModal('modal-antrian');
+}
+
+function updateDokterByPoli() {
+  const poliId = parseInt(document.getElementById('form-antrian-poli').value);
+  const selDok = document.getElementById('form-antrian-dokter');
+  if (!selDok) return;
+  selDok.innerHTML='';
+  dbDokter.filter(d => d.id_poli === poliId).forEach(d => {
+    selDok.innerHTML += `<option value="${d.id_dokter}">${d.nama_dokter}</option>`;
+  });
+}
+
+function simpanAntrian() {
+  const pasienId = parseInt(document.getElementById('form-antrian-pasien').value);
+  const poliId   = parseInt(document.getElementById('form-antrian-poli').value);
+  const dokterId = parseInt(document.getElementById('form-antrian-dokter').value);
+  const tgl      = document.getElementById('form-antrian-tgl').value;
+  if (!tgl) { showToast('⚠️ Tanggal harus diisi','yellow'); return; }
+  const poli   = getPoli(poliId);
+  const newId  = Math.max(...dbAntrian.map(a=>a.id_antrian),0) + 1;
+  const nomor  = `${poli.kode_poli}-${String(dbAntrian.filter(a=>a.id_poli===poliId).length+1).padStart(3,'0')}`;
+  dbAntrian.push({ id_antrian:newId, nomor_antrian:nomor, id_pasien:pasienId, id_poli:poliId, id_dokter:dokterId, tanggal:tgl, status:'Menunggu', waktu_daftar:new Date().toISOString(), waktu_dipanggil:null });
+  tutupModal('modal-antrian'); renderSemua(); showToast(`✅ Antrian ${nomor} berhasil dibuat`,'green');
+}
+
+function bukaModalPasien() { bukaModal('modal-pasien'); }
+function simpanPasien() {
+  const nama  = document.getElementById('form-pasien-nama').value.trim();
+  const nik   = document.getElementById('form-pasien-nik').value.trim();
+  const tgl   = document.getElementById('form-pasien-tgl').value;
+  const hp    = document.getElementById('form-pasien-hp').value.trim();
+  const alamat= document.getElementById('form-pasien-alamat').value.trim();
+  if (!nama||!nik||!tgl) { showToast('⚠️ Nama, NIK, dan tanggal lahir wajib diisi','yellow'); return; }
+  const newId = Math.max(...dbPasien.map(p=>p.id_pasien),0)+1;
+  const rm    = `RM-${new Date().getFullYear()}-${String(Math.floor(Math.random()*99999)).padStart(5,'0')}`;
+  dbPasien.push({ id_pasien:newId, nomor_rm:rm, nama_lengkap:nama, nik, tanggal_lahir:tgl, alamat, nomor_hp:hp });
+  tutupModal('modal-pasien'); renderPasien(); showToast(`✅ Pasien ${nama} berhasil ditambahkan`,'green');
+}
+
+function bukaModalDokter() {
+  const sel = document.getElementById('form-dokter-poli');
+  if (sel) { sel.innerHTML=''; dbPoli.forEach(p => sel.innerHTML+=`<option value="${p.id_poli}">${p.nama_poli}</option>`); }
+  bukaModal('modal-dokter');
+}
+function simpanDokter() {
+  const nama     = document.getElementById('form-dokter-nama').value.trim();
+  const spesialis= document.getElementById('form-dokter-spesialis').value.trim();
+  const poliId   = parseInt(document.getElementById('form-dokter-poli').value);
+  if (!nama) { showToast('⚠️ Nama dokter wajib diisi','yellow'); return; }
+  const newId = Math.max(...dbDokter.map(d=>d.id_dokter),0)+1;
+  dbDokter.push({ id_dokter:newId, nama_dokter:nama, spesialisasi:spesialis, id_poli:poliId, is_available:1 });
+  tutupModal('modal-dokter'); renderDokter(); showToast(`✅ Dokter ${nama} berhasil ditambahkan`,'green');
+}
+
+function bukaModalPoli() { bukaModal('modal-poli'); }
+function simpanPoli() {
+  const kode = document.getElementById('form-poli-kode').value.trim().toUpperCase();
+  const nama = document.getElementById('form-poli-nama').value.trim();
+  if (!kode||!nama) { showToast('⚠️ Kode dan nama poli wajib diisi','yellow'); return; }
+  const newId = Math.max(...dbPoli.map(p=>p.id_poli),0)+1;
+  dbPoli.push({ id_poli:newId, kode_poli:kode, nama_poli:nama, is_active:1 });
+  tutupModal('modal-poli'); renderPoliSection(); showToast(`✅ ${nama} berhasil ditambahkan`,'green');
+}
+
+// ============================================================
+// RENDER SEMUA
+// ============================================================
+function renderSemua() {
+  renderDashboard(); renderAntrian(); renderPanggil(); renderKunjungan(); renderStatistik();
+}
+function refreshData() { renderSemua(); showToast('🔄 Data diperbarui'); }
+
+// ============================================================
+// TOAST
+// ============================================================
+function showToast(msg, type='blue') {
+  const colors={blue:'bg-blue-700',green:'bg-green-600',yellow:'bg-yellow-500',red:'bg-red-600',gray:'bg-gray-600'};
+  const toast=document.getElementById('toast');
+  const inner=toast.querySelector('div');
+  inner.className=`${colors[type]||colors.blue} px-5 py-3 rounded-xl shadow-lg text-sm font-semibold text-white`;
+  document.getElementById('toast-msg').textContent=msg;
+  toast.style.display='block';
+  clearTimeout(toast._t);
+  toast._t=setTimeout(()=>{toast.style.display='none';},2500);
+}
+
+// ============================================================
+// TANGGAL & INIT
+// ============================================================
+document.addEventListener('DOMContentLoaded', function() {
+  const now=new Date();
+  const hari=['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'][now.getDay()];
+  const bln=['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'][now.getMonth()];
+  const sesi=now.getHours()<12?'Sesi Pagi':now.getHours()<17?'Sesi Siang':'Sesi Sore';
+  const el=document.getElementById('admin-tgl');
+  if(el) el.textContent=`${hari}, ${now.getDate()} ${bln} ${now.getFullYear()} — ${sesi}`;
+  renderDashboard();
+});
+</script>
+</body>
+</html>

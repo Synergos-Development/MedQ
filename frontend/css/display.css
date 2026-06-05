@@ -1,0 +1,63 @@
+/* ================================================
+   display.css
+   Styling tambahan untuk display/display.html
+   (Tailwind sudah handle sebagian besar,
+    file ini untuk animasi & efek khusus)
+   ================================================ */
+
+/* Animasi LIVE dot */
+@keyframes pulse-live {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.4; transform: scale(1.3); }
+}
+.dot-live {
+  animation: pulse-live 1.2s ease-in-out infinite;
+}
+
+/* Animasi nomor antrian masuk */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.nomor-animasi {
+  animation: fadeInUp 0.5s ease-out;
+}
+
+/* Ticker berjalan di footer (opsional) */
+@keyframes ticker-scroll {
+  0%   { transform: translateX(100%); }
+  100% { transform: translateX(-100%); }
+}
+.ticker-text {
+  display: inline-block;
+  white-space: nowrap;
+  animation: ticker-scroll 30s linear infinite;
+}
+
+/* Highlight baris antrian yang sedang dipanggil */
+.row-dipanggil {
+  background-color: #1d4ed8 !important;
+  border-color: #3b82f6 !important;
+}
+
+/* Glow efek pada nomor antrian utama */
+.glow-number {
+  text-shadow: 0 0 30px rgba(96, 165, 250, 0.5);
+}
+
+/* Transisi status antrian */
+.status-badge {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Scrollbar tipis untuk panel antrian */
+.scroll-thin::-webkit-scrollbar {
+  width: 4px;
+}
+.scroll-thin::-webkit-scrollbar-track {
+  background: #eff6ff;
+}
+.scroll-thin::-webkit-scrollbar-thumb {
+  background: #93c5fd;
+  border-radius: 4px;
+}
