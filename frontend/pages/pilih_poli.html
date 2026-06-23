@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Pilih Poli — MedQ</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --blue-50: #EFF6FF; --blue-100: #DBEAFE; --blue-500: #3B82F6;
+    --blue-600: #2563EB; --blue-700: #1D4ED8;
+    --gray-50: #F8FAFC; --gray-100: #F1F5F9; --gray-200: #E2E8F0;
+    --gray-400: #94A3B8; --gray-500: #64748B; --gray-700: #334155; --gray-900: #0F172A;
+    --white: #FFFFFF; --radius: 14px; --radius-sm: 10px;
+  }
+  html, body { min-height: 100%; background: var(--gray-50); font-family: 'DM Sans', sans-serif; -webkit-font-smoothing: antialiased; }
+  .page { max-width: 430px; margin: 0 auto; background: var(--white); min-height: 100vh; display: flex; flex-direction: column; }
+
+  .topbar { display: flex; align-items: center; gap: 12px; padding: 16px 20px; border-bottom: 1px solid var(--gray-100); position: sticky; top: 0; background: var(--white); z-index: 10; }
+  .back-btn { width: 36px; height: 36px; border-radius: 50%; background: var(--gray-100); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+  .back-btn svg { width: 18px; height: 18px; stroke: var(--gray-700); stroke-width: 2.5; fill: none; }
+  .topbar-title { font-size: 15px; font-weight: 600; }
+
+  .steps { display: flex; align-items: center; padding: 16px 20px; }
+  .step { display: flex; flex-direction: column; align-items: center; flex: 1; position: relative; }
+  .step:not(:last-child)::after { content: ''; position: absolute; top: 14px; left: 50%; width: 100%; height: 2px; background: var(--gray-200); z-index: 0; }
+  .step.done:not(:last-child)::after, .step.active:not(:last-child)::after { background: var(--blue-500); }
+  .step-circle { width: 28px; height: 28px; border-radius: 50%; border: 2px solid var(--gray-200); background: var(--white); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; color: var(--gray-400); z-index: 1; }
+  .step.active .step-circle { border-color: var(--blue-600); background: var(--blue-600); color: white; }
+  .step.done .step-circle { border-color: var(--blue-500); background: var(--blue-50); color: var(--blue-600); }
+  .step-label { font-size: 10px; color: var(--gray-400); margin-top: 4px; font-weight: 500; }
+  .step.active .step-label, .step.done .step-label { color: var(--blue-600); }
+
+  .body { flex: 1; padding: 20px; overflow-y: auto; }
+  .section-head { margin-bottom: 16px; }
+  .section-head h2 { font-size: 16px; font-weight: 600; }
+  .section-head p { font-size: 13px; color: var(--gray-500); margin-top: 3px; }
+
+  /* Search */
+  .search-wrap { position: relative; margin-bottom: 16px; }
+  .search-wrap svg { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); width: 16px; height: 16px; stroke: var(--gray-400); stroke-width: 2; fill: none; }
+  .search-input { width: 100%; padding: 11px 14px 11px 36px; border: 1.5px solid var(--gray-200); border-radius: var(--radius-sm); font-family: 'DM Sans', sans-serif; font-size: 14px; color: var(--gray-900); outline: none; background: var(--gray-50); transition: all 0.15s; }
+  .search-input:focus { border-color: var(--blue-500); background: var(--white); }
+  .search-input::placeholder { color: var(--gray-400); }
+
+  /* Poli grid */
+  .poli-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 24px; }
+  .poli-card { border: 1.5px solid var(--gray-200); border-radius: var(--radius); padding: 16px 14px; cursor: pointer; transition: all 0.18s; background: var(--white); text-align: center; }
+  .poli-card:hover { border-color: var(--blue-300); background: var(--blue-50); transform: translateY(-2px); }
+  .poli-card.selected { border-color: var(--blue-600); background: var(--blue-50); box-shadow: 0 0 0 3px rgba(37,99,235,0.12); }
+  .poli-emoji { font-size: 28px; margin-bottom: 8px; }
+  .poli-name { font-size: 13px; font-weight: 600; color: var(--gray-900); margin-bottom: 3px; }
+  .poli-queue { font-size: 11px; color: var(--gray-400); }
+  .poli-queue span { color: var(--blue-600); font-weight: 600; }
+
+  /* Dokter select */
+  .dokter-section { display: none; animation: fadeUp 0.2s ease; }
+  .dokter-section.show { display: block; }
+  @keyframes fadeUp { from { opacity:0; transform: translateY(8px); } to { opacity:1; transform: translateY(0); } }
+  .dokter-label { font-size: 12px; font-weight: 500; color: var(--gray-700); margin-bottom: 8px; letter-spacing: 0.3px; }
+  .dokter-list { display: flex; flex-direction: column; gap: 8px; }
+  .dokter-item { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border: 1.5px solid var(--gray-200); border-radius: var(--radius-sm); cursor: pointer; transition: all 0.15s; }
+  .dokter-item:hover { border-color: var(--blue-300); background: var(--blue-50); }
+  .dokter-item.selected { border-color: var(--blue-600); background: var(--blue-50); }
+  .dokter-avatar { width: 38px; height: 38px; border-radius: 50%; background: var(--blue-100); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; color: var(--blue-700); flex-shrink: 0; }
+  .dokter-name { font-size: 14px; font-weight: 500; color: var(--gray-900); }
+  .dokter-spec { font-size: 12px; color: var(--gray-500); }
+  .dokter-check { margin-left: auto; width: 20px; height: 20px; border-radius: 50%; background: var(--blue-600); display: none; align-items: center; justify-content: center; }
+  .dokter-item.selected .dokter-check { display: flex; }
+  .dokter-check svg { width: 11px; height: 11px; stroke: white; stroke-width: 3; fill: none; }
+
+  .cta-wrap { padding: 16px 20px 32px; border-top: 1px solid var(--gray-100); background: var(--white); }
+  .btn-primary { width: 100%; padding: 15px; border: none; border-radius: var(--radius); background: var(--blue-600); color: white; font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.18s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+  .btn-primary:hover { background: var(--blue-700); }
+  .btn-primary:active { transform: scale(0.98); }
+  .btn-primary:disabled { background: var(--gray-200); color: var(--gray-400); cursor: not-allowed; }
+  .btn-primary svg { width: 18px; height: 18px; stroke: white; stroke-width: 2.5; fill: none; }
+  .spinner { width: 18px; height: 18px; border: 2px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 0.7s linear infinite; display: none; }
+  .btn-primary.loading .spinner { display: block; }
+  .btn-primary.loading .btn-label { display: none; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .skeleton { background: var(--gray-100); border-radius: var(--radius-sm); animation: pulse 1.5s ease infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="topbar">
+    <button class="back-btn" onclick="history.back()">
+      <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+    </button>
+    <span class="topbar-title">Pilih Poli</span>
+  </div>
+
+  <div class="steps">
+    <div class="step done">
+      <div class="step-circle">✓</div>
+      <span class="step-label">Data Diri</span>
+    </div>
+    <div class="step active">
+      <div class="step-circle">2</div>
+      <span class="step-label">Pilih Poli</span>
+    </div>
+    <div class="step">
+      <div class="step-circle">3</div>
+      <span class="step-label">Tiket</span>
+    </div>
+  </div>
+
+  <div class="body">
+    <div class="section-head">
+      <h2>Pilih Poli Tujuan</h2>
+      <p>Pilih poli sesuai kebutuhan pemeriksaan kamu</p>
+    </div>
+
+    <div class="search-wrap">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" class="search-input" id="searchInput" placeholder="Cari poli..." oninput="filterPoli(this.value)">
+    </div>
+
+    <div class="poli-grid" id="poliGrid">
+      <!-- Skeleton loading -->
+      <div class="skeleton" style="height:110px"></div>
+      <div class="skeleton" style="height:110px"></div>
+      <div class="skeleton" style="height:110px"></div>
+      <div class="skeleton" style="height:110px"></div>
+    </div>
+
+    <div class="dokter-section" id="dokterSection">
+      <p class="dokter-label">Pilih Dokter</p>
+      <div class="dokter-list" id="dokterList"></div>
+    </div>
+  </div>
+
+  <div class="cta-wrap">
+    <button class="btn-primary" id="btnAmbil" disabled onclick="ambilAntrian()">
+      <span class="btn-label" style="display:flex;align-items:center;gap:8px">
+        Ambil Nomor Antrian
+        <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+      </span>
+      <div class="spinner"></div>
+    </button>
+  </div>
+</div>
+
+<script>
+  const params = new URLSearchParams(location.search);
+  const mode   = params.get('mode') || 'baru';
+  let poliData  = [];
+  let dokterData = [];
+  let selectedPoli   = null;
+  let selectedDokter = null;
+
+  const emojis = { 'UMUM':'🩺','GIGI':'🦷','JANTUNG':'❤️','ANAK':'👶','MATA':'👁️','ORTHO':'🦴','SARAF':'🧠','KULIT':'🌿' };
+
+  async function loadPoli() {
+    try {
+      const res  = await fetch('http://localhost:5000/api/poli/list');
+      const json = await res.json();
+      poliData   = json.data;
+      renderPoli(poliData);
+    } catch {
+      // Fallback data untuk demo
+      poliData = [
+        {id_poli:1,kode_poli:'UMUM',  nama_poli:'Poli Umum'},
+        {id_poli:2,kode_poli:'GIGI',  nama_poli:'Poli Gigi'},
+        {id_poli:3,kode_poli:'JANTUNG',nama_poli:'Poli Jantung'},
+        {id_poli:4,kode_poli:'ANAK',  nama_poli:'Poli Anak'},
+        {id_poli:5,kode_poli:'MATA',  nama_poli:'Poli Mata'},
+      ];
+      renderPoli(poliData);
+    }
+  }
+
+  function renderPoli(list) {
+    const grid = document.getElementById('poliGrid');
+    grid.innerHTML = list.map(p => `
+      <div class="poli-card" id="pc-${p.id_poli}" onclick="selectPoli(${p.id_poli})">
+        <div class="poli-emoji">${emojis[p.kode_poli] || '🏥'}</div>
+        <div class="poli-name">${p.nama_poli}</div>
+        <div class="poli-queue">Antrian: <span>-</span></div>
+      </div>
+    `).join('');
+  }
+
+  function filterPoli(q) {
+    const filtered = poliData.filter(p => p.nama_poli.toLowerCase().includes(q.toLowerCase()));
+    renderPoli(filtered);
+  }
+
+  async function selectPoli(id) {
+    selectedPoli   = poliData.find(p => p.id_poli === id);
+    selectedDokter = null;
+    document.querySelectorAll('.poli-card').forEach(c => c.classList.remove('selected'));
+    const card = document.getElementById('pc-' + id);
+    if (card) card.classList.add('selected');
+    document.getElementById('btnAmbil').disabled = true;
+    await loadDokter(id);
+  }
+
+  async function loadDokter(id_poli) {
+    const sec = document.getElementById('dokterSection');
+    const list = document.getElementById('dokterList');
+    list.innerHTML = `<div class="skeleton" style="height:60px"></div><div class="skeleton" style="height:60px;margin-top:8px"></div>`;
+    sec.classList.add('show');
+
+    try {
+      const res  = await fetch(`http://localhost:5000/api/poli/${id_poli}/dokter`);
+      const json = await res.json();
+      dokterData = json.data;
+    } catch {
+      dokterData = [
+        {id_dokter:1, nama_dokter:'dr. Budi Santoso', spesialisasi:'Umum'},
+        {id_dokter:2, nama_dokter:'dr. Siti Rahayu',  spesialisasi:'Umum'},
+      ];
+    }
+
+    list.innerHTML = dokterData.map(d => `
+      <div class="dokter-item" id="di-${d.id_dokter}" onclick="selectDokter(${d.id_dokter})">
+        <div class="dokter-avatar">${d.nama_dokter.replace('dr.','').replace('drg.','').trim().split(' ').map(w=>w[0]).slice(0,2).join('')}</div>
+        <div>
+          <div class="dokter-name">${d.nama_dokter}</div>
+          <div class="dokter-spec">${d.spesialisasi}</div>
+        </div>
+        <div class="dokter-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+      </div>
+    `).join('');
+  }
+
+  function selectDokter(id) {
+    selectedDokter = dokterData.find(d => d.id_dokter === id);
+    document.querySelectorAll('.dokter-item').forEach(d => d.classList.remove('selected'));
+    document.getElementById('di-' + id).classList.add('selected');
+    document.getElementById('btnAmbil').disabled = false;
+  }
+
+  async function ambilAntrian() {
+    if (!selectedPoli || !selectedDokter) return;
+    const btn = document.getElementById('btnAmbil');
+    btn.classList.add('loading');
+
+    const pasien = JSON.parse(sessionStorage.getItem(mode === 'baru' ? 'pasien_baru' : 'pasien_lama') || '{}');
+
+    try {
+      let id_pasien = pasien.id_pasien;
+
+      // Kalau pasien baru, daftar dulu
+      if (mode === 'baru' && !id_pasien) {
+        const regRes  = await fetch('http://localhost:5000/api/pasien/daftar', {
+          method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(pasien)
+        });
+        const regJson = await regRes.json();
+        id_pasien = regJson.data.id_pasien;
+        sessionStorage.setItem('pasien_baru', JSON.stringify({...pasien, ...regJson.data}));
+      }
+
+      const res  = await fetch('http://localhost:5000/api/antrian/ambil', {
+        method: 'POST', headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({ id_pasien, id_poli: selectedPoli.id_poli, id_dokter: selectedDokter.id_dokter })
+      });
+      const json = await res.json();
+
+      if (json.status === 'success') {
+        sessionStorage.setItem('tiket', JSON.stringify(json.data));
+        window.location.href = 'tiket.html';
+      } else {
+        alert(json.message);
+        btn.classList.remove('loading');
+      }
+    } catch(e) {
+      // Demo mode — langsung ke tiket
+      sessionStorage.setItem('tiket', JSON.stringify({
+        nomor_antrian: `${selectedPoli.kode_poli}-001`,
+        nama_poli: selectedPoli.nama_poli,
+        nama_dokter: selectedDokter.nama_dokter,
+        posisi: 3, estimasi_menit: 30
+      }));
+      window.location.href = 'tiket.html';
+    }
+  }
+
+  loadPoli();
+</script>
+</body>
+</html>

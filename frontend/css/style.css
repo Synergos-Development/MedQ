@@ -1,0 +1,252 @@
+/* ============================================
+   MedQ — Global Stylesheet
+   Mobile-first, responsive, clean & medical
+   ============================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --blue-50:  #EFF6FF;
+  --blue-100: #DBEAFE;
+  --blue-300: #93C5FD;
+  --blue-500: #3B82F6;
+  --blue-600: #2563EB;
+  --blue-700: #1D4ED8;
+  --blue-800: #1E40AF;
+  --blue-900: #1E3A8A;
+  --gray-50:  #F8FAFC;
+  --gray-100: #F1F5F9;
+  --gray-200: #E2E8F0;
+  --gray-300: #CBD5E1;
+  --gray-400: #94A3B8;
+  --gray-500: #64748B;
+  --gray-700: #334155;
+  --gray-900: #0F172A;
+  --green-50: #F0FDF4;
+  --green-600: #16A34A;
+  --green-700: #15803D;
+  --red-500:  #EF4444;
+  --white:    #FFFFFF;
+
+  --radius-sm: 10px;
+  --radius:    16px;
+  --radius-lg: 20px;
+
+  --shadow-sm: 0 1px 4px rgba(0,0,0,0.06);
+  --shadow-md: 0 4px 16px rgba(0,0,0,0.08);
+  --shadow-lg: 0 12px 40px rgba(0,0,0,0.12);
+
+  --page-max: 480px;
+  --side-pad: clamp(16px, 5vw, 28px);
+}
+
+html { font-size: 16px; scroll-behavior: smooth; }
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--gray-50);
+  color: var(--gray-900);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+}
+
+/* ── Page shell ─────────────────────────── */
+.page {
+  max-width: var(--page-max);
+  margin: 0 auto;
+  background: var(--white);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+/* ── Topbar ─────────────────────────────── */
+.topbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px var(--side-pad);
+  border-bottom: 1px solid var(--gray-100);
+  position: sticky;
+  top: 0;
+  background: var(--white);
+  z-index: 20;
+}
+.topbar-title { font-size: clamp(14px, 3.5vw, 16px); font-weight: 600; }
+.back-btn {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: var(--gray-100); border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; transition: background 0.15s;
+}
+.back-btn:hover { background: var(--gray-200); }
+.back-btn svg { width: 18px; height: 18px; stroke: var(--gray-700); stroke-width: 2.5; fill: none; }
+
+/* ── Step indicator ─────────────────────── */
+.steps {
+  display: flex;
+  align-items: center;
+  padding: 16px var(--side-pad);
+}
+.step {
+  display: flex; flex-direction: column; align-items: center;
+  flex: 1; position: relative;
+}
+.step:not(:last-child)::after {
+  content: ''; position: absolute;
+  top: 14px; left: 50%; width: 100%; height: 2px;
+  background: var(--gray-200); z-index: 0;
+}
+.step.done:not(:last-child)::after,
+.step.active:not(:last-child)::after { background: var(--blue-500); }
+.step-circle {
+  width: 28px; height: 28px; border-radius: 50%;
+  border: 2px solid var(--gray-200); background: var(--white);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 600; color: var(--gray-400); z-index: 1;
+  transition: all 0.2s;
+}
+.step.active .step-circle { border-color: var(--blue-600); background: var(--blue-600); color: white; }
+.step.done  .step-circle  { border-color: var(--blue-500); background: var(--blue-50);  color: var(--blue-600); }
+.step-label { font-size: 10px; color: var(--gray-400); margin-top: 4px; font-weight: 500; }
+.step.active .step-label,
+.step.done   .step-label  { color: var(--blue-600); }
+
+/* ── Cards ──────────────────────────────── */
+.card {
+  background: var(--white);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius);
+  padding: clamp(16px, 4vw, 20px);
+  box-shadow: var(--shadow-sm);
+  transition: all 0.18s;
+}
+.card-link {
+  display: flex; align-items: center; gap: 16px;
+  text-decoration: none; color: inherit;
+  cursor: pointer;
+}
+.card-link:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); border-color: var(--blue-100); }
+.card-link:active { transform: scale(0.98); }
+
+/* ── Buttons ────────────────────────────── */
+.btn {
+  width: 100%; padding: clamp(13px, 3.5vw, 15px);
+  border: none; border-radius: var(--radius);
+  font-family: 'DM Sans', sans-serif;
+  font-size: clamp(14px, 3.5vw, 15px); font-weight: 600;
+  cursor: pointer; transition: all 0.18s;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+}
+.btn-primary { background: var(--blue-600); color: white; }
+.btn-primary:hover  { background: var(--blue-700); }
+.btn-primary:active { transform: scale(0.98); }
+.btn-primary:disabled { background: var(--gray-200); color: var(--gray-400); cursor: not-allowed; }
+.btn-outline {
+  background: var(--white); color: var(--gray-700);
+  border: 1.5px solid var(--gray-200);
+}
+.btn-outline:hover { border-color: var(--blue-500); color: var(--blue-600); }
+.btn svg { width: 18px; height: 18px; stroke: currentColor; stroke-width: 2.5; fill: none; }
+
+/* ── Form fields ────────────────────────── */
+.field { margin-bottom: clamp(14px, 3.5vw, 18px); }
+.field label {
+  display: block; font-size: 12px; font-weight: 500;
+  color: var(--gray-700); margin-bottom: 6px; letter-spacing: 0.3px;
+}
+.field label span { color: var(--red-500); }
+.field input, .field select, .field textarea {
+  width: 100%; padding: clamp(11px, 3vw, 13px) 14px;
+  border: 1.5px solid var(--gray-200); border-radius: var(--radius-sm);
+  font-family: 'DM Sans', sans-serif;
+  font-size: clamp(14px, 3.5vw, 15px); color: var(--gray-900);
+  background: var(--white); outline: none; transition: border-color 0.15s;
+  -webkit-appearance: none; appearance: none;
+}
+.field input:focus, .field select:focus, .field textarea:focus {
+  border-color: var(--blue-500);
+  box-shadow: 0 0 0 3px rgba(59,130,246,0.1);
+}
+.field input::placeholder, .field textarea::placeholder { color: var(--gray-400); }
+.field textarea { resize: none; height: 80px; line-height: 1.5; }
+.field .hint  { font-size: 11.5px; color: var(--gray-400); margin-top: 5px; }
+.field .error { font-size: 11.5px; color: var(--red-500); margin-top: 5px; display: none; }
+.field.invalid input, .field.invalid select { border-color: var(--red-500); }
+.field.invalid .error { display: block; }
+
+/* ── Info strip ─────────────────────────── */
+.info-strip {
+  background: var(--blue-50); border-radius: var(--radius-sm);
+  padding: 14px 16px; display: flex; gap: 12px; align-items: flex-start;
+}
+.info-strip svg { width: 18px; height: 18px; flex-shrink: 0; margin-top: 1px; stroke: var(--blue-600); fill: none; stroke-width: 2; }
+.info-strip p { font-size: 12.5px; color: var(--blue-700); line-height: 1.5; }
+
+/* ── Spinner ────────────────────────────── */
+.spinner {
+  width: 18px; height: 18px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: white; border-radius: 50%;
+  animation: spin 0.7s linear infinite; display: none;
+}
+.btn.loading .spinner { display: block; }
+.btn.loading .btn-label { display: none; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── Skeleton ───────────────────────────── */
+.skeleton {
+  background: var(--gray-100); border-radius: var(--radius-sm);
+  animation: pulse 1.5s ease infinite;
+}
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
+
+/* ── Toast ──────────────────────────────── */
+.toast {
+  position: fixed; bottom: 24px; left: 50%;
+  transform: translateX(-50%) translateY(80px);
+  background: var(--gray-900); color: white;
+  padding: 12px 20px; border-radius: 100px;
+  font-size: 13px; font-weight: 500; white-space: nowrap;
+  transition: transform 0.3s ease; z-index: 100;
+}
+.toast.show  { transform: translateX(-50%) translateY(0); }
+.toast.error { background: #991B1B; }
+.toast.ok    { background: #166534; }
+
+/* ── Animations ─────────────────────────── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.fade-up { animation: fadeUp 0.3s ease both; }
+
+/* ── Responsive breakpoints ─────────────── */
+
+/* Tablet / small desktop — 2 column layout */
+@media (min-width: 600px) {
+  .page {
+    margin: 24px auto;
+    border-radius: 24px;
+    box-shadow: var(--shadow-lg);
+    min-height: auto;
+  }
+  body { background: var(--gray-100); }
+  .hero { border-radius: 24px 24px 0 0; }
+  .row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+}
+
+/* Larger desktop */
+@media (min-width: 900px) {
+  :root { --page-max: 520px; }
+}
+
+/* Print — untuk tiket */
+@media print {
+  body { background: white; }
+  .page { box-shadow: none; border-radius: 0; max-width: 100%; }
+  .actions, .topbar { display: none; }
+}

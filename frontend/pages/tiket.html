@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Tiket Antrian — MedQ</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --blue-50: #EFF6FF; --blue-100: #DBEAFE; --blue-500: #3B82F6;
+    --blue-600: #2563EB; --blue-700: #1D4ED8; --blue-800: #1E40AF;
+    --gray-50: #F8FAFC; --gray-100: #F1F5F9; --gray-200: #E2E8F0;
+    --gray-400: #94A3B8; --gray-500: #64748B; --gray-700: #334155; --gray-900: #0F172A;
+    --white: #FFFFFF; --radius: 20px; --radius-sm: 12px;
+  }
+  html, body { min-height: 100%; background: var(--blue-600); font-family: 'DM Sans', sans-serif; -webkit-font-smoothing: antialiased; }
+  .page { max-width: 430px; margin: 0 auto; min-height: 100vh; display: flex; flex-direction: column; background: var(--blue-600); }
+
+  .topbar { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px 0; }
+  .logo { font-family: 'DM Serif Display', serif; font-size: 18px; color: rgba(255,255,255,0.9); }
+  .time { font-size: 12px; color: rgba(255,255,255,0.6); }
+
+  /* Success banner */
+  .success-banner { padding: 28px 24px 20px; text-align: center; }
+  .check-circle { width: 56px; height: 56px; border-radius: 50%; background: rgba(255,255,255,0.15); display: flex; align-items: center; justify-content: center; margin: 0 auto 14px; }
+  .check-circle svg { width: 28px; height: 28px; stroke: white; stroke-width: 2.5; fill: none; }
+  .success-title { font-size: 22px; font-weight: 600; color: white; margin-bottom: 4px; }
+  .success-sub { font-size: 13px; color: rgba(255,255,255,0.7); }
+
+  /* Ticket card */
+  .ticket-wrap { flex: 1; padding: 0 16px 16px; }
+  .ticket {
+    background: var(--white); border-radius: var(--radius);
+    overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+  }
+
+  /* Nomor antrian */
+  .ticket-top { padding: 28px 24px; text-align: center; border-bottom: 2px dashed var(--gray-200); position: relative; }
+  .ticket-top::before, .ticket-top::after {
+    content: ''; position: absolute; width: 24px; height: 24px; border-radius: 50%;
+    background: var(--blue-600); bottom: -12px;
+  }
+  .ticket-top::before { left: -12px; }
+  .ticket-top::after  { right: -12px; }
+
+  .ticket-label { font-size: 11px; font-weight: 500; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gray-400); margin-bottom: 10px; }
+  .nomor { font-family: 'DM Serif Display', serif; font-size: 64px; color: var(--blue-600); line-height: 1; letter-spacing: -1px; margin-bottom: 8px; animation: popIn 0.5s cubic-bezier(0.175,0.885,0.32,1.275); }
+  @keyframes popIn { from { transform: scale(0.7); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+  .poli-badge { display: inline-flex; align-items: center; gap: 6px; background: var(--blue-50); color: var(--blue-700); font-size: 12px; font-weight: 600; padding: 5px 14px; border-radius: 20px; }
+
+  /* Info rows */
+  .ticket-body { padding: 20px 24px; }
+  .info-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--gray-100); }
+  .info-row:last-child { border-bottom: none; }
+  .info-key { font-size: 12.5px; color: var(--gray-500); }
+  .info-val { font-size: 13px; font-weight: 600; color: var(--gray-900); text-align: right; max-width: 200px; }
+
+  /* Estimasi highlight */
+  .estimasi-card { background: var(--blue-50); border-radius: var(--radius-sm); padding: 14px 18px; margin: 16px 24px 0; display: flex; align-items: center; gap: 14px; }
+  .est-icon { width: 42px; height: 42px; border-radius: 50%; background: white; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .est-icon svg { width: 20px; height: 20px; stroke: var(--blue-600); stroke-width: 2; fill: none; }
+  .est-label { font-size: 11px; color: var(--blue-500); font-weight: 500; margin-bottom: 2px; }
+  .est-val { font-size: 20px; font-weight: 700; color: var(--blue-700); }
+  .est-sub { font-size: 11px; color: var(--blue-500); }
+
+  /* Posisi bar */
+  .posisi-wrap { padding: 16px 24px 20px; }
+  .posisi-label { font-size: 12px; color: var(--gray-500); margin-bottom: 8px; display: flex; justify-content: space-between; }
+  .posisi-label span { font-weight: 600; color: var(--blue-600); }
+  .posisi-bar { height: 6px; background: var(--gray-100); border-radius: 3px; overflow: hidden; }
+  .posisi-fill { height: 100%; background: var(--blue-500); border-radius: 3px; transition: width 1s ease; }
+
+  /* Bottom actions */
+  .actions { padding: 16px 16px 32px; display: flex; flex-direction: column; gap: 10px; }
+  .btn-white { width: 100%; padding: 14px; border: none; border-radius: 14px; background: rgba(255,255,255,0.2); color: white; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.18s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+  .btn-white:hover { background: rgba(255,255,255,0.3); }
+  .btn-white svg { width: 16px; height: 16px; stroke: white; stroke-width: 2.5; fill: none; }
+  .btn-outline-white { width: 100%; padding: 13px; border: 1.5px solid rgba(255,255,255,0.3); border-radius: 14px; background: transparent; color: rgba(255,255,255,0.8); font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.18s; }
+  .btn-outline-white:hover { border-color: white; color: white; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="topbar">
+    <span class="logo">MedQ</span>
+    <span class="time" id="clock"></span>
+  </div>
+
+  <div class="success-banner">
+    <div class="check-circle">
+      <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+    </div>
+    <h1 class="success-title">Antrian Berhasil!</h1>
+    <p class="success-sub">Nomor antrian kamu sudah terdaftar</p>
+  </div>
+
+  <div class="ticket-wrap">
+    <div class="ticket">
+      <div class="ticket-top">
+        <p class="ticket-label">Nomor Antrian</p>
+        <div class="nomor" id="nomorAntrian">—</div>
+        <div class="poli-badge" id="poliName">🏥 —</div>
+      </div>
+
+      <div class="ticket-body">
+        <div class="info-row">
+          <span class="info-key">Dokter</span>
+          <span class="info-val" id="dokterName">—</span>
+        </div>
+        <div class="info-row">
+          <span class="info-key">Tanggal</span>
+          <span class="info-val" id="tanggal">—</span>
+        </div>
+        <div class="info-row">
+          <span class="info-key">Posisi Antrian</span>
+          <span class="info-val" id="posisi">—</span>
+        </div>
+      </div>
+
+      <div class="estimasi-card">
+        <div class="est-icon">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <div>
+          <div class="est-label">Estimasi Waktu Tunggu</div>
+          <div class="est-val" id="estimasi">—</div>
+          <div class="est-sub">Harap standby di ruang tunggu</div>
+        </div>
+      </div>
+
+      <div class="posisi-wrap">
+        <div class="posisi-label">
+          <span>Posisi dalam antrian</span>
+          <span id="posisiLabel">— / —</span>
+        </div>
+        <div class="posisi-bar">
+          <div class="posisi-fill" id="posisiFill" style="width:0%"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="actions">
+    <button class="btn-white" onclick="window.print()">
+      <svg viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+      Cetak Tiket
+    </button>
+    <button class="btn-outline-white" onclick="window.location.href='index.html'">
+      Kembali ke Beranda
+    </button>
+  </div>
+
+</div>
+
+<script>
+  // Isi data dari sessionStorage
+  const tiket = JSON.parse(sessionStorage.getItem('tiket') || '{}');
+  const emojis = {'UMUM':'🩺','GIGI':'🦷','JANTUNG':'❤️','ANAK':'👶','MATA':'👁️'};
+  const kode   = tiket.nomor_antrian ? tiket.nomor_antrian.split('-')[0] : '';
+
+  document.getElementById('nomorAntrian').textContent = tiket.nomor_antrian || '—';
+  document.getElementById('poliName').textContent     = (emojis[kode] || '🏥') + ' ' + (tiket.nama_poli || '—');
+  document.getElementById('dokterName').textContent   = tiket.nama_dokter || '—';
+  document.getElementById('estimasi').textContent     = tiket.estimasi_menit ? tiket.estimasi_menit + ' menit' : '—';
+  document.getElementById('posisi').textContent       = tiket.posisi ? 'Ke-' + tiket.posisi : '—';
+  document.getElementById('posisiLabel').textContent  = tiket.posisi ? tiket.posisi + ' / ' + (tiket.posisi + 2) : '—';
+
+  // Progress bar — semakin kecil posisi = semakin depan
+  if (tiket.posisi) {
+    const pct = Math.max(10, 100 - (tiket.posisi - 1) * 20);
+    setTimeout(() => document.getElementById('posisiFill').style.width = pct + '%', 400);
+  }
+
+  // Tanggal hari ini
+  const now   = new Date();
+  const opts  = { weekday:'long', year:'numeric', month:'long', day:'numeric' };
+  document.getElementById('tanggal').textContent = now.toLocaleDateString('id-ID', opts);
+
+  // Jam realtime
+  function updateClock() {
+    const d = new Date();
+    document.getElementById('clock').textContent =
+      d.toLocaleTimeString('id-ID', { hour:'2-digit', minute:'2-digit' });
+  }
+  updateClock();
+  setInterval(updateClock, 1000);
+</script>
+</body>
+</html>

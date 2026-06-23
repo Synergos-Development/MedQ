@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Admin Panel — MedQ</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+<style>
+/* Admin-specific overrides */
+body { background: var(--gray-50); }
+.page { max-width: 680px; }
+
+.admin-header {
+  background: linear-gradient(135deg, var(--blue-800) 0%, var(--blue-600) 100%);
+  padding: clamp(20px, 5vw, 28px) var(--side-pad);
+}
+.admin-header-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+.logo-row { display: flex; align-items: center; gap: 10px; }
+.logo-icon { width: 34px; height: 34px; background: rgba(255,255,255,0.18); border-radius: 9px; display: flex; align-items: center; justify-content: center; }
+.logo-icon svg { width: 18px; height: 18px; stroke: white; stroke-width: 2; fill: none; }
+.logo-text { font-family: 'DM Serif Display', serif; font-size: 18px; color: white; }
+.admin-badge { font-size: 11px; background: rgba(255,255,255,0.15); color: rgba(255,255,255,0.9); padding: 4px 12px; border-radius: 20px; font-weight: 500; }
+
+/* Stat cards dalam header */
+.stat-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.stat-card { background: rgba(255,255,255,0.1); border-radius: 12px; padding: 12px 14px; border: 1px solid rgba(255,255,255,0.12); }
+.stat-n    { font-size: 26px; font-weight: 600; color: white; }
+.stat-l    { font-size: 11px; color: rgba(255,255,255,0.6); margin-top: 2px; }
+
+/* Body */
+.admin-body { flex: 1; padding: clamp(16px, 4vw, 24px) var(--side-pad); overflow-y: auto; }
+
+/* Poli selector */
+.sec-label { font-size: 11px; font-weight: 500; letter-spacing: 1.2px; text-transform: uppercase; color: var(--gray-400); margin-bottom: 10px; }
+.poli-select-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+.poli-pill { padding: 8px 16px; border-radius: 30px; font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.18s; border: 1.5px solid var(--gray-200); color: var(--gray-600); background: var(--white); }
+.poli-pill:hover  { border-color: var(--blue-300); color: var(--blue-600); }
+.poli-pill.active { background: var(--blue-600); border-color: var(--blue-600); color: white; }
+
+/* Calling card */
+.calling-card {
+  background: var(--white); border: 1px solid var(--gray-200);
+  border-radius: var(--radius); padding: clamp(18px, 5vw, 24px);
+  margin-bottom: 16px; box-shadow: var(--shadow-sm);
+}
+.calling-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+.calling-title  { font-size: 14px; font-weight: 600; color: var(--gray-900); }
+.calling-poli   { font-size: 12px; color: var(--gray-500); margin-top: 2px; }
+
+.next-nomor-wrap { text-align: center; padding: clamp(16px, 5vw, 24px) 0; }
+.next-label { font-size: 11px; font-weight: 500; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gray-400); margin-bottom: 8px; }
+.next-nomor { font-family: 'DM Serif Display', serif; font-size: clamp(40px, 10vw, 64px); color: var(--blue-600); line-height: 1; }
+.next-pasien { font-size: 14px; color: var(--gray-700); font-weight: 500; margin-top: 8px; }
+.next-empty  { font-size: 14px; color: var(--gray-400); padding: 16px 0; }
+
+.call-btn {
+  width: 100%; padding: clamp(14px, 4vw, 16px);
+  border: none; border-radius: var(--radius);
+  background: var(--blue-600); color: white;
+  font-family: 'DM Sans', sans-serif;
+  font-size: clamp(14px, 3.8vw, 15px); font-weight: 600;
+  cursor: pointer; transition: all 0.18s;
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+}
+.call-btn:hover   { background: var(--blue-700); transform: translateY(-1px); box-shadow: 0 4px 14px rgba(37,99,235,0.3); }
+.call-btn:active  { transform: scale(0.98); }
+.call-btn:disabled{ background: var(--gray-200); color: var(--gray-400); cursor: not-allowed; transform: none; box-shadow: none; }
+.call-btn svg { width: 18px; height: 18px; stroke: white; stroke-width: 2.5; fill: none; }
+.call-btn .spinner { width: 18px; height: 18px; border: 2px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 0.7s linear infinite; display: none; }
+.call-btn.loading .spinner { display: block; }
+.call-btn.loading .btn-label { display: none; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Queue table */
+.queue-card { background: var(--white); border: 1px solid var(--gray-200); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow-sm); margin-bottom: 16px; }
+.queue-card-head { padding: 14px 18px; border-bottom: 1px solid var(--gray-100); display: flex; align-items: center; justify-content: space-between; }
+.queue-card-title { font-size: 13px; font-weight: 600; color: var(--gray-900); }
+.refresh-btn { width: 30px; height: 30px; border: none; background: var(--gray-100); border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.15s; }
+.refresh-btn:hover { background: var(--gray-200); }
+.refresh-btn svg { width: 14px; height: 14px; stroke: var(--gray-500); stroke-width: 2.5; fill: none; }
+
+.q-table { width: 100%; }
+.q-thead { display: grid; grid-template-columns: 40px 1fr 1fr 80px 60px; gap: 8px; padding: 10px 16px; background: var(--gray-50); border-bottom: 1px solid var(--gray-100); }
+.q-th { font-size: 11px; font-weight: 500; letter-spacing: 0.5px; text-transform: uppercase; color: var(--gray-400); }
+.q-tbody { max-height: 280px; overflow-y: auto; }
+.q-row { display: grid; grid-template-columns: 40px 1fr 1fr 80px 60px; gap: 8px; padding: 12px 16px; border-bottom: 1px solid var(--gray-100); align-items: center; transition: background 0.15s; }
+.q-row:last-child { border-bottom: none; }
+.q-row:hover { background: var(--gray-50); }
+.q-rank-badge { width: 26px; height: 26px; border-radius: 50%; background: var(--blue-50); color: var(--blue-600); font-size: 11px; font-weight: 600; display: flex; align-items: center; justify-content: center; }
+.q-nomor-text { font-size: 13px; font-weight: 600; color: var(--gray-900); font-family: monospace; letter-spacing: 0.5px; }
+.q-name-text  { font-size: 12.5px; color: var(--gray-600); }
+.q-status { font-size: 11px; font-weight: 500; padding: 3px 10px; border-radius: 20px; text-align: center; }
+.status-menunggu  { background: #FEF9C3; color: #854D0E; }
+.status-dipanggil { background: var(--blue-50); color: var(--blue-700); }
+.status-diperiksa { background: #F0FDF4; color: #166534; }
+.status-selesai   { background: var(--gray-100); color: var(--gray-500); }
+.status-batal     { background: #FEF2F2; color: #991B1B; }
+
+.batal-btn { width: 28px; height: 28px; border: none; background: #FEF2F2; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.15s; }
+.batal-btn:hover { background: #FECACA; }
+.batal-btn svg { width: 13px; height: 13px; stroke: #EF4444; stroke-width: 2.5; fill: none; }
+
+.q-empty-row { padding: 32px; text-align: center; color: var(--gray-400); font-size: 13px; }
+.q-empty-row svg { width: 32px; height: 32px; stroke: var(--gray-300); fill: none; margin: 0 auto 10px; display: block; }
+
+/* Recent called */
+.called-list { display: flex; flex-direction: column; gap: 8px; }
+.called-item { display: flex; align-items: center; gap: 12px; padding: 12px 16px; background: var(--white); border: 1px solid var(--gray-200); border-radius: var(--radius-sm); }
+.called-nomor { font-family: monospace; font-size: 14px; font-weight: 600; color: var(--blue-600); min-width: 90px; }
+.called-name  { font-size: 13px; color: var(--gray-700); flex: 1; }
+.called-time  { font-size: 11px; color: var(--gray-400); }
+
+/* Modal konfirmasi */
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 50; display: none; align-items: center; justify-content: center; padding: 20px; }
+.modal-overlay.show { display: flex; }
+.modal { background: var(--white); border-radius: var(--radius); padding: 24px; max-width: 360px; width: 100%; animation: fadeUp 0.2s ease; }
+.modal-title { font-size: 16px; font-weight: 600; margin-bottom: 8px; }
+.modal-desc  { font-size: 13.5px; color: var(--gray-500); line-height: 1.5; margin-bottom: 20px; }
+.modal-actions { display: flex; gap: 10px; }
+.modal-actions button { flex: 1; }
+
+.cta-wrap { padding: 0 var(--side-pad) clamp(24px, 6vw, 36px); }
+
+@media (max-width: 480px) {
+  .stat-row { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .stat-n   { font-size: 22px; }
+  .q-thead, .q-row { grid-template-columns: 36px 1fr 70px 54px; }
+  .q-name-col { display: none; }
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="admin-header">
+    <div class="admin-header-row">
+      <div class="logo-row">
+        <div class="logo-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20z"/><path d="M12 8v8M8 12h8"/></svg>
+        </div>
+        <span class="logo-text">MedQ</span>
+      </div>
+      <span class="admin-badge">Admin Panel</span>
+    </div>
+    <div class="stat-row">
+      <div class="stat-card">
+        <div class="stat-n" id="statMenunggu">0</div>
+        <div class="stat-l">Menunggu</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-n" id="statDilayani">0</div>
+        <div class="stat-l">Dilayani</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-n" id="statSelesai">0</div>
+        <div class="stat-l">Selesai Hari Ini</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="admin-body">
+
+    <!-- Pilih poli -->
+    <p class="sec-label">Pilih Poli</p>
+    <div class="poli-select-row" id="poliPills">
+      <div class="skeleton" style="height:36px;width:90px;border-radius:30px"></div>
+      <div class="skeleton" style="height:36px;width:80px;border-radius:30px"></div>
+      <div class="skeleton" style="height:36px;width:100px;border-radius:30px"></div>
+    </div>
+
+    <!-- Panggil nomor -->
+    <div class="calling-card">
+      <div class="calling-header">
+        <div>
+          <div class="calling-title">Panggil Nomor Berikutnya</div>
+          <div class="calling-poli" id="callingPoliName">Pilih poli terlebih dahulu</div>
+        </div>
+      </div>
+      <div class="next-nomor-wrap">
+        <div class="next-label">Antrian Berikutnya</div>
+        <div class="next-nomor" id="nextNomor">—</div>
+        <div class="next-pasien" id="nextPasien"></div>
+      </div>
+      <button class="call-btn" id="callBtn" disabled onclick="panggilBerikutnya()">
+        <span class="btn-label" style="display:flex;align-items:center;gap:8px">
+          <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2A19.79 19.79 0 0 1 11.61 19a19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 3.12 4.18 2 2 0 0 1 5.08 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L9.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+          Panggil Sekarang
+        </span>
+        <div class="spinner"></div>
+      </button>
+    </div>
+
+    <!-- Daftar antrian -->
+    <div class="queue-card">
+      <div class="queue-card-head">
+        <span class="queue-card-title">Daftar Antrian Hari Ini</span>
+        <button class="refresh-btn" onclick="loadAntrian()" title="Refresh">
+          <svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+        </button>
+      </div>
+      <div class="q-table">
+        <div class="q-thead">
+          <span class="q-th">#</span>
+          <span class="q-th">Nomor</span>
+          <span class="q-th q-name-col">Pasien</span>
+          <span class="q-th">Status</span>
+          <span class="q-th">Aksi</span>
+        </div>
+        <div class="q-tbody" id="qTbody">
+          <div class="q-empty-row">
+            <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            Pilih poli untuk melihat antrian
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Baru dipanggil -->
+    <p class="sec-label" style="margin-top:4px">Baru Dipanggil</p>
+    <div class="called-list" id="calledList">
+      <div style="font-size:13px;color:var(--gray-400);padding:8px 0">Belum ada yang dipanggil</div>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- Modal konfirmasi batal -->
+<div class="modal-overlay" id="batalModal">
+  <div class="modal">
+    <div class="modal-title">Batalkan Antrian?</div>
+    <div class="modal-desc" id="batalDesc">Antrian ini akan dibatalkan dan tidak bisa dikembalikan.</div>
+    <div class="modal-actions">
+      <button class="btn btn-outline" onclick="closeBatalModal()">Tidak</button>
+      <button class="btn btn-primary" id="batalConfirm" onclick="konfirmasiBatal()" style="background:#EF4444">
+        <span class="btn-label">Ya, Batalkan</span>
+        <div class="spinner"></div>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+  const emojis = {UMUM:'🩺',GIGI:'🦷',JANTUNG:'❤️',ANAK:'👶',MATA:'👁️'};
+  let poliList      = [];
+  let activePoli    = null;
+  let antrianData   = [];
+  let calledHistory = [];
+  let batalTarget   = null;
+
+  // ── Toast ──────────────────────────────────
+  function showToast(msg, type='') {
+    const t = document.getElementById('toast');
+    t.textContent = msg; t.className = 'toast show ' + type;
+    setTimeout(() => t.className = 'toast', 2800);
+  }
+
+  // ── Load poli ──────────────────────────────
+  async function loadPoli() {
+    try {
+      const res  = await fetch('http://localhost:5000/api/poli/list');
+      poliList   = (await res.json()).data;
+    } catch {
+      poliList = [
+        {id_poli:1,kode_poli:'UMUM',   nama_poli:'Poli Umum'},
+        {id_poli:2,kode_poli:'GIGI',   nama_poli:'Poli Gigi'},
+        {id_poli:3,kode_poli:'JANTUNG',nama_poli:'Poli Jantung'},
+        {id_poli:4,kode_poli:'ANAK',   nama_poli:'Poli Anak'},
+        {id_poli:5,kode_poli:'MATA',   nama_poli:'Poli Mata'},
+      ];
+    }
+    renderPoliPills();
+  }
+
+  function renderPoliPills() {
+    document.getElementById('poliPills').innerHTML = poliList.map(p => `
+      <div class="poli-pill" data-id="${p.id_poli}" onclick="selectPoli(${p.id_poli})">
+        ${emojis[p.kode_poli]||'🏥'} ${p.nama_poli}
+      </div>`).join('');
+  }
+
+  function selectPoli(id) {
+    activePoli = id;
+    document.querySelectorAll('.poli-pill').forEach(p => p.classList.toggle('active', Number(p.dataset.id) === id));
+    const poli = poliList.find(p => p.id_poli === id);
+    document.getElementById('callingPoliName').textContent = (emojis[poli.kode_poli]||'🏥') + ' ' + poli.nama_poli;
+    loadAntrian();
+  }
+
+  // ── Load antrian ───────────────────────────
+  async function loadAntrian() {
+    if (!activePoli) return;
+    try {
+      const res  = await fetch(`http://localhost:5000/api/antrian/aktif/${activePoli}`);
+      const json = await res.json();
+      if (json.status === 'success') {
+        antrianData = json.data.antrian_menunggu.map((n, i) => ({
+          nomor: n, posisi: i+1, status: 'Menunggu', nama_pasien: '—'
+        }));
+        updateStats(json.data);
+        renderQueue(antrianData);
+        updateNextNomor(antrianData);
+      }
+    } catch {
+      // Demo fallback
+      antrianData = [
+        {nomor:'UMUM-004',posisi:1,status:'Menunggu',   nama_pasien:'Budi Santoso'},
+        {nomor:'UMUM-005',posisi:2,status:'Menunggu',   nama_pasien:'Siti Rahayu'},
+        {nomor:'UMUM-006',posisi:3,status:'Menunggu',   nama_pasien:'Ahmad Fauzi'},
+        {nomor:'UMUM-003',posisi:0,status:'Dipanggil',  nama_pasien:'Dewi Kusuma'},
+        {nomor:'UMUM-001',posisi:0,status:'Selesai',    nama_pasien:'Hendra W.'},
+        {nomor:'UMUM-002',posisi:0,status:'Selesai',    nama_pasien:'Retno W.'},
+      ];
+      const menunggu   = antrianData.filter(a => a.status === 'Menunggu').length;
+      const dilayani   = antrianData.filter(a => a.status === 'Dipanggil' || a.status === 'Diperiksa').length;
+      const selesai    = antrianData.filter(a => a.status === 'Selesai').length;
+      document.getElementById('statMenunggu').textContent = menunggu;
+      document.getElementById('statDilayani').textContent = dilayani;
+      document.getElementById('statSelesai').textContent  = selesai;
+      renderQueue(antrianData);
+      updateNextNomor(antrianData.filter(a => a.status === 'Menunggu'));
+    }
+  }
+
+  function updateStats(data) {
+    document.getElementById('statMenunggu').textContent = data.total_menunggu || 0;
+  }
+
+  function updateNextNomor(menunggu) {
+    const btn = document.getElementById('callBtn');
+    if (menunggu.length > 0) {
+      document.getElementById('nextNomor').textContent  = menunggu[0].nomor;
+      document.getElementById('nextPasien').textContent = menunggu[0].nama_pasien !== '—' ? menunggu[0].nama_pasien : '';
+      btn.disabled = false;
+    } else {
+      document.getElementById('nextNomor').textContent  = '—';
+      document.getElementById('nextPasien').textContent = 'Tidak ada antrian';
+      btn.disabled = true;
+    }
+  }
+
+  function renderQueue(data) {
+    const body = document.getElementById('qTbody');
+    if (!data.length) {
+      body.innerHTML = `<div class="q-empty-row">
+        <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Tidak ada antrian
+      </div>`; return;
+    }
+    let posisi = 1;
+    body.innerHTML = data.map(a => {
+      const rank    = a.status === 'Menunggu' ? posisi++ : '—';
+      const canBatal = ['Menunggu','Dipanggil'].includes(a.status);
+      return `<div class="q-row">
+        <div class="q-rank-badge">${rank}</div>
+        <div class="q-nomor-text">${a.nomor}</div>
+        <div class="q-name-text q-name-col">${a.nama_pasien}</div>
+        <div><span class="q-status status-${a.status.toLowerCase()}">${a.status}</span></div>
+        <div>${canBatal
+          ? `<button class="batal-btn" onclick="showBatalModal('${a.nomor}')" title="Batalkan">
+               <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+             </button>`
+          : ''}</div>
+      </div>`;
+    }).join('');
+  }
+
+  // ── Panggil berikutnya ──────────────────────
+  async function panggilBerikutnya() {
+    if (!activePoli) return;
+    const btn = document.getElementById('callBtn');
+    btn.classList.add('loading');
+    try {
+      const res  = await fetch('http://localhost:5000/api/antrian/panggil', {
+        method: 'POST', headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({ id_poli: activePoli })
+      });
+      const json = await res.json();
+      if (json.status === 'success') {
+        const d = json.data;
+        addCalledHistory(d.nomor_antrian, d.nama_pasien);
+        showToast(`✅ ${d.nomor_antrian} — ${d.nama_pasien} dipanggil`, 'ok');
+        await loadAntrian();
+      } else {
+        showToast(json.message, 'error');
+      }
+    } catch {
+      // Demo
+      const menunggu = antrianData.filter(a => a.status === 'Menunggu');
+      if (menunggu.length > 0) {
+        const next = menunggu[0];
+        next.status = 'Dipanggil';
+        addCalledHistory(next.nomor, next.nama_pasien);
+        showToast(`✅ ${next.nomor} dipanggil`, 'ok');
+        renderQueue(antrianData);
+        updateNextNomor(antrianData.filter(a => a.status === 'Menunggu'));
+      }
+    }
+    btn.classList.remove('loading');
+  }
+
+  function addCalledHistory(nomor, nama) {
+    const now  = new Date().toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit'});
+    calledHistory.unshift({ nomor, nama, time: now });
+    if (calledHistory.length > 5) calledHistory.pop();
+
+    document.getElementById('calledList').innerHTML = calledHistory.map(c => `
+      <div class="called-item">
+        <span class="called-nomor">${c.nomor}</span>
+        <span class="called-name">${c.nama}</span>
+        <span class="called-time">${c.time}</span>
+      </div>`).join('');
+  }
+
+  // ── Batalkan antrian ────────────────────────
+  function showBatalModal(nomor) {
+    batalTarget = nomor;
+    document.getElementById('batalDesc').textContent = `Antrian ${nomor} akan dibatalkan dan pasien perlu mengambil nomor baru.`;
+    document.getElementById('batalModal').classList.add('show');
+  }
+
+  function closeBatalModal() {
+    batalTarget = null;
+    document.getElementById('batalModal').classList.remove('show');
+  }
+
+  async function konfirmasiBatal() {
+    if (!batalTarget) return;
+    const btn = document.getElementById('batalConfirm');
+    btn.classList.add('loading');
+    try {
+      const item = antrianData.find(a => a.nomor === batalTarget);
+      const res  = await fetch('http://localhost:5000/api/antrian/batal', {
+        method: 'POST', headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({ id_antrian: item?.id_antrian || 0 })
+      });
+      const json = await res.json();
+      showToast(json.status === 'success' ? `Antrian ${batalTarget} dibatalkan` : json.message,
+                json.status === 'success' ? 'ok' : 'error');
+    } catch {
+      // Demo
+      const item = antrianData.find(a => a.nomor === batalTarget);
+      if (item) { item.status = 'Batal'; renderQueue(antrianData); }
+      showToast(`Antrian ${batalTarget} dibatalkan`, 'ok');
+    }
+    btn.classList.remove('loading');
+    closeBatalModal();
+    await loadAntrian();
+  }
+
+  // Tutup modal klik luar
+  document.getElementById('batalModal').addEventListener('click', function(e) {
+    if (e.target === this) closeBatalModal();
+  });
+
+  // ── Auto refresh tiap 10 detik ──────────────
+  loadPoli();
+  setInterval(() => { if (activePoli) loadAntrian(); }, 10000);
+</script>
+</body>
+</html>
