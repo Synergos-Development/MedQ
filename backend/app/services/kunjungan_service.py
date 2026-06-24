@@ -12,10 +12,20 @@ class KunjunganService:
         Returns: (kunjungan, error)
         """
         antrian = Antrian.query.get(id_antrian)
+
         if not antrian:
             return None, 'Antrian tidak ditemukan.'
+
         if antrian.status != 'Dipanggil':
             return None, 'Pasien belum dipanggil.'
+
+        # VALIDASI BARU
+        existing = Kunjungan.query.filter_by(
+            id_antrian=id_antrian
+        ).first()
+
+        if existing:
+            return None, 'Kunjungan sudah pernah dibuat.'
 
         # Update status antrian
         antrian.status = 'Diperiksa'
@@ -23,12 +33,13 @@ class KunjunganService:
 
         # Buat record kunjungan
         kunjungan = Kunjungan(
-            id_antrian  = id_antrian,
-            id_pasien   = antrian.id_pasien,
-            id_dokter   = antrian.id_dokter,
-            waktu_masuk = datetime.now(),
-            keluhan     = keluhan,
+            id_antrian=id_antrian,
+            id_pasien=antrian.id_pasien,
+            id_dokter=antrian.id_dokter,
+            waktu_masuk=datetime.now(),
+            keluhan=keluhan,
         )
+        
         db.session.add(kunjungan)
         db.session.commit()
 
@@ -44,16 +55,21 @@ class KunjunganService:
         Returns: (data, error)
         """
         kunjungan = Kunjungan.query.get(id_kunjungan)
+
         if not kunjungan:
             return None, 'Kunjungan tidak ditemukan.'
 
-        # Update kunjungan
-        kunjungan.diagnosa       = diagnosa
-        kunjungan.catatan_dokter = catatan_dokter
-        kunjungan.waktu_keluar   = datetime.now()
+        # CEGAH DOUBLE SELESAI
+        if kunjungan.waktu_keluar:
+            return None, 'Kunjungan sudah selesai.'
 
-        # Update status antrian jadi Selesai
-        antrian        = Antrian.query.get(kunjungan.id_antrian)
+        # Update kunjungan
+        kunjungan.diagnosa = diagnosa
+        kunjungan.catatan_dokter = catatan_dokter
+        kunjungan.waktu_keluar = datetime.now()
+
+        # Update status antrian
+        antrian = Antrian.query.get(kunjungan.id_antrian)
         antrian.status = 'Selesai'
 
         id_resep = None
@@ -61,17 +77,19 @@ class KunjunganService:
         # Simpan resep jika ada
         if resep_list:
             resep = Resep(id_kunjungan=id_kunjungan)
+
             db.session.add(resep)
-            db.session.flush()  # supaya id_resep tersedia
+            db.session.flush()
 
             for item in resep_list:
                 detail = DetailResep(
-                    id_resep     = resep.id_resep,
-                    nama_obat    = item['nama_obat'],
-                    dosis        = item.get('dosis'),
-                    aturan_pakai = item.get('aturan_pakai'),
-                    jumlah       = item['jumlah'],
+                    id_resep=resep.id_resep,
+                    nama_obat=item['nama_obat'],
+                    dosis=item.get('dosis'),
+                    aturan_pakai=item.get('aturan_pakai'),
+                    jumlah=item['jumlah'],
                 )
+
                 db.session.add(detail)
 
             id_resep = resep.id_resep
@@ -80,7 +98,7 @@ class KunjunganService:
 
         return {
             'id_kunjungan': id_kunjungan,
-            'id_resep':     id_resep,
+            'id_resep': id_resep,
         }, None
 
     @staticmethod
@@ -95,7 +113,7 @@ class KunjunganService:
         kunjungan = Kunjungan.query.get(id_kunjungan)
         if not kunjungan:
             return None, 'Kunjungan tidak ditemukan.'
-
+        
         pasien = Pasien.query.get(kunjungan.id_pasien)
         dokter = Dokter.query.get(kunjungan.id_dokter)
         resep  = kunjungan.resep
