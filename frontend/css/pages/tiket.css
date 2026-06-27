@@ -1,0 +1,912 @@
+/* ══════════════════════════════════════════
+   MedQ — tiket.css
+   Breakpoints:
+     Mobile  : < 640px
+     Tablet  : 640px – 1023px
+     Desktop : ≥ 1024px
+══════════════════════════════════════════ */
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0
+}
+
+:root {
+    --blue-50: #EFF6FF;
+    --blue-100: #DBEAFE;
+    --blue-200: #BFDBFE;
+    --blue-500: #3B82F6;
+    --blue-600: #2563EB;
+    --blue-700: #1D4ED8;
+    --blue-800: #1E40AF;
+    --green-50: #F0FDF4;
+    --green-400: #4ADE80;
+    --green-500: #22C55E;
+    --green-600: #16A34A;
+    --gray-0: #FFFFFF;
+    --gray-50: #F8FAFC;
+    --gray-100: #F1F5F9;
+    --gray-200: #E2E8F0;
+    --gray-400: #94A3B8;
+    --gray-500: #64748B;
+    --gray-600: #475569;
+    --gray-700: #334155;
+    --gray-800: #1E293B;
+    --gray-900: #0F172A;
+    --r: 14px;
+    --rl: 20px;
+}
+
+html,
+body {
+    min-height: 100%;
+    background: linear-gradient(160deg, var(--blue-800) 0%, var(--blue-600) 55%, var(--blue-500) 100%);
+    font-family: 'Inter', system-ui, sans-serif;
+    color: var(--gray-900);
+    -webkit-font-smoothing: antialiased;
+}
+
+/* ────────────────────────────────────────
+   TOPBAR
+──────────────────────────────────────── */
+.topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px 0;
+    position: relative;
+    z-index: 10;
+}
+
+.topbar-brand {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+}
+
+.topbar-brand-icon {
+    width: 34px;
+    height: 34px;
+    background: rgba(255, 255, 255, .18);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(255, 255, 255, .2);
+}
+
+.topbar-brand-icon svg {
+    width: 17px;
+    height: 17px;
+    stroke: white;
+    fill: none;
+    stroke-width: 2.2;
+}
+
+.topbar-brand-name {
+    font-size: 17px;
+    font-weight: 800;
+    color: white;
+    letter-spacing: -.5px;
+}
+
+.topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255, 255, 255, .12);
+    border: 1px solid rgba(255, 255, 255, .16);
+    border-radius: 20px;
+    padding: 5px 12px;
+}
+
+.live-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--green-400);
+    box-shadow: 0 0 6px rgba(74, 222, 128, .6);
+    animation: blink 2s infinite;
+}
+
+@keyframes blink {
+
+    0%,
+    100% {
+        opacity: 1
+    }
+
+    50% {
+        opacity: .4
+    }
+}
+
+.clock {
+    font-size: 12px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, .85);
+}
+
+/* ────────────────────────────────────────
+   MOBILE (default, < 640px)
+──────────────────────────────────────── */
+.page {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ── Success banner ── */
+.success-banner {
+    padding: 28px 24px 20px;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+}
+
+.check-circle {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, .15);
+    border: 2px solid rgba(255, 255, 255, .25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 14px;
+    animation: popIn .5s cubic-bezier(.175, .885, .32, 1.275);
+}
+
+.check-circle svg {
+    width: 28px;
+    height: 28px;
+    stroke: white;
+    stroke-width: 2.5;
+    fill: none;
+}
+
+.success-title {
+    font-size: 24px;
+    font-weight: 800;
+    color: white;
+    letter-spacing: -.5px;
+    margin-bottom: 4px;
+}
+
+.success-sub {
+    font-size: 13px;
+    color: rgba(255, 255, 255, .7);
+}
+
+@keyframes popIn {
+    from {
+        transform: scale(.7);
+        opacity: 0
+    }
+
+    to {
+        transform: scale(1);
+        opacity: 1
+    }
+}
+
+/* ── Step indicator (mobile) ── */
+.steps-wrap-mobile {
+    padding: 0 20px;
+    margin-bottom: 6px;
+    position: relative;
+    z-index: 2;
+}
+
+.steps-card {
+    background: rgba(255, 255, 255, .14);
+    border: 1px solid rgba(255, 255, 255, .18);
+    border-radius: var(--rl);
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+}
+
+.step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    position: relative;
+}
+
+.step:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    top: 13px;
+    left: 50%;
+    width: 100%;
+    height: 2px;
+    background: rgba(255, 255, 255, .25);
+    z-index: 0;
+}
+
+.step.done:not(:last-child)::after {
+    background: rgba(255, 255, 255, .7);
+}
+
+.step-circle {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, .3);
+    background: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: 700;
+    color: rgba(255, 255, 255, .5);
+    z-index: 1;
+    transition: all .2s;
+}
+
+.step.done .step-circle {
+    border-color: rgba(255, 255, 255, .8);
+    background: rgba(255, 255, 255, .2);
+    color: white;
+}
+
+.step.active .step-circle {
+    border-color: white;
+    background: white;
+    color: var(--blue-600);
+}
+
+.step-label {
+    font-size: 10px;
+    color: rgba(255, 255, 255, .5);
+    margin-top: 4px;
+    font-weight: 500;
+}
+
+.step.done .step-label {
+    color: rgba(255, 255, 255, .8);
+}
+
+.step.active .step-label {
+    color: white;
+    font-weight: 600;
+}
+
+/* ── Ticket card ── */
+.ticket-wrap {
+    flex: 1;
+    padding: 16px 16px 0;
+}
+
+.ticket {
+    background: var(--gray-0);
+    border-radius: var(--rl);
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, .2);
+}
+
+/* Top: nomor antrian */
+.ticket-top {
+    padding: 26px 24px;
+    text-align: center;
+    border-bottom: 2px dashed var(--gray-200);
+    position: relative;
+}
+
+.ticket-top::before,
+.ticket-top::after {
+    content: '';
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--blue-600);
+    bottom: -12px;
+}
+
+.ticket-top::before {
+    left: -12px;
+}
+
+.ticket-top::after {
+    right: -12px;
+}
+
+.ticket-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--gray-400);
+    margin-bottom: 10px;
+}
+
+.nomor {
+    font-size: 68px;
+    font-weight: 800;
+    color: var(--blue-600);
+    line-height: 1;
+    letter-spacing: -2px;
+    margin-bottom: 10px;
+    font-variant-numeric: tabular-nums;
+    animation: popIn .5s cubic-bezier(.175, .885, .32, 1.275);
+}
+
+.poli-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--blue-50);
+    color: var(--blue-700);
+    font-size: 12px;
+    font-weight: 700;
+    padding: 5px 14px;
+    border-radius: 20px;
+    border: 1px solid var(--blue-100);
+}
+
+/* Info rows */
+.ticket-body {
+    padding: 18px 24px;
+}
+
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--gray-100);
+}
+
+.info-row:last-child {
+    border-bottom: none;
+}
+
+.info-key {
+    font-size: 12.5px;
+    color: var(--gray-500);
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+
+.info-key svg {
+    width: 13px;
+    height: 13px;
+    stroke: var(--gray-400);
+    fill: none;
+    stroke-width: 2;
+    flex-shrink: 0;
+}
+
+.info-val {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--gray-900);
+    text-align: right;
+    max-width: 200px;
+}
+
+/* Estimasi highlight */
+.estimasi-card {
+    background: var(--blue-50);
+    border: 1px solid var(--blue-100);
+    border-radius: var(--r);
+    padding: 14px 18px;
+    margin: 0 24px 0;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.est-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: white;
+    border: 1px solid var(--blue-100);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.est-icon svg {
+    width: 20px;
+    height: 20px;
+    stroke: var(--blue-600);
+    stroke-width: 2;
+    fill: none;
+}
+
+.est-label {
+    font-size: 10.5px;
+    color: var(--blue-500);
+    font-weight: 600;
+    margin-bottom: 2px;
+    letter-spacing: .3px;
+}
+
+.est-val {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--blue-700);
+    letter-spacing: -.5px;
+}
+
+.est-sub {
+    font-size: 11px;
+    color: var(--blue-500);
+    margin-top: 2px;
+}
+
+/* Posisi bar */
+.posisi-wrap {
+    padding: 16px 24px 20px;
+}
+
+.posisi-label {
+    font-size: 12px;
+    color: var(--gray-500);
+    margin-bottom: 8px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.posisi-label span {
+    font-weight: 700;
+    color: var(--blue-600);
+}
+
+.posisi-bar {
+    height: 6px;
+    background: var(--gray-100);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.posisi-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--blue-500), var(--blue-400));
+    border-radius: 3px;
+    transition: width 1s ease;
+}
+
+/* ── Actions ── */
+.actions {
+    padding: 16px 16px 36px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.btn-white {
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: var(--rl);
+    background: rgba(255, 255, 255, .2);
+    color: white;
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all .18s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border: 1px solid rgba(255, 255, 255, .25);
+}
+
+.btn-white:hover {
+    background: rgba(255, 255, 255, .3);
+    border-color: rgba(255, 255, 255, .4);
+}
+
+.btn-white svg {
+    width: 16px;
+    height: 16px;
+    stroke: white;
+    stroke-width: 2.5;
+    fill: none;
+}
+
+.btn-outline-white {
+    width: 100%;
+    padding: 13px;
+    border: 1.5px solid rgba(255, 255, 255, .3);
+    border-radius: var(--rl);
+    background: transparent;
+    color: rgba(255, 255, 255, .8);
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all .18s;
+}
+
+.btn-outline-white:hover {
+    border-color: white;
+    color: white;
+}
+
+/* Desktop sidebar (hidden mobile) */
+.sidebar {
+    display: none;
+}
+
+
+/* ────────────────────────────────────────
+   TABLET  (640px – 1023px)
+──────────────────────────────────────── */
+@media(min-width:640px) {
+    body {
+        padding: 28px 24px 48px;
+    }
+
+    .topbar {
+        max-width: 700px;
+        margin: 0 auto;
+        padding: 0 28px;
+        background: transparent;
+        height: 64px;
+        display: flex;
+        align-items: center;
+    }
+
+    .page {
+        max-width: 700px;
+        margin: 0 auto;
+        min-height: auto;
+    }
+
+    .success-banner {
+        padding: 32px 32px 22px;
+    }
+
+    .success-title {
+        font-size: 28px;
+    }
+
+    .check-circle {
+        width: 68px;
+        height: 68px;
+    }
+
+    .check-circle svg {
+        width: 32px;
+        height: 32px;
+    }
+
+    .steps-wrap-mobile {
+        padding: 0 24px;
+        margin-bottom: 10px;
+    }
+
+    .ticket-wrap {
+        padding: 16px 24px 0;
+    }
+
+    .nomor {
+        font-size: 80px;
+    }
+
+    .ticket-top {
+        padding: 32px 28px;
+    }
+
+    .ticket-body {
+        padding: 20px 28px;
+    }
+
+    .estimasi-card {
+        margin: 0 28px;
+    }
+
+    .posisi-wrap {
+        padding: 18px 28px 24px;
+    }
+
+    .actions {
+        padding: 20px 24px 40px;
+        flex-direction: row;
+        gap: 12px;
+    }
+
+    .btn-white,
+    .btn-outline-white {
+        flex: 1;
+    }
+}
+
+
+/* ────────────────────────────────────────
+   DESKTOP  (≥ 1024px)
+──────────────────────────────────────── */
+@media(min-width:1024px) {
+
+    html,
+    body {
+        /* Gradient background penuh */
+        background: linear-gradient(160deg, var(--blue-800) 0%, var(--blue-600) 55%, var(--blue-500) 100%);
+        background-attachment: fixed;
+    }
+
+    body {
+        padding: 0;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+    }
+
+    /* Topbar full-width di atas */
+    .topbar {
+        position: sticky;
+        top: 0;
+        z-index: 20;
+        max-width: none;
+        width: 100%;
+        padding: 0 48px;
+        height: 64px;
+        background: rgba(30, 64, 175, .7);
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid rgba(255, 255, 255, .12);
+    }
+
+    /* Konten bawah topbar */
+    .page {
+        flex: 1;
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 40px 40px 60px;
+        display: grid;
+        grid-template-columns: 1fr 360px;
+        grid-template-rows: auto auto 1fr auto;
+        grid-template-areas:
+            "banner  sidebar"
+            "steps   sidebar"
+            "ticket  sidebar"
+            "actions sidebar";
+        gap: 0 28px;
+        min-height: auto;
+    }
+
+    .success-banner {
+        grid-area: banner;
+        text-align: left;
+        padding: 0 0 22px;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+    }
+
+    .check-circle {
+        margin: 0;
+        width: 64px;
+        height: 64px;
+        flex-shrink: 0;
+    }
+
+    .success-banner-text {}
+
+    .success-title {
+        font-size: 30px;
+    }
+
+    .steps-wrap-mobile {
+        grid-area: steps;
+        padding: 0;
+        margin-bottom: 16px;
+    }
+
+    .steps-card {
+        background: rgba(255, 255, 255, .12);
+        border-color: rgba(255, 255, 255, .16);
+        max-width: 480px;
+    }
+
+    .ticket-wrap {
+        grid-area: ticket;
+        padding: 0;
+    }
+
+    .ticket {
+        box-shadow: 0 24px 64px rgba(0, 0, 0, .25);
+    }
+
+    .nomor {
+        font-size: 88px;
+    }
+
+    .ticket-top {
+        padding: 32px 32px;
+    }
+
+    .ticket-body {
+        padding: 20px 32px;
+    }
+
+    .estimasi-card {
+        margin: 0 32px;
+    }
+
+    .posisi-wrap {
+        padding: 18px 32px 24px;
+    }
+
+    .actions {
+        grid-area: actions;
+        padding: 20px 0 0;
+        flex-direction: row;
+        gap: 12px;
+    }
+
+    .btn-white,
+    .btn-outline-white {
+        flex: 1;
+        max-width: 260px;
+    }
+
+    /* ── SIDEBAR ── */
+    .sidebar {
+        grid-area: sidebar;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        padding-top: 0;
+    }
+
+    .sidebar-section {
+        background: rgba(255, 255, 255, .12);
+        border: 1px solid rgba(255, 255, 255, .15);
+        border-radius: var(--rl);
+        padding: 20px;
+        backdrop-filter: blur(8px);
+    }
+
+    .sidebar-title {
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 1.2px;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, .5);
+        margin-bottom: 14px;
+    }
+
+    /* Apa selanjutnya */
+    .next-list {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .next-item {
+        display: flex;
+        gap: 12px;
+        align-items: flex-start;
+    }
+
+    .next-num {
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, .15);
+        border: 1px solid rgba(255, 255, 255, .2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 11px;
+        font-weight: 700;
+        color: white;
+        flex-shrink: 0;
+    }
+
+    .next-text p {
+        font-size: 12.5px;
+        color: rgba(255, 255, 255, .85);
+        line-height: 1.5;
+        font-weight: 500;
+    }
+
+    .next-text span {
+        font-size: 11px;
+        color: rgba(255, 255, 255, .5);
+    }
+
+    /* Info pasien ringkasan */
+    .pasien-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px 0;
+        border-bottom: 1px solid rgba(255, 255, 255, .08);
+    }
+
+    .pasien-row:last-child {
+        border-bottom: none;
+    }
+
+    .pasien-key {
+        font-size: 11.5px;
+        color: rgba(255, 255, 255, .5);
+    }
+
+    .pasien-val {
+        font-size: 12.5px;
+        font-weight: 600;
+        color: rgba(255, 255, 255, .9);
+        text-align: right;
+        max-width: 160px;
+    }
+
+    /* Warning note */
+    .sidebar-note {
+        background: rgba(255, 255, 255, .1);
+        border: 1px solid rgba(255, 255, 255, .15);
+        border-radius: var(--r);
+        padding: 14px;
+        display: flex;
+        gap: 10px;
+        align-items: flex-start;
+    }
+
+    .sidebar-note svg {
+        width: 14px;
+        height: 14px;
+        stroke: rgba(255, 255, 255, .7);
+        fill: none;
+        stroke-width: 2;
+        flex-shrink: 0;
+        margin-top: 1px;
+    }
+
+    .sidebar-note p {
+        font-size: 11.5px;
+        color: rgba(255, 255, 255, .75);
+        line-height: 1.55;
+    }
+}
+
+/* ── Print ── */
+@media print {
+    body {
+        background: white !important;
+    }
+
+    .topbar,
+    .actions,
+    .sidebar,
+    .steps-wrap-mobile {
+        display: none !important;
+    }
+
+    .page {
+        display: block;
+        max-width: none;
+        padding: 0;
+    }
+
+    .ticket-wrap {
+        padding: 0;
+    }
+
+    .ticket {
+        box-shadow: none;
+        border: 1px solid #e2e8f0;
+    }
+
+    .ticket-top::before,
+    .ticket-top::after {
+        background: #2563eb;
+    }
+
+    .nomor {
+        color: #2563eb;
+    }
+}

@@ -23,21 +23,25 @@ class Antrian(db.Model):
                       )
     waktu_daftar    = db.Column(db.DateTime, default=datetime.now)
     waktu_dipanggil = db.Column(db.DateTime, nullable=True)
+    waktu_diperiksa = db.Column(db.DateTime, nullable=True)
+    waktu_selesai   = db.Column(db.DateTime, nullable=True) 
 
     # Relasi ke kunjungan (one-to-one)
     kunjungan = db.relationship('Kunjungan', backref='antrian', uselist=False, lazy=True)
 
     def to_dict(self):
         return {
-            'id_antrian':      self.id_antrian,
-            'nomor_antrian':   self.nomor_antrian,
-            'id_pasien':       self.id_pasien,
-            'id_poli':         self.id_poli,
-            'id_dokter':       self.id_dokter,
-            'tanggal':         str(self.tanggal),
-            'status':          self.status,
-            'waktu_daftar':    str(self.waktu_daftar),
+            'id_antrian': self.id_antrian,
+            'nomor_antrian': self.nomor_antrian,
+            'id_pasien': self.id_pasien,
+            'id_poli': self.id_poli,
+            'id_dokter': self.id_dokter,
+            'tanggal': str(self.tanggal),
+            'status': self.status,
+            'waktu_daftar': str(self.waktu_daftar),
             'waktu_dipanggil': str(self.waktu_dipanggil) if self.waktu_dipanggil else None,
+            'waktu_diperiksa': str(self.waktu_diperiksa) if self.waktu_diperiksa else None,
+            'waktu_selesai': str(self.waktu_selesai) if self.waktu_selesai else None,
         }
 
     def __repr__(self):

@@ -1,216 +1,298 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Pendaftaran Pasien Baru — MedQ</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display&display=swap" rel="stylesheet">
-<style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  :root {
-    --blue-50: #EFF6FF; --blue-100: #DBEAFE; --blue-500: #3B82F6;
-    --blue-600: #2563EB; --blue-700: #1D4ED8;
-    --gray-50: #F8FAFC; --gray-100: #F1F5F9; --gray-200: #E2E8F0;
-    --gray-400: #94A3B8; --gray-500: #64748B; --gray-700: #334155; --gray-900: #0F172A;
-    --red-500: #EF4444; --green-500: #22C55E;
-    --white: #FFFFFF; --radius: 14px; --radius-sm: 10px;
-  }
-  html, body { min-height: 100%; background: var(--gray-50); font-family: 'DM Sans', sans-serif; color: var(--gray-900); -webkit-font-smoothing: antialiased; }
-  .page { max-width: 430px; margin: 0 auto; background: var(--white); min-height: 100vh; display: flex; flex-direction: column; }
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0"
+    />
+    <title>Pendaftaran Pasien Baru — MedQ</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+    />
+    <link rel="stylesheet" href="../css/pages/pendaftaran.css" />
+  </head>
+  <body>
+    <!-- ── TOPBAR (semua ukuran) ── -->
+    <nav class="topbar">
+      <button class="back-btn" onclick="history.back()" aria-label="Kembali">
+        <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6" /></svg>
+      </button>
+      <div class="topbar-brand">
+        <div class="topbar-brand-icon">
+          <svg viewBox="0 0 24 24">
+            <path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20z" />
+            <path d="M12 8v8M8 12h8" />
+          </svg>
+        </div>
+        <span class="topbar-brand-name">MedQ</span>
+      </div>
+      <span class="topbar-title">Pendaftaran Pasien Baru</span>
+    </nav>
 
-  /* Top bar */
-  .topbar { display: flex; align-items: center; gap: 12px; padding: 16px 20px; border-bottom: 1px solid var(--gray-100); position: sticky; top: 0; background: var(--white); z-index: 10; }
-  .back-btn { width: 36px; height: 36px; border-radius: 50%; background: var(--gray-100); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: background 0.15s; }
-  .back-btn:hover { background: var(--gray-200); }
-  .back-btn svg { width: 18px; height: 18px; stroke: var(--gray-700); stroke-width: 2.5; fill: none; }
-  .topbar-title { font-size: 15px; font-weight: 600; }
+    <!-- ── PAGE (grid pada desktop) ── -->
+    <div class="page">
+      <!-- HERO STRIP -->
+      <div class="hero-strip">
+        <div class="hero-eyebrow">Langkah 1 dari 3</div>
+        <div class="hero-title">
+          Data Diri Pasien<br /><span>Isi sesuai dokumen KTP Anda</span>
+        </div>
+      </div>
 
-  /* Step indicator */
-  .steps { display: flex; align-items: center; padding: 16px 20px; gap: 0; }
-  .step { display: flex; flex-direction: column; align-items: center; flex: 1; position: relative; }
-  .step:not(:last-child)::after { content: ''; position: absolute; top: 14px; left: 50%; width: 100%; height: 2px; background: var(--gray-200); z-index: 0; }
-  .step.done:not(:last-child)::after { background: var(--blue-500); }
-  .step-circle { width: 28px; height: 28px; border-radius: 50%; border: 2px solid var(--gray-200); background: var(--white); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; color: var(--gray-400); z-index: 1; transition: all 0.2s; }
-  .step.active .step-circle { border-color: var(--blue-600); background: var(--blue-600); color: white; }
-  .step.done .step-circle { border-color: var(--blue-500); background: var(--blue-50); color: var(--blue-600); }
-  .step-label { font-size: 10px; color: var(--gray-400); margin-top: 4px; text-align: center; font-weight: 500; }
-  .step.active .step-label { color: var(--blue-600); }
+      <!-- STEP INDICATOR -->
+      <div class="steps-wrap">
+        <div class="steps-card">
+          <div class="step active">
+            <div class="step-circle">1</div>
+            <span class="step-label">Data Diri</span>
+          </div>
+          <div class="step">
+            <div class="step-circle">2</div>
+            <span class="step-label">Pilih Poli</span>
+          </div>
+          <div class="step">
+            <div class="step-circle">3</div>
+            <span class="step-label">Tiket</span>
+          </div>
+        </div>
+      </div>
 
-  /* Form */
-  .form-body { flex: 1; padding: 8px 20px 24px; }
-  .section-head { margin: 20px 0 14px; }
-  .section-head h2 { font-size: 16px; font-weight: 600; color: var(--gray-900); }
-  .section-head p { font-size: 12.5px; color: var(--gray-500); margin-top: 2px; }
+      <!-- FORM BODY -->
+      <div class="form-body">
+        <div class="info-strip">
+          <svg viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="10" />
+            <line x1="12" y1="8" x2="12" y2="12" />
+            <line x1="12" y1="16" x2="12.01" y2="16" />
+          </svg>
+          <p>
+            Pastikan data yang diisi sesuai KTP. Data ini akan digunakan untuk
+            rekam medis Anda.
+          </p>
+        </div>
 
-  .field { margin-bottom: 16px; }
-  .field label { display: block; font-size: 12px; font-weight: 500; color: var(--gray-700); margin-bottom: 6px; letter-spacing: 0.3px; }
-  .field label span { color: var(--red-500); }
-  .field input, .field select, .field textarea {
-    width: 100%; padding: 12px 14px; border: 1.5px solid var(--gray-200); border-radius: var(--radius-sm);
-    font-family: 'DM Sans', sans-serif; font-size: 14px; color: var(--gray-900);
-    background: var(--white); outline: none; transition: border-color 0.15s;
-    -webkit-appearance: none; appearance: none;
-  }
-  .field input:focus, .field select:focus, .field textarea:focus { border-color: var(--blue-500); box-shadow: 0 0 0 3px rgba(59,130,246,0.1); }
-  .field input::placeholder, .field textarea::placeholder { color: var(--gray-400); }
-  .field textarea { resize: none; height: 80px; line-height: 1.5; }
-  .field select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2394A3B8' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; padding-right: 36px; }
-  .field .hint { font-size: 11.5px; color: var(--gray-400); margin-top: 5px; }
-  .field .error { font-size: 11.5px; color: var(--red-500); margin-top: 5px; display: none; }
-  .field.invalid input, .field.invalid select { border-color: var(--red-500); }
-  .field.invalid .error { display: block; }
+        <div class="section-head">
+          <h2>Identitas Diri</h2>
+          <p>Data wajib sesuai kartu identitas resmi</p>
+        </div>
 
-  .row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        <!-- Nama Lengkap -->
+        <div class="field" id="f-nama">
+          <label>Nama Lengkap <span class="req">*</span></label>
+          <input
+            type="text"
+            id="nama"
+            placeholder="Sesuai KTP"
+            autocomplete="name"
+          />
+          <span class="err">
+            <svg viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="10" />
+              <line x1="12" y1="8" x2="12" y2="12" />
+              <line x1="12" y1="16" x2="12.01" y2="16" />
+            </svg>
+            Nama lengkap wajib diisi (min. 3 karakter)
+          </span>
+        </div>
 
-  /* CTA */
-  .cta-wrap { padding: 16px 20px 32px; border-top: 1px solid var(--gray-100); background: var(--white); }
-  .btn-primary {
-    width: 100%; padding: 15px; border: none; border-radius: var(--radius);
-    background: var(--blue-600); color: white; font-family: 'DM Sans', sans-serif;
-    font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.18s;
-    display: flex; align-items: center; justify-content: center; gap: 8px;
-  }
-  .btn-primary:hover { background: var(--blue-700); }
-  .btn-primary:active { transform: scale(0.98); }
-  .btn-primary svg { width: 18px; height: 18px; stroke: white; stroke-width: 2.5; fill: none; }
+        <!-- NIK -->
+        <div class="field" id="f-nik">
+          <label>NIK <span class="req">*</span></label>
+          <input
+            type="text"
+            id="nik"
+            placeholder="16 digit nomor KTP"
+            maxlength="16"
+            inputmode="numeric"
+          />
+          <span class="hint">
+            <svg viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="10" />
+              <line x1="12" y1="8" x2="12" y2="12" />
+              <line x1="12" y1="16" x2="12.01" y2="16" />
+            </svg>
+            Nomor Induk Kependudukan (16 digit)
+          </span>
+          <span class="err">
+            <svg viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="10" />
+              <line x1="12" y1="8" x2="12" y2="12" />
+              <line x1="12" y1="16" x2="12.01" y2="16" />
+            </svg>
+            NIK harus 16 digit angka
+          </span>
+        </div>
 
-  /* Loading state */
-  .btn-primary.loading { pointer-events: none; opacity: 0.75; }
-  .spinner { width: 18px; height: 18px; border: 2px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 0.7s linear infinite; display: none; }
-  .btn-primary.loading .spinner { display: block; }
-  .btn-primary.loading .btn-text { display: none; }
+        <!-- Tanggal Lahir & Jenis Kelamin -->
+        <div class="row-2">
+          <div class="field" id="f-tgl">
+            <label>Tanggal Lahir <span class="req">*</span></label>
+            <input type="date" id="tgl_lahir" />
+            <span class="err">
+              <svg viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="10" />
+                <line x1="12" y1="8" x2="12" y2="12" />
+                <line x1="12" y1="16" x2="12.01" y2="16" />
+              </svg>
+              Wajib diisi
+            </span>
+          </div>
+          <div class="field" id="f-jk">
+            <label>Jenis Kelamin <span class="req">*</span></label>
+            <select id="jenis_kelamin">
+              <option value="">Pilih</option>
+              <option value="L">Laki-laki</option>
+              <option value="P">Perempuan</option>
+            </select>
+            <span class="err">
+              <svg viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="10" />
+                <line x1="12" y1="8" x2="12" y2="12" />
+                <line x1="12" y1="16" x2="12.01" y2="16" />
+              </svg>
+              Wajib dipilih
+            </span>
+          </div>
+        </div>
 
-  @keyframes spin { to { transform: rotate(360deg); } }
+        <div class="form-divider"></div>
 
-  /* Toast */
-  .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px); background: var(--gray-900); color: white; padding: 12px 20px; border-radius: 100px; font-size: 13px; font-weight: 500; white-space: nowrap; transition: transform 0.3s ease; z-index: 100; }
-  .toast.show { transform: translateX(-50%) translateY(0); }
-  .toast.success { background: #166534; }
-  .toast.error { background: #991B1B; }
-</style>
-</head>
-<body>
-<div class="page">
+        <div class="section-head">
+          <h2>Kontak &amp; Alamat</h2>
+          <p>Untuk konfirmasi dan keperluan komunikasi</p>
+        </div>
 
-  <div class="topbar">
-    <button class="back-btn" onclick="history.back()">
-      <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
-    </button>
-    <span class="topbar-title">Pendaftaran Pasien Baru</span>
-  </div>
+        <!-- Nomor HP -->
+        <div class="field" id="f-hp">
+          <label>Nomor HP <span class="req">*</span></label>
+          <input
+            type="tel"
+            id="nomor_hp"
+            placeholder="08xxxxxxxxxx"
+            inputmode="tel"
+          />
+          <span class="err">
+            <svg viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="10" />
+              <line x1="12" y1="8" x2="12" y2="12" />
+              <line x1="12" y1="16" x2="12.01" y2="16" />
+            </svg>
+            Nomor HP wajib diisi (min. 8 digit)
+          </span>
+        </div>
 
-  <div class="steps">
-    <div class="step active">
-      <div class="step-circle">1</div>
-      <span class="step-label">Data Diri</span>
+        <!-- Alamat -->
+        <div class="field">
+          <label>Alamat</label>
+          <textarea
+            id="alamat"
+            placeholder="Jl. nama jalan, RT/RW, Kelurahan, Kecamatan..."
+          ></textarea>
+        </div>
+      </div>
+      <!-- /form-body -->
+
+      <!-- CTA -->
+      <div class="cta-wrap">
+        <button class="btn-primary" id="btnLanjut">
+          <span
+            class="btn-text"
+            style="display: flex; align-items: center; gap: 8px"
+          >
+            Lanjut Pilih Poli
+            <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6" /></svg>
+          </span>
+          <div class="spinner"></div>
+        </button>
+      </div>
+
+      <!-- ── SIDEBAR (desktop only) ── -->
+      <aside class="sidebar">
+        <!-- Progress tracker -->
+        <div class="sidebar-section">
+          <div class="sidebar-title">Progress Pendaftaran</div>
+          <div class="progress-list">
+            <div class="progress-item">
+              <div class="progress-ico active">1</div>
+              <div class="progress-text">
+                <div class="progress-name active">Data Diri</div>
+                <div class="progress-desc">Sedang diisi</div>
+              </div>
+            </div>
+            <div class="progress-item">
+              <div class="progress-ico">2</div>
+              <div class="progress-text">
+                <div class="progress-name muted">Pilih Poli</div>
+                <div class="progress-desc">Pilih poliklinik tujuan</div>
+              </div>
+            </div>
+            <div class="progress-item">
+              <div class="progress-ico">3</div>
+              <div class="progress-text">
+                <div class="progress-name muted">Tiket Antrian</div>
+                <div class="progress-desc">Nomor antrian Anda</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tips -->
+        <div class="sidebar-section">
+          <div class="sidebar-title">Tips Pengisian</div>
+          <div class="tips-list">
+            <div class="tip-item">
+              <div class="tip-dot">
+                <svg viewBox="0 0 24 24">
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+              </div>
+              <p>Isi nama sesuai KTP, termasuk gelar jika ada.</p>
+            </div>
+            <div class="tip-item">
+              <div class="tip-dot">
+                <svg viewBox="0 0 24 24">
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+              </div>
+              <p>NIK terdiri dari 16 digit angka yang tertera di KTP.</p>
+            </div>
+            <div class="tip-item">
+              <div class="tip-dot">
+                <svg viewBox="0 0 24 24">
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+              </div>
+              <p>Pastikan nomor HP aktif untuk menerima konfirmasi antrian.</p>
+            </div>
+            <div class="tip-item">
+              <div class="tip-dot">
+                <svg viewBox="0 0 24 24">
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+              </div>
+              <p>Data Anda aman dan hanya digunakan untuk keperluan medis.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Note -->
+        <div class="sidebar-note">
+          <svg viewBox="0 0 24 24">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+          </svg>
+          <p>
+            Data Anda dilindungi dan tidak akan dibagikan kepada pihak ketiga
+            tanpa izin Anda.
+          </p>
+        </div>
+      </aside>
     </div>
-    <div class="step">
-      <div class="step-circle">2</div>
-      <span class="step-label">Pilih Poli</span>
-    </div>
-    <div class="step">
-      <div class="step-circle">3</div>
-      <span class="step-label">Tiket</span>
-    </div>
-  </div>
+    <!-- /page -->
 
-  <div class="form-body">
-    <div class="section-head">
-      <h2>Data Diri Pasien</h2>
-      <p>Isi dengan data yang sesuai KTP</p>
-    </div>
-
-    <div class="field" id="f-nama">
-      <label>Nama Lengkap <span>*</span></label>
-      <input type="text" id="nama" placeholder="Sesuai KTP" autocomplete="name">
-      <span class="error">Nama lengkap wajib diisi</span>
-    </div>
-
-    <div class="field" id="f-nik">
-      <label>NIK <span>*</span></label>
-      <input type="text" id="nik" placeholder="16 digit nomor KTP" maxlength="16" inputmode="numeric">
-      <span class="hint">Nomor Induk Kependudukan (16 digit)</span>
-      <span class="error">NIK harus 16 digit angka</span>
-    </div>
-
-    <div class="field" id="f-tgl">
-      <label>Tanggal Lahir <span>*</span></label>
-      <input type="date" id="tgl_lahir">
-      <span class="error">Tanggal lahir wajib diisi</span>
-    </div>
-
-    <div class="field" id="f-hp">
-      <label>Nomor HP <span>*</span></label>
-      <input type="tel" id="nomor_hp" placeholder="08xxxxxxxxxx" inputmode="tel">
-      <span class="error">Nomor HP wajib diisi</span>
-    </div>
-
-    <div class="field">
-      <label>Alamat</label>
-      <textarea id="alamat" placeholder="Jl. nama jalan, RT/RW, Kelurahan, Kecamatan..."></textarea>
-    </div>
-  </div>
-
-  <div class="cta-wrap">
-    <button class="btn-primary" id="btnLanjut" onclick="submit()">
-      <span class="btn-text" style="display:flex;align-items:center;gap:8px">
-        Lanjut Pilih Poli
-        <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
-      </span>
-      <div class="spinner"></div>
-    </button>
-  </div>
-
-</div>
-<div class="toast" id="toast"></div>
-
-<script>
-  function showToast(msg, type='') {
-    const t = document.getElementById('toast');
-    t.textContent = msg;
-    t.className = 'toast show ' + type;
-    setTimeout(() => t.className = 'toast', 2800);
-  }
-
-  function validate() {
-    let ok = true;
-    const fields = [
-      { id: 'f-nama', input: 'nama', check: v => v.trim().length > 2 },
-      { id: 'f-nik',  input: 'nik',  check: v => /^\d{16}$/.test(v) },
-      { id: 'f-tgl',  input: 'tgl_lahir', check: v => !!v },
-      { id: 'f-hp',   input: 'nomor_hp', check: v => v.trim().length > 7 },
-    ];
-    fields.forEach(f => {
-      const val = document.getElementById(f.input).value;
-      const field = document.getElementById(f.id);
-      if (!f.check(val)) { field.classList.add('invalid'); ok = false; }
-      else field.classList.remove('invalid');
-    });
-    return ok;
-  }
-
-  function submit() {
-    if (!validate()) { showToast('Lengkapi data yang wajib diisi', 'error'); return; }
-    const btn = document.getElementById('btnLanjut');
-    btn.classList.add('loading');
-
-    // Simpan data ke sessionStorage
-    const data = {
-      nama_lengkap:  document.getElementById('nama').value.trim(),
-      nik:           document.getElementById('nik').value.trim(),
-      tanggal_lahir: document.getElementById('tgl_lahir').value,
-      nomor_hp:      document.getElementById('nomor_hp').value.trim(),
-      alamat:        document.getElementById('alamat').value.trim(),
-    };
-    sessionStorage.setItem('pasien_baru', JSON.stringify(data));
-
-    setTimeout(() => { window.location.href = 'pilih_poli.html?mode=baru'; }, 800);
-  }
-
-  // NIK hanya angka
-  document.getElementById('nik').addEventListener('input', function() {
-    this.value = this.value.replace(/\D/g, '');
-  });
-</script>
-</body>
+    <div class="toast" id="toast"></div>
+    <script type="module" src="../js/pages/pendaftaran.js"></script>
+  </body>
 </html>

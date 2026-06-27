@@ -1,233 +1,543 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Verifikasi Pasien — MedQ</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display&display=swap" rel="stylesheet">
-<style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  :root {
-    --blue-50: #EFF6FF; --blue-100: #DBEAFE; --blue-500: #3B82F6;
-    --blue-600: #2563EB; --blue-700: #1D4ED8;
-    --gray-50: #F8FAFC; --gray-100: #F1F5F9; --gray-200: #E2E8F0;
-    --gray-400: #94A3B8; --gray-500: #64748B; --gray-700: #334155; --gray-900: #0F172A;
-    --green-50: #F0FDF4; --green-600: #16A34A; --green-700: #15803D;
-    --red-500: #EF4444;
-    --white: #FFFFFF; --radius: 14px; --radius-sm: 10px;
-  }
-  html, body { min-height: 100%; background: var(--gray-50); font-family: 'DM Sans', sans-serif; -webkit-font-smoothing: antialiased; }
-  .page { max-width: 430px; margin: 0 auto; background: var(--white); min-height: 100vh; display: flex; flex-direction: column; }
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0"
+    />
+    <title>Verifikasi Pasien — MedQ</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      :root {
+        --blue-50: #eff6ff;
+        --blue-100: #dbeafe;
+        --blue-500: #3b82f6;
+        --blue-600: #2563eb;
+        --blue-700: #1d4ed8;
+        --gray-50: #f8fafc;
+        --gray-100: #f1f5f9;
+        --gray-200: #e2e8f0;
+        --gray-400: #94a3b8;
+        --gray-500: #64748b;
+        --gray-700: #334155;
+        --gray-900: #0f172a;
+        --green-50: #f0fdf4;
+        --green-600: #16a34a;
+        --green-700: #15803d;
+        --red-500: #ef4444;
+        --white: #ffffff;
+        --radius: 14px;
+        --radius-sm: 10px;
+      }
+      html,
+      body {
+        min-height: 100%;
+        background: var(--gray-50);
+        font-family: "DM Sans", sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+      .page {
+        max-width: 430px;
+        margin: 0 auto;
+        background: var(--white);
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
 
-  .topbar { display: flex; align-items: center; gap: 12px; padding: 16px 20px; border-bottom: 1px solid var(--gray-100); }
-  .back-btn { width: 36px; height: 36px; border-radius: 50%; background: var(--gray-100); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.15s; }
-  .back-btn:hover { background: var(--gray-200); }
-  .back-btn svg { width: 18px; height: 18px; stroke: var(--gray-700); stroke-width: 2.5; fill: none; }
-  .topbar-title { font-size: 15px; font-weight: 600; }
+      .topbar {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 16px 20px;
+        border-bottom: 1px solid var(--gray-100);
+      }
+      .back-btn {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: var(--gray-100);
+        border: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background 0.15s;
+      }
+      .back-btn:hover {
+        background: var(--gray-200);
+      }
+      .back-btn svg {
+        width: 18px;
+        height: 18px;
+        stroke: var(--gray-700);
+        stroke-width: 2.5;
+        fill: none;
+      }
+      .topbar-title {
+        font-size: 15px;
+        font-weight: 600;
+      }
 
-  .body { flex: 1; padding: 28px 20px; }
+      .body {
+        flex: 1;
+        padding: 28px 20px;
+      }
 
-  .illus { text-align: center; margin-bottom: 32px; }
-  .illus-circle { width: 90px; height: 90px; border-radius: 50%; background: var(--blue-50); display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; }
-  .illus-circle svg { width: 44px; height: 44px; stroke: var(--blue-600); stroke-width: 1.5; fill: none; }
-  .illus h2 { font-size: 20px; font-weight: 600; margin-bottom: 6px; }
-  .illus p { font-size: 13.5px; color: var(--gray-500); line-height: 1.5; }
+      .illus {
+        text-align: center;
+        margin-bottom: 32px;
+      }
+      .illus-circle {
+        width: 90px;
+        height: 90px;
+        border-radius: 50%;
+        background: var(--blue-50);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 16px;
+      }
+      .illus-circle svg {
+        width: 44px;
+        height: 44px;
+        stroke: var(--blue-600);
+        stroke-width: 1.5;
+        fill: none;
+      }
+      .illus h2 {
+        font-size: 20px;
+        font-weight: 600;
+        margin-bottom: 6px;
+      }
+      .illus p {
+        font-size: 13.5px;
+        color: var(--gray-500);
+        line-height: 1.5;
+      }
 
-  /* Input RM */
-  .rm-field { margin-bottom: 20px; }
-  .rm-label { font-size: 12px; font-weight: 500; color: var(--gray-700); margin-bottom: 8px; display: block; letter-spacing: 0.3px; }
-  .rm-input-wrap { position: relative; }
-  .rm-input {
-    width: 100%; padding: 14px 50px 14px 16px;
-    border: 1.5px solid var(--gray-200); border-radius: var(--radius-sm);
-    font-family: 'DM Sans', sans-serif; font-size: 16px; font-weight: 500;
-    color: var(--gray-900); letter-spacing: 1px; text-transform: uppercase;
-    outline: none; transition: border-color 0.15s; -webkit-appearance: none;
-  }
-  .rm-input:focus { border-color: var(--blue-500); box-shadow: 0 0 0 3px rgba(59,130,246,0.1); }
-  .rm-input.error { border-color: var(--red-500); }
-  .rm-clear { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); width: 24px; height: 24px; border: none; background: var(--gray-200); border-radius: 50%; cursor: pointer; display: none; align-items: center; justify-content: center; }
-  .rm-clear.show { display: flex; }
-  .rm-clear svg { width: 12px; height: 12px; stroke: var(--gray-500); stroke-width: 2.5; fill: none; }
-  .rm-hint { font-size: 12px; color: var(--gray-400); margin-top: 6px; }
-  .rm-error { font-size: 12px; color: var(--red-500); margin-top: 6px; display: none; }
-  .rm-error.show { display: block; }
+      /* Input RM */
+      .rm-field {
+        margin-bottom: 20px;
+      }
+      .rm-label {
+        font-size: 12px;
+        font-weight: 500;
+        color: var(--gray-700);
+        margin-bottom: 8px;
+        display: block;
+        letter-spacing: 0.3px;
+      }
+      .rm-input-wrap {
+        position: relative;
+      }
+      .rm-input {
+        width: 100%;
+        padding: 14px 50px 14px 16px;
+        border: 1.5px solid var(--gray-200);
+        border-radius: var(--radius-sm);
+        font-family: "DM Sans", sans-serif;
+        font-size: 16px;
+        font-weight: 500;
+        color: var(--gray-900);
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        outline: none;
+        transition: border-color 0.15s;
+        -webkit-appearance: none;
+      }
+      .rm-input:focus {
+        border-color: var(--blue-500);
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+      }
+      .rm-input.error {
+        border-color: var(--red-500);
+      }
+      .rm-clear {
+        position: absolute;
+        right: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 24px;
+        height: 24px;
+        border: none;
+        background: var(--gray-200);
+        border-radius: 50%;
+        cursor: pointer;
+        display: none;
+        align-items: center;
+        justify-content: center;
+      }
+      .rm-clear.show {
+        display: flex;
+      }
+      .rm-clear svg {
+        width: 12px;
+        height: 12px;
+        stroke: var(--gray-500);
+        stroke-width: 2.5;
+        fill: none;
+      }
+      .rm-hint {
+        font-size: 12px;
+        color: var(--gray-400);
+        margin-top: 6px;
+      }
+      .rm-error {
+        font-size: 12px;
+        color: var(--red-500);
+        margin-top: 6px;
+        display: none;
+      }
+      .rm-error.show {
+        display: block;
+      }
 
-  /* Contoh format */
-  .format-hint { background: var(--gray-50); border-radius: var(--radius-sm); padding: 12px 14px; margin-bottom: 24px; }
-  .format-hint p { font-size: 12px; color: var(--gray-500); margin-bottom: 4px; }
-  .format-hint code { font-family: monospace; font-size: 13px; color: var(--blue-600); background: var(--blue-50); padding: 2px 8px; border-radius: 4px; }
+      /* Contoh format */
+      .format-hint {
+        background: var(--gray-50);
+        border-radius: var(--radius-sm);
+        padding: 12px 14px;
+        margin-bottom: 24px;
+      }
+      .format-hint p {
+        font-size: 12px;
+        color: var(--gray-500);
+        margin-bottom: 4px;
+      }
+      .format-hint code {
+        font-family: monospace;
+        font-size: 13px;
+        color: var(--blue-600);
+        background: var(--blue-50);
+        padding: 2px 8px;
+        border-radius: 4px;
+      }
 
-  /* Result card */
-  .result-card { background: var(--green-50); border: 1.5px solid #BBF7D0; border-radius: var(--radius); padding: 18px; margin-bottom: 20px; display: none; animation: fadeIn 0.25s ease; }
-  .result-card.show { display: block; }
-  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-  .result-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-  .result-row:last-child { margin-bottom: 0; }
-  .result-key { font-size: 12px; color: var(--green-600); font-weight: 500; }
-  .result-val { font-size: 14px; color: #14532D; font-weight: 600; }
-  .result-badge { background: var(--green-600); color: white; font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 20px; }
+      /* Result card */
+      .result-card {
+        background: var(--green-50);
+        border: 1.5px solid #bbf7d0;
+        border-radius: var(--radius);
+        padding: 18px;
+        margin-bottom: 20px;
+        display: none;
+        animation: fadeIn 0.25s ease;
+      }
+      .result-card.show {
+        display: block;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(8px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .result-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+      }
+      .result-row:last-child {
+        margin-bottom: 0;
+      }
+      .result-key {
+        font-size: 12px;
+        color: var(--green-600);
+        font-weight: 500;
+      }
+      .result-val {
+        font-size: 14px;
+        color: #14532d;
+        font-weight: 600;
+      }
+      .result-badge {
+        background: var(--green-600);
+        color: white;
+        font-size: 11px;
+        font-weight: 600;
+        padding: 3px 10px;
+        border-radius: 20px;
+      }
 
-  .btn-primary {
-    width: 100%; padding: 15px; border: none; border-radius: var(--radius);
-    background: var(--blue-600); color: white; font-family: 'DM Sans', sans-serif;
-    font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.18s;
-    display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 12px;
-  }
-  .btn-primary:hover { background: var(--blue-700); }
-  .btn-primary:active { transform: scale(0.98); }
-  .btn-primary svg { width: 18px; height: 18px; stroke: white; stroke-width: 2.5; fill: none; }
-  .btn-primary:disabled { background: var(--gray-200); color: var(--gray-400); cursor: not-allowed; }
-  .btn-outline {
-    width: 100%; padding: 13px; border: 1.5px solid var(--gray-200); border-radius: var(--radius);
-    background: var(--white); color: var(--gray-700); font-family: 'DM Sans', sans-serif;
-    font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.18s;
-  }
-  .btn-outline:hover { border-color: var(--blue-500); color: var(--blue-600); }
+      .btn-primary {
+        width: 100%;
+        padding: 15px;
+        border: none;
+        border-radius: var(--radius);
+        background: var(--blue-600);
+        color: white;
+        font-family: "DM Sans", sans-serif;
+        font-size: 15px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.18s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        margin-bottom: 12px;
+      }
+      .btn-primary:hover {
+        background: var(--blue-700);
+      }
+      .btn-primary:active {
+        transform: scale(0.98);
+      }
+      .btn-primary svg {
+        width: 18px;
+        height: 18px;
+        stroke: white;
+        stroke-width: 2.5;
+        fill: none;
+      }
+      .btn-primary:disabled {
+        background: var(--gray-200);
+        color: var(--gray-400);
+        cursor: not-allowed;
+      }
+      .btn-outline {
+        width: 100%;
+        padding: 13px;
+        border: 1.5px solid var(--gray-200);
+        border-radius: var(--radius);
+        background: var(--white);
+        color: var(--gray-700);
+        font-family: "DM Sans", sans-serif;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.18s;
+      }
+      .btn-outline:hover {
+        border-color: var(--blue-500);
+        color: var(--blue-600);
+      }
 
-  .spinner { width: 18px; height: 18px; border: 2px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 0.7s linear infinite; }
-  @keyframes spin { to { transform: rotate(360deg); } }
+      .spinner {
+        width: 18px;
+        height: 18px;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        border-top-color: white;
+        border-radius: 50%;
+        animation: spin 0.7s linear infinite;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
 
-  .divider { text-align: center; font-size: 12px; color: var(--gray-400); margin: 16px 0; position: relative; }
-  .divider::before, .divider::after { content: ''; position: absolute; top: 50%; width: 42%; height: 1px; background: var(--gray-200); }
-  .divider::before { left: 0; }
-  .divider::after { right: 0; }
-</style>
-</head>
-<body>
-<div class="page">
-
-  <div class="topbar">
-    <button class="back-btn" onclick="history.back()">
-      <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
-    </button>
-    <span class="topbar-title">Verifikasi Pasien</span>
-  </div>
-
-  <div class="body">
-    <div class="illus">
-      <div class="illus-circle">
-        <svg viewBox="0 0 24 24">
-          <rect x="2" y="5" width="20" height="14" rx="3"/>
-          <path d="M2 10h20"/><path d="M7 15h2M11 15h6"/>
-        </svg>
+      .divider {
+        text-align: center;
+        font-size: 12px;
+        color: var(--gray-400);
+        margin: 16px 0;
+        position: relative;
+      }
+      .divider::before,
+      .divider::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        width: 42%;
+        height: 1px;
+        background: var(--gray-200);
+      }
+      .divider::before {
+        left: 0;
+      }
+      .divider::after {
+        right: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <div class="topbar">
+        <button class="back-btn" onclick="history.back()">
+          <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6" /></svg>
+        </button>
+        <span class="topbar-title">Verifikasi Pasien</span>
       </div>
-      <h2>Kartu Berobat</h2>
-      <p>Masukkan nomor Rekam Medis yang tertera pada kartu berobat kamu</p>
-    </div>
 
-    <div class="rm-field">
-      <label class="rm-label">Nomor Rekam Medis <span style="color:#EF4444">*</span></label>
-      <div class="rm-input-wrap">
-        <input type="text" class="rm-input" id="rmInput" placeholder="RM-2026-00001" maxlength="14" oninput="onInput(this)">
-        <button class="rm-clear" id="clearBtn" onclick="clearInput()">
-          <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      <div class="body">
+        <div class="illus">
+          <div class="illus-circle">
+            <svg viewBox="0 0 24 24">
+              <rect x="2" y="5" width="20" height="14" rx="3" />
+              <path d="M2 10h20" />
+              <path d="M7 15h2M11 15h6" />
+            </svg>
+          </div>
+          <h2>Kartu Berobat</h2>
+          <p>Masukkan nomor Rekam Medis yang tertera pada kartu berobat kamu</p>
+        </div>
+
+        <div class="rm-field">
+          <label class="rm-label"
+            >Nomor Rekam Medis <span style="color: #ef4444">*</span></label
+          >
+          <div class="rm-input-wrap">
+            <input
+              type="text"
+              class="rm-input"
+              id="rmInput"
+              placeholder="RM-2026-00001"
+              maxlength="14"
+              oninput="onInput(this)"
+            />
+            <button class="rm-clear" id="clearBtn" onclick="clearInput()">
+              <svg viewBox="0 0 24 24">
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+              </svg>
+            </button>
+          </div>
+          <p class="rm-hint">Format: RM-YYYY-NNNNN</p>
+          <p class="rm-error" id="rmError">
+            Nomor RM tidak ditemukan. Periksa kembali.
+          </p>
+        </div>
+
+        <div class="format-hint">
+          <p>Contoh format nomor RM:</p>
+          <code>RM-2026-00042</code>
+        </div>
+
+        <div class="result-card" id="resultCard">
+          <div class="result-row">
+            <span class="result-key">Nama Pasien</span>
+            <span class="result-badge">Terverifikasi ✓</span>
+          </div>
+          <div class="result-row">
+            <span class="result-key">Nama</span>
+            <span class="result-val" id="rNama">—</span>
+          </div>
+          <div class="result-row">
+            <span class="result-key">No. RM</span>
+            <span class="result-val" id="rRm">—</span>
+          </div>
+          <div class="result-row">
+            <span class="result-key">No. HP</span>
+            <span class="result-val" id="rHp">—</span>
+          </div>
+        </div>
+
+        <button class="btn-primary" id="btnVerif" onclick="verifikasi()">
+          <span
+            id="btnText"
+            style="display: flex; align-items: center; gap: 8px"
+          >
+            Verifikasi
+            <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6" /></svg>
+          </span>
+        </button>
+
+        <div class="divider">atau</div>
+
+        <button
+          class="btn-outline"
+          onclick="window.location.href = 'pendaftaran.html'"
+        >
+          Daftar sebagai pasien baru
         </button>
       </div>
-      <p class="rm-hint">Format: RM-YYYY-NNNNN</p>
-      <p class="rm-error" id="rmError">Nomor RM tidak ditemukan. Periksa kembali.</p>
     </div>
 
-    <div class="format-hint">
-      <p>Contoh format nomor RM:</p>
-      <code>RM-2026-00042</code>
-    </div>
+    <script>
+      let verified = false;
 
-    <div class="result-card" id="resultCard">
-      <div class="result-row">
-        <span class="result-key">Nama Pasien</span>
-        <span class="result-badge">Terverifikasi ✓</span>
-      </div>
-      <div class="result-row">
-        <span class="result-key">Nama</span>
-        <span class="result-val" id="rNama">—</span>
-      </div>
-      <div class="result-row">
-        <span class="result-key">No. RM</span>
-        <span class="result-val" id="rRm">—</span>
-      </div>
-      <div class="result-row">
-        <span class="result-key">No. HP</span>
-        <span class="result-val" id="rHp">—</span>
-      </div>
-    </div>
-
-    <button class="btn-primary" id="btnVerif" onclick="verifikasi()">
-      <span id="btnText" style="display:flex;align-items:center;gap:8px">
-        Verifikasi
-        <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
-      </span>
-    </button>
-
-    <div class="divider">atau</div>
-
-    <button class="btn-outline" onclick="window.location.href='pendaftaran.html'">
-      Daftar sebagai pasien baru
-    </button>
-  </div>
-
-</div>
-
-<script>
-  let verified = false;
-
-  function onInput(el) {
-    // Auto format RM-YYYY-NNNNN
-    let v = el.value.replace(/[^RM0-9\-]/gi, '').toUpperCase();
-    el.value = v;
-    document.getElementById('clearBtn').classList.toggle('show', v.length > 0);
-    document.getElementById('rmError').classList.remove('show');
-    el.classList.remove('error');
-    document.getElementById('resultCard').classList.remove('show');
-    verified = false;
-    document.getElementById('btnText').innerHTML = `Verifikasi <svg viewBox="0 0 24 24" width="18" height="18" style="stroke:white;stroke-width:2.5;fill:none"><polyline points="9 18 15 12 9 6"/></svg>`;
-  }
-
-  function clearInput() {
-    document.getElementById('rmInput').value = '';
-    document.getElementById('clearBtn').classList.remove('show');
-    document.getElementById('resultCard').classList.remove('show');
-    document.getElementById('rmError').classList.remove('show');
-    document.getElementById('rmInput').classList.remove('error');
-    verified = false;
-  }
-
-  async function verifikasi() {
-    if (verified) { window.location.href = 'pilih_poli.html?mode=lama'; return; }
-    const rm = document.getElementById('rmInput').value.trim();
-    if (!rm) { document.getElementById('rmInput').classList.add('error'); return; }
-
-    const btn = document.getElementById('btnVerif');
-    document.getElementById('btnText').innerHTML = `<div class="spinner"></div>`;
-
-    try {
-      const res = await fetch(`http://localhost:5000/api/pasien/verifikasi`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ nomor_rm: rm })
-      });
-      const json = await res.json();
-
-      if (json.status === 'success') {
-        const p = json.data;
-        document.getElementById('rNama').textContent = p.nama_lengkap;
-        document.getElementById('rRm').textContent   = p.nomor_rm;
-        document.getElementById('rHp').textContent   = p.nomor_hp || '-';
-        document.getElementById('resultCard').classList.add('show');
-        sessionStorage.setItem('pasien_lama', JSON.stringify(p));
-        verified = true;
-        document.getElementById('btnText').innerHTML = `Lanjut Pilih Poli <svg viewBox="0 0 24 24" width="18" height="18" style="stroke:white;stroke-width:2.5;fill:none"><polyline points="9 18 15 12 9 6"/></svg>`;
-      } else {
-        document.getElementById('rmInput').classList.add('error');
-        document.getElementById('rmError').classList.add('show');
-        document.getElementById('btnText').innerHTML = `Verifikasi <svg viewBox="0 0 24 24" width="18" height="18" style="stroke:white;stroke-width:2.5;fill:none"><polyline points="9 18 15 12 9 6"/></svg>`;
+      function onInput(el) {
+        // Auto format RM-YYYY-NNNNN
+        let v = el.value.replace(/[^RM0-9\-]/gi, "").toUpperCase();
+        el.value = v;
+        document
+          .getElementById("clearBtn")
+          .classList.toggle("show", v.length > 0);
+        document.getElementById("rmError").classList.remove("show");
+        el.classList.remove("error");
+        document.getElementById("resultCard").classList.remove("show");
+        verified = false;
+        document.getElementById("btnText").innerHTML =
+          `Verifikasi <svg viewBox="0 0 24 24" width="18" height="18" style="stroke:white;stroke-width:2.5;fill:none"><polyline points="9 18 15 12 9 6"/></svg>`;
       }
-    } catch(e) {
-      document.getElementById('rmError').textContent = 'Gagal terhubung ke server.';
-      document.getElementById('rmError').classList.add('show');
-      document.getElementById('btnText').innerHTML = `Verifikasi <svg viewBox="0 0 24 24" width="18" height="18" style="stroke:white;stroke-width:2.5;fill:none"><polyline points="9 18 15 12 9 6"/></svg>`;
-    }
-  }
-</script>
-</body>
+
+      function clearInput() {
+        document.getElementById("rmInput").value = "";
+        document.getElementById("clearBtn").classList.remove("show");
+        document.getElementById("resultCard").classList.remove("show");
+        document.getElementById("rmError").classList.remove("show");
+        document.getElementById("rmInput").classList.remove("error");
+        verified = false;
+      }
+
+      async function verifikasi() {
+        if (verified) {
+          window.location.href = "pilih_poli.html?mode=lama";
+          return;
+        }
+        const rm = document.getElementById("rmInput").value.trim();
+        if (!rm) {
+          document.getElementById("rmInput").classList.add("error");
+          return;
+        }
+
+        const btn = document.getElementById("btnVerif");
+        document.getElementById("btnText").innerHTML =
+          `<div class="spinner"></div>`;
+
+        try {
+          const res = await fetch(
+            `http://localhost:5000/api/pasien/verifikasi`,
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ nomor_rm: rm }),
+            },
+          );
+          const json = await res.json();
+
+          if (json.status === "success") {
+            const p = json.data;
+            document.getElementById("rNama").textContent = p.nama_lengkap;
+            document.getElementById("rRm").textContent = p.nomor_rm;
+            document.getElementById("rHp").textContent = p.nomor_hp || "-";
+            document.getElementById("resultCard").classList.add("show");
+            sessionStorage.setItem("pasien_lama", JSON.stringify(p));
+            verified = true;
+            document.getElementById("btnText").innerHTML =
+              `Lanjut Pilih Poli <svg viewBox="0 0 24 24" width="18" height="18" style="stroke:white;stroke-width:2.5;fill:none"><polyline points="9 18 15 12 9 6"/></svg>`;
+          } else {
+            document.getElementById("rmInput").classList.add("error");
+            document.getElementById("rmError").classList.add("show");
+            document.getElementById("btnText").innerHTML =
+              `Verifikasi <svg viewBox="0 0 24 24" width="18" height="18" style="stroke:white;stroke-width:2.5;fill:none"><polyline points="9 18 15 12 9 6"/></svg>`;
+          }
+        } catch (e) {
+          document.getElementById("rmError").textContent =
+            "Gagal terhubung ke server.";
+          document.getElementById("rmError").classList.add("show");
+          document.getElementById("btnText").innerHTML =
+            `Verifikasi <svg viewBox="0 0 24 24" width="18" height="18" style="stroke:white;stroke-width:2.5;fill:none"><polyline points="9 18 15 12 9 6"/></svg>`;
+        }
+      }
+    </script>
+  </body>
 </html>

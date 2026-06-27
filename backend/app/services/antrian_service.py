@@ -3,10 +3,34 @@ from app.models.antrian import Antrian
 from app.models.poli import Poli, Dokter
 from app.algorithms.queue_poli import queue_manager
 from datetime import datetime, date
+from app.models.pasien import Pasien
 
 
 class AntrianService:
 
+    @staticmethod
+    def serialize_antrian(antrian):
+        if not antrian:
+            return None
+
+        return {
+            "id_antrian": antrian.id_antrian,
+            "nomor_antrian": antrian.nomor_antrian,
+            "status": antrian.status,
+
+            "id_pasien": antrian.id_pasien,
+            "nama_pasien": antrian.pasien.nama_lengkap,
+            "nomor_rm": antrian.pasien.nomor_rm,
+
+            "id_poli": antrian.id_poli,
+            "nama_poli": antrian.poli.nama_poli,
+
+            "id_dokter": antrian.id_dokter,
+            "nama_dokter": antrian.dokter.nama_dokter,
+
+            "waktu_daftar": str(antrian.waktu_daftar),
+            "waktu_dipanggil": str(antrian.waktu_dipanggil) if antrian.waktu_dipanggil else None
+        }
     @staticmethod
     def ambil_nomor(id_pasien, id_poli, id_dokter):
         """
@@ -16,10 +40,14 @@ class AntrianService:
         # Validasi poli dan dokter
         poli   = Poli.query.get(id_poli)
         dokter = Dokter.query.get(id_dokter)
+        pasien = Pasien.query.get(id_pasien)
+        
         if not poli:
             return None, 'Poli tidak ditemukan.'
         if not dokter:
             return None, 'Dokter tidak ditemukan.'
+        if not pasien:
+            return None, 'Pasien tidak ditemukan.'
         if not dokter.is_available:
             return None, 'Dokter sedang tidak tersedia.'
 
@@ -56,11 +84,20 @@ class AntrianService:
         estimasi = posisi * 10  # estimasi 10 menit per pasien
 
         return {
-            'id_antrian':    antrian.id_antrian,
+            'id_antrian': antrian.id_antrian,
             'nomor_antrian': nomor_antrian,
-            'nama_poli':     poli.nama_poli,
-            'nama_dokter':   dokter.nama_dokter,
-            'posisi':        posisi,
+
+            'id_pasien': pasien.id_pasien,
+            'nomor_rm': pasien.nomor_rm,
+            'nama_pasien': pasien.nama_lengkap,
+
+            'id_poli': poli.id_poli,
+            'nama_poli': poli.nama_poli,
+
+            'id_dokter': dokter.id_dokter,
+            'nama_dokter': dokter.nama_dokter,
+
+            'posisi': posisi,
             'estimasi_menit': estimasi,
         }, None
 
@@ -124,6 +161,48 @@ class AntrianService:
         }, None
 
     @staticmethod
+    def mulai_periksa(id_antrian):
+        """
+        Mengubah status antrian dari Dipanggil menjadi Diperiksa.
+        Returns: (data, error)
+        """
+        antrian = Antrian.query.get(id_antrian)
+
+        if not antrian:
+            return None, "Antrian tidak ditemukan."
+
+        if antrian.status != Antrian.STATUS_DIPANGGIL:
+            return None, "Antrian belum berstatus Dipanggil."
+
+        antrian.status = Antrian.STATUS_DIPERIKSA
+        antrian.waktu_diperiksa = datetime.now()
+
+        db.session.commit()
+
+        return AntrianService.serialize_antrian(antrian), None  
+    
+    @staticmethod
+    def selesaikan(id_antrian):
+        """
+        Mengubah status antrian dari Diperiksa menjadi Selesai.
+        Returns: (data, error)
+        """
+        antrian = Antrian.query.get(id_antrian)
+
+        if not antrian:
+            return None, "Antrian tidak ditemukan."
+
+        if antrian.status != Antrian.STATUS_DIPERIKSA:
+            return None, "Antrian belum berstatus Diperiksa."
+
+        antrian.status = Antrian.STATUS_SELESAI
+        antrian.waktu_selesai = datetime.now()
+
+        db.session.commit()
+
+        return AntrianService.serialize_antrian(antrian), None   
+     
+    @staticmethod
     def batalkan(id_antrian):
         """
         Batalkan antrian pasien.
@@ -146,25 +225,27 @@ class AntrianService:
     @staticmethod
     def get_antrian_aktif(id_poli):
         """
-        Ambil data antrian aktif untuk layar display.
-        Returns: (data, error)
+        Mengambil seluruh antrian hari ini berdasarkan poli.
+        Digunakan oleh halaman admin.
         """
-        # Sedang dilayani
-        dilayani = Antrian.query.filter_by(
-            id_poli = id_poli,
-            tanggal = date.today(),
-            status  = 'Dipanggil',
-        ).order_by(Antrian.waktu_dipanggil.desc()).first()
-
-        # Antrian menunggu
-        menunggu = Antrian.query.filter_by(
-            id_poli = id_poli,
-            tanggal = date.today(),
-            status  = 'Menunggu',
+        # Semua antrian hari ini
+        semua = Antrian.query.filter_by(
+            id_poli=id_poli,
+            tanggal=date.today()
         ).order_by(Antrian.waktu_daftar.asc()).all()
 
+        # Sedang dilayani (Dipanggil atau Diperiksa)
+        dilayani = next(
+            (a for a in semua if a.status in [Antrian.STATUS_DIPANGGIL, Antrian.STATUS_DIPERIKSA]),
+            None
+        )
+
         return {
-            'sedang_dilayani':  dilayani.nomor_antrian if dilayani else None,
-            'antrian_menunggu': [a.nomor_antrian for a in menunggu],
-            'total_menunggu':   len(menunggu),
+            "sedang_dilayani": AntrianService.serialize_antrian(dilayani),
+            "antrian": [AntrianService.serialize_antrian(a) for a in semua],
+            "total_menunggu": sum(1 for a in semua if a.status == Antrian.STATUS_MENUNGGU),
+            "total_dipanggil": sum(1 for a in semua if a.status == Antrian.STATUS_DIPANGGIL),
+            "total_diperiksa": sum(1 for a in semua if a.status == Antrian.STATUS_DIPERIKSA),
+            "total_selesai": sum(1 for a in semua if a.status == Antrian.STATUS_SELESAI),
+            "total_batal": sum(1 for a in semua if a.status == Antrian.STATUS_BATAL),
         }, None

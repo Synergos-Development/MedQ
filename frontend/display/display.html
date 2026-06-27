@@ -1,886 +1,1153 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Display Antrian — MedQ</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&display=swap" rel="stylesheet">
-<style>
-
-/* ═══════════════════════════════════════════════
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Display Antrian — MedQ</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* ═══════════════════════════════════════════════
    TOKENS
 ═══════════════════════════════════════════════ */
-:root {
-  --blue-400: #60A5FA;
-  --blue-500: #3B82F6;
-  --blue-600: #2563EB;
-  --blue-700: #1D4ED8;
+      :root {
+        --blue-400: #60a5fa;
+        --blue-500: #3b82f6;
+        --blue-600: #2563eb;
+        --blue-700: #1d4ed8;
 
-  --green-400: #4ADE80;
-  --green-500: #22C55E;
+        --green-400: #4ade80;
+        --green-500: #22c55e;
 
-  --amber-400: #FBBF24;
+        --amber-400: #fbbf24;
 
-  /* Dark background system */
-  --bg-base:    #060D1A;
-  --bg-panel:   #0C1830;
-  --bg-card:    #0F1E38;
-  --bg-surface: #142244;
-  --bg-hover:   #1A2B50;
+        /* Dark background system */
+        --bg-base: #060d1a;
+        --bg-panel: #0c1830;
+        --bg-card: #0f1e38;
+        --bg-surface: #142244;
+        --bg-hover: #1a2b50;
 
-  /* Borders */
-  --border:     rgba(255,255,255,0.06);
-  --border-med: rgba(255,255,255,0.10);
-  --border-hi:  rgba(255,255,255,0.16);
+        /* Borders */
+        --border: rgba(255, 255, 255, 0.06);
+        --border-med: rgba(255, 255, 255, 0.1);
+        --border-hi: rgba(255, 255, 255, 0.16);
 
-  /* Text */
-  --text-100: rgba(255,255,255,1.00);
-  --text-70:  rgba(255,255,255,0.70);
-  --text-45:  rgba(255,255,255,0.45);
-  --text-25:  rgba(255,255,255,0.25);
+        /* Text */
+        --text-100: rgba(255, 255, 255, 1);
+        --text-70: rgba(255, 255, 255, 0.7);
+        --text-45: rgba(255, 255, 255, 0.45);
+        --text-25: rgba(255, 255, 255, 0.25);
 
-  --font: 'Inter', system-ui, sans-serif;
+        --font: "Inter", system-ui, sans-serif;
 
-  --radius-sm: 10px;
-  --radius:    16px;
-  --radius-lg: 22px;
-  --radius-xl: 28px;
-}
+        --radius-sm: 10px;
+        --radius: 16px;
+        --radius-lg: 22px;
+        --radius-xl: 28px;
+      }
 
-/* ═══════════════════════════════════════════════
+      /* ═══════════════════════════════════════════════
    RESET
 ═══════════════════════════════════════════════ */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html, body {
-  height: 100%; width: 100%;
-  background: var(--bg-base);
-  font-family: var(--font);
-  color: var(--text-100);
-  -webkit-font-smoothing: antialiased;
-  overflow: hidden;
-}
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html,
+      body {
+        height: 100%;
+        width: 100%;
+        background: var(--bg-base);
+        font-family: var(--font);
+        color: var(--text-100);
+        -webkit-font-smoothing: antialiased;
+        overflow: hidden;
+      }
 
-/* ═══════════════════════════════════════════════
+      /* ═══════════════════════════════════════════════
    SCREEN LAYOUT
 ═══════════════════════════════════════════════ */
-.screen {
-  height: 100vh;
-  width: 100vw;
-  display: grid;
-  grid-template-columns: 1fr 320px;
-  grid-template-rows: 70px 1fr 52px;
-  grid-template-areas:
-    "header  header"
-    "main    sidebar"
-    "ticker  ticker";
-}
+      .screen {
+        height: 100vh;
+        width: 100vw;
+        display: grid;
+        grid-template-columns: 1fr 320px;
+        grid-template-rows: 70px 1fr 52px;
+        grid-template-areas:
+          "header  header"
+          "main    sidebar"
+          "ticker  ticker";
+      }
 
-/* ═══════════════════════════════════════════════
+      /* ═══════════════════════════════════════════════
    HEADER
 ═══════════════════════════════════════════════ */
-.header {
-  grid-area: header;
-  background: var(--bg-panel);
-  border-bottom: 1px solid var(--border);
-  padding: 0 36px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  position: relative;
-  z-index: 10;
-}
+      .header {
+        grid-area: header;
+        background: var(--bg-panel);
+        border-bottom: 1px solid var(--border);
+        padding: 0 36px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        position: relative;
+        z-index: 10;
+      }
 
-/* subtle glow line at bottom */
-.header::after {
-  content: '';
-  position: absolute;
-  bottom: -1px; left: 0; right: 0;
-  height: 1px;
-  background: linear-gradient(90deg, transparent 0%, rgba(37,99,235,0.5) 40%, rgba(37,99,235,0.5) 60%, transparent 100%);
-}
+      /* subtle glow line at bottom */
+      .header::after {
+        content: "";
+        position: absolute;
+        bottom: -1px;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: linear-gradient(
+          90deg,
+          transparent 0%,
+          rgba(37, 99, 235, 0.5) 40%,
+          rgba(37, 99, 235, 0.5) 60%,
+          transparent 100%
+        );
+      }
 
-.header-brand {
-  display: flex;
-  align-items: center;
-  gap: 11px;
-}
-.brand-icon {
-  width: 38px; height: 38px;
-  background: var(--blue-600);
-  border-radius: 10px;
-  display: flex; align-items: center; justify-content: center;
-  box-shadow: 0 0 20px rgba(37,99,235,0.4);
-}
-.brand-icon svg { width: 18px; height: 18px; stroke: white; stroke-width: 2.2; fill: none; }
-.brand-name {
-  font-size: 18px;
-  font-weight: 800;
-  letter-spacing: -0.5px;
-  color: var(--text-100);
-}
-.brand-sep {
-  width: 1px; height: 24px;
-  background: var(--border-med);
-  margin: 0 4px;
-}
-.header-subtitle {
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--text-45);
-}
+      .header-brand {
+        display: flex;
+        align-items: center;
+        gap: 11px;
+      }
+      .brand-icon {
+        width: 38px;
+        height: 38px;
+        background: var(--blue-600);
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 0 20px rgba(37, 99, 235, 0.4);
+      }
+      .brand-icon svg {
+        width: 18px;
+        height: 18px;
+        stroke: white;
+        stroke-width: 2.2;
+        fill: none;
+      }
+      .brand-name {
+        font-size: 18px;
+        font-weight: 800;
+        letter-spacing: -0.5px;
+        color: var(--text-100);
+      }
+      .brand-sep {
+        width: 1px;
+        height: 24px;
+        background: var(--border-med);
+        margin: 0 4px;
+      }
+      .header-subtitle {
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--text-45);
+      }
 
-.header-center {
-  position: absolute;
-  left: 50%; transform: translateX(-50%);
-  text-align: center;
-}
-.live-indicator {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  background: rgba(34,197,94,0.1);
-  border: 1px solid rgba(34,197,94,0.25);
-  border-radius: 20px;
-  padding: 5px 14px;
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--green-400);
-  letter-spacing: 0.3px;
-}
-.live-dot {
-  width: 7px; height: 7px;
-  background: var(--green-400);
-  border-radius: 50%;
-  box-shadow: 0 0 6px rgba(74,222,128,0.6);
-  animation: livePulse 2s ease-in-out infinite;
-}
-@keyframes livePulse {
-  0%,100% { opacity:1; transform: scale(1); }
-  50%     { opacity:0.5; transform: scale(0.8); }
-}
-.header-info-sub {
-  font-size: 11px;
-  color: var(--text-25);
-  margin-top: 3px;
-}
+      .header-center {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        text-align: center;
+      }
+      .live-indicator {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        background: rgba(34, 197, 94, 0.1);
+        border: 1px solid rgba(34, 197, 94, 0.25);
+        border-radius: 20px;
+        padding: 5px 14px;
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--green-400);
+        letter-spacing: 0.3px;
+      }
+      .live-dot {
+        width: 7px;
+        height: 7px;
+        background: var(--green-400);
+        border-radius: 50%;
+        box-shadow: 0 0 6px rgba(74, 222, 128, 0.6);
+        animation: livePulse 2s ease-in-out infinite;
+      }
+      @keyframes livePulse {
+        0%,
+        100% {
+          opacity: 1;
+          transform: scale(1);
+        }
+        50% {
+          opacity: 0.5;
+          transform: scale(0.8);
+        }
+      }
+      .header-info-sub {
+        font-size: 11px;
+        color: var(--text-25);
+        margin-top: 3px;
+      }
 
-.header-clock {
-  text-align: right;
-}
-.clock-time {
-  font-size: 26px;
-  font-weight: 700;
-  letter-spacing: -0.5px;
-  font-variant-numeric: tabular-nums;
-  color: var(--text-100);
-  line-height: 1;
-}
-.clock-date {
-  font-size: 11.5px;
-  color: var(--text-45);
-  margin-top: 3px;
-}
+      .header-clock {
+        text-align: right;
+      }
+      .clock-time {
+        font-size: 26px;
+        font-weight: 700;
+        letter-spacing: -0.5px;
+        font-variant-numeric: tabular-nums;
+        color: var(--text-100);
+        line-height: 1;
+      }
+      .clock-date {
+        font-size: 11.5px;
+        color: var(--text-45);
+        margin-top: 3px;
+      }
 
-/* ═══════════════════════════════════════════════
+      /* ═══════════════════════════════════════════════
    MAIN AREA
 ═══════════════════════════════════════════════ */
-.main {
-  grid-area: main;
-  padding: 24px 28px 24px 36px;
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-  overflow: hidden;
-}
+      .main {
+        grid-area: main;
+        padding: 24px 28px 24px 36px;
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+        overflow: hidden;
+      }
 
-/* Poli filter tabs */
-.poli-tabs {
-  display: flex;
-  gap: 7px;
-  flex-wrap: wrap;
-  flex-shrink: 0;
-}
-.poli-tab {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  padding: 7px 16px;
-  border-radius: 30px;
-  font-size: 12.5px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.18s;
-  border: 1px solid var(--border-med);
-  color: var(--text-45);
-  background: transparent;
-  white-space: nowrap;
-}
-.poli-tab:hover  { border-color: var(--border-hi); color: var(--text-70); background: var(--bg-hover); }
-.poli-tab.active {
-  background: var(--blue-600);
-  border-color: var(--blue-600);
-  color: white;
-  box-shadow: 0 2px 12px rgba(37,99,235,0.35);
-}
+      /* Poli filter tabs */
+      .poli-tabs {
+        display: flex;
+        gap: 7px;
+        flex-wrap: wrap;
+        flex-shrink: 0;
+      }
+      .poli-tab {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        padding: 7px 16px;
+        border-radius: 30px;
+        font-size: 12.5px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.18s;
+        border: 1px solid var(--border-med);
+        color: var(--text-45);
+        background: transparent;
+        white-space: nowrap;
+      }
+      .poli-tab:hover {
+        border-color: var(--border-hi);
+        color: var(--text-70);
+        background: var(--bg-hover);
+      }
+      .poli-tab.active {
+        background: var(--blue-600);
+        border-color: var(--blue-600);
+        color: white;
+        box-shadow: 0 2px 12px rgba(37, 99, 235, 0.35);
+      }
 
-/* ── Now Serving ── */
-.now-serving-wrap {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-  min-height: 0;
-}
+      /* ── Now Serving ── */
+      .now-serving-wrap {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+        min-height: 0;
+      }
 
-.ns-card {
-  flex: 1;
-  background: var(--bg-card);
-  border: 1px solid var(--border-med);
-  border-radius: var(--radius-xl);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  position: relative;
-  overflow: hidden;
-  padding: 32px;
-  min-height: 0;
-}
+      .ns-card {
+        flex: 1;
+        background: var(--bg-card);
+        border: 1px solid var(--border-med);
+        border-radius: var(--radius-xl);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+        padding: 32px;
+        min-height: 0;
+      }
 
-/* ambient glow rings */
-.ns-glow {
-  position: absolute;
-  border-radius: 50%;
-  pointer-events: none;
-}
-.ns-glow-1 {
-  width: 500px; height: 500px;
-  background: radial-gradient(circle, rgba(37,99,235,0.10) 0%, transparent 65%);
-  top: 50%; left: 50%;
-  transform: translate(-50%, -50%);
-}
-.ns-glow-2 {
-  width: 280px; height: 280px;
-  background: radial-gradient(circle, rgba(96,165,250,0.06) 0%, transparent 70%);
-  top: 50%; left: 50%;
-  transform: translate(-50%, -50%);
-}
-
-/* corner accents */
-.ns-corner {
-  position: absolute;
-  width: 60px; height: 60px;
-  pointer-events: none;
-}
-.ns-corner-tl { top: 20px; left: 20px; border-top: 1.5px solid rgba(37,99,235,0.3); border-left: 1.5px solid rgba(37,99,235,0.3); border-radius: 4px 0 0 0; }
-.ns-corner-tr { top: 20px; right: 20px; border-top: 1.5px solid rgba(37,99,235,0.3); border-right: 1.5px solid rgba(37,99,235,0.3); border-radius: 0 4px 0 0; }
-.ns-corner-bl { bottom: 20px; left: 20px; border-bottom: 1.5px solid rgba(37,99,235,0.3); border-left: 1.5px solid rgba(37,99,235,0.3); border-radius: 0 0 0 4px; }
-.ns-corner-br { bottom: 20px; right: 20px; border-bottom: 1.5px solid rgba(37,99,235,0.3); border-right: 1.5px solid rgba(37,99,235,0.3); border-radius: 0 0 4px 0; }
-
-.ns-eyebrow {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: var(--blue-400);
-  margin-bottom: 20px;
-  position: relative;
-  z-index: 1;
-}
-.ns-eyebrow-dot {
-  width: 8px; height: 8px;
-  border-radius: 50%;
-  background: var(--blue-500);
-  box-shadow: 0 0 8px rgba(59,130,246,0.7);
-  animation: eyebrowBlink 1.5s ease-in-out infinite;
-}
-@keyframes eyebrowBlink {
-  0%,100% { opacity:1; box-shadow: 0 0 8px rgba(59,130,246,0.7); }
-  50%     { opacity:0.4; box-shadow: none; }
-}
-
-.ns-nomor {
-  font-size: clamp(72px, 10vw, 128px);
-  font-weight: 900;
-  color: var(--text-100);
-  line-height: 0.95;
-  letter-spacing: -4px;
-  position: relative;
-  z-index: 1;
-  font-variant-numeric: tabular-nums;
-  transition: color 0.3s;
-}
-/* subtle text glow */
-.ns-nomor.has-value {
-  text-shadow: 0 0 60px rgba(96,165,250,0.15);
-}
-.ns-nomor.flash {
-  animation: nFlash 0.55s cubic-bezier(0.34,1.56,0.64,1);
-}
-@keyframes nFlash {
-  0%  { transform: scale(1);    color: var(--text-100); }
-  35% { transform: scale(1.06); color: var(--blue-400); text-shadow: 0 0 40px rgba(96,165,250,0.6); }
-  100%{ transform: scale(1);    color: var(--text-100); }
-}
-
-.ns-poli-badge {
-  margin-top: 20px;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  background: rgba(37,99,235,0.15);
-  border: 1px solid rgba(37,99,235,0.3);
-  color: var(--blue-400);
-  font-size: 14px;
-  font-weight: 600;
-  padding: 9px 22px;
-  border-radius: 30px;
-  position: relative;
-  z-index: 1;
-  letter-spacing: 0.2px;
-}
-
-.ns-idle-text {
-  font-size: 16px;
-  color: var(--text-25);
-  margin-top: 16px;
-  position: relative;
-  z-index: 1;
-  letter-spacing: -0.2px;
-}
-
-/* ═══════════════════════════════════════════════
-   SIDEBAR
-═══════════════════════════════════════════════ */
-.sidebar {
-  grid-area: sidebar;
-  background: var(--bg-panel);
-  border-left: 1px solid var(--border);
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-
-.sidebar-head {
-  padding: 22px 22px 18px;
-  border-bottom: 1px solid var(--border);
-  flex-shrink: 0;
-}
-
-.sidebar-eyebrow {
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  color: var(--text-25);
-  margin-bottom: 8px;
-}
-
-.sidebar-count-row {
-  display: flex;
-  align-items: baseline;
-  gap: 8px;
-}
-.sidebar-count {
-  font-size: 36px;
-  font-weight: 800;
-  letter-spacing: -1.5px;
-  color: var(--text-100);
-  font-variant-numeric: tabular-nums;
-  line-height: 1;
-}
-.sidebar-count-label {
-  font-size: 13px;
-  color: var(--text-45);
-}
-
-.queue-list {
-  flex: 1;
-  overflow-y: auto;
-  padding: 10px;
-  scrollbar-width: thin;
-  scrollbar-color: rgba(255,255,255,0.08) transparent;
-}
-.queue-list::-webkit-scrollbar { width: 3px; }
-.queue-list::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 2px; }
-
-/* Queue item */
-.q-item {
-  display: flex;
-  align-items: center;
-  gap: 11px;
-  padding: 11px 13px;
-  border-radius: var(--radius-sm);
-  margin-bottom: 5px;
-  transition: all 0.2s;
-  border: 1px solid transparent;
-  cursor: default;
-}
-
-.q-item.next-up {
-  background: rgba(37,99,235,0.12);
-  border-color: rgba(37,99,235,0.25);
-}
-.q-item.next-up .q-rank-badge {
-  background: var(--blue-600);
-  color: white;
-  box-shadow: 0 2px 8px rgba(37,99,235,0.4);
-}
-.q-item.next-up .q-nomor-text { color: var(--text-100); }
-
-.q-item.regular {
-  background: rgba(255,255,255,0.03);
-}
-.q-item.regular:hover { background: var(--bg-hover); }
-.q-item.regular .q-rank-badge {
-  background: rgba(255,255,255,0.07);
-  color: var(--text-45);
-}
-.q-item.regular .q-nomor-text { color: var(--text-70); }
-
-.q-rank-badge {
-  width: 26px; height: 26px;
-  border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 11px;
-  font-weight: 700;
-  flex-shrink: 0;
-  transition: all 0.2s;
-}
-
-.q-item-info { flex: 1; min-width: 0; }
-.q-nomor-text {
-  font-size: 14.5px;
-  font-weight: 700;
-  letter-spacing: 0.3px;
-  font-variant-numeric: tabular-nums;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.q-poli-text {
-  font-size: 11px;
-  color: var(--text-25);
-  margin-top: 1px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.q-item.next-up .q-poli-text { color: rgba(147,197,253,0.5); }
-
-.q-wait-badge {
-  font-size: 10.5px;
-  font-weight: 500;
-  color: var(--text-25);
-  white-space: nowrap;
-  flex-shrink: 0;
-}
-.q-item.next-up .q-wait-badge { color: var(--blue-400); }
-
-.q-empty {
-  text-align: center;
-  padding: 44px 20px;
-}
-.q-empty svg {
-  width: 38px; height: 38px;
-  stroke: rgba(255,255,255,0.1);
-  fill: none; stroke-width: 1.5;
-  margin: 0 auto 12px;
-  display: block;
-}
-.q-empty-text { font-size: 13px; color: var(--text-25); line-height: 1.6; }
-
-/* ═══════════════════════════════════════════════
-   TICKER / FOOTER
-═══════════════════════════════════════════════ */
-.ticker-bar {
-  grid-area: ticker;
-  background: var(--bg-panel);
-  border-top: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  gap: 0;
-  overflow: hidden;
-  height: 52px;
-}
-
-.ticker-label {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  padding: 0 20px 0 28px;
-  flex-shrink: 0;
-  border-right: 1px solid var(--border);
-  height: 100%;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  color: var(--blue-400);
-  white-space: nowrap;
-}
-.ticker-label svg { width: 14px; height: 14px; stroke: currentColor; stroke-width: 2; fill: none; flex-shrink: 0; }
-
-.ticker-track {
-  flex: 1;
-  overflow: hidden;
-  white-space: nowrap;
-  position: relative;
-}
-/* fade edges */
-.ticker-track::before,
-.ticker-track::after {
-  content: '';
-  position: absolute;
-  top: 0; bottom: 0;
-  width: 40px;
-  z-index: 2;
-  pointer-events: none;
-}
-.ticker-track::before { left: 0;  background: linear-gradient(to right, var(--bg-panel), transparent); }
-.ticker-track::after  { right: 0; background: linear-gradient(to left,  var(--bg-panel), transparent); }
-
-.ticker-inner {
-  display: inline-block;
-  animation: ticker 28s linear infinite;
-  padding-left: 20px;
-}
-.ticker-inner span {
-  font-size: 12.5px;
-  color: var(--text-45);
-  margin-right: 64px;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-}
-.ticker-inner span::before {
-  content: '•';
-  color: rgba(37,99,235,0.5);
-  font-size: 16px;
-}
-@keyframes ticker {
-  from { transform: translateX(0); }
-  to   { transform: translateX(-50%); }
-}
-
-.ticker-status {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  padding: 0 28px 0 20px;
-  flex-shrink: 0;
-  border-left: 1px solid var(--border);
-  height: 100%;
-  font-size: 11.5px;
-  color: var(--text-25);
-  white-space: nowrap;
-  font-variant-numeric: tabular-nums;
-}
-.status-dot-green {
-  width: 7px; height: 7px;
-  border-radius: 50%;
-  background: var(--green-500);
-  box-shadow: 0 0 6px rgba(34,197,94,0.6);
-  flex-shrink: 0;
-  animation: livePulse 2s ease-in-out infinite;
-}
-
-/* ═══════════════════════════════════════════════
-   RESPONSIVE
-═══════════════════════════════════════════════ */
-@media (max-width: 900px) {
-  .screen {
-    grid-template-columns: 1fr;
-    grid-template-rows: 60px 1fr auto auto;
-    grid-template-areas:
-      "header"
-      "main"
-      "sidebar"
-      "ticker";
-    height: auto;
-    overflow-y: auto;
-  }
-  html, body { overflow: auto; }
-  .sidebar {
-    border-left: none;
-    border-top: 1px solid var(--border);
-    max-height: 300px;
-  }
-  .header-center { display: none; }
-  .ns-nomor { font-size: clamp(56px, 18vw, 96px); letter-spacing: -2px; }
-  .ns-corner { display: none; }
-  .header { padding: 0 20px; }
-  .main { padding: 18px; }
-  .ticker-label { padding: 0 14px; }
-  .ticker-status { padding: 0 16px; }
-}
-
-@media (max-width: 480px) {
-  .clock-time { font-size: 20px; }
-  .poli-tab { padding: 6px 12px; font-size: 12px; }
-  .brand-sep, .header-subtitle { display: none; }
-  .sidebar { max-height: 240px; }
-}
-</style>
-</head>
-<body>
-<div class="screen">
-
-  <!-- ── HEADER ─────────────────────────────── -->
-  <header class="header">
-    <div class="header-brand">
-      <div class="brand-icon">
-        <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20z"/><path d="M12 8v8M8 12h8"/></svg>
-      </div>
-      <span class="brand-name">MedQ</span>
-      <div class="brand-sep"></div>
-      <span class="header-subtitle">Display Antrian</span>
-    </div>
-
-    <div class="header-center">
-      <div class="live-indicator">
-        <span class="live-dot"></span>
-        LIVE
-      </div>
-      <div class="header-info-sub" id="hSub">Memuat data...</div>
-    </div>
-
-    <div class="header-clock">
-      <div class="clock-time" id="clock">—</div>
-      <div class="clock-date" id="date">—</div>
-    </div>
-  </header>
-
-  <!-- ── MAIN ───────────────────────────────── -->
-  <main class="main">
-
-    <!-- Poli filter -->
-    <div class="poli-tabs" id="poliTabs">
-      <div class="poli-tab active" data-id="all" onclick="selectPoli('all')">Semua Poli</div>
-    </div>
-
-    <!-- Now Serving -->
-    <div class="now-serving-wrap">
-      <div class="ns-card">
-        <!-- Ambient -->
-        <div class="ns-glow ns-glow-1"></div>
-        <div class="ns-glow ns-glow-2"></div>
-        <!-- Corner accents -->
-        <div class="ns-corner ns-corner-tl"></div>
-        <div class="ns-corner ns-corner-tr"></div>
-        <div class="ns-corner ns-corner-bl"></div>
-        <div class="ns-corner ns-corner-br"></div>
-
-        <div class="ns-eyebrow">
-          <span class="ns-eyebrow-dot"></span>
-          Sedang Dilayani
-        </div>
-
-        <div class="ns-nomor" id="nsNomor">—</div>
-        <div class="ns-poli-badge" id="nsPoli">🏥 Menunggu Data</div>
-        <div class="ns-idle-text" id="nsIdle">Pilih poli atau tunggu panggilan</div>
-      </div>
-    </div>
-
-  </main>
-
-  <!-- ── SIDEBAR ─────────────────────────────── -->
-  <aside class="sidebar">
-    <div class="sidebar-head">
-      <div class="sidebar-eyebrow">Antrian Menunggu</div>
-      <div class="sidebar-count-row">
-        <div class="sidebar-count" id="qCount">0</div>
-        <div class="sidebar-count-label">pasien</div>
-      </div>
-    </div>
-    <div class="queue-list" id="queueList">
-      <div class="q-empty">
-        <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-        <div class="q-empty-text">Belum ada antrian<br>yang menunggu</div>
-      </div>
-    </div>
-  </aside>
-
-  <!-- ── TICKER BAR ───────────────────────────── -->
-  <div class="ticker-bar">
-    <div class="ticker-label">
-      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-      Info
-    </div>
-    <div class="ticker-track">
-      <div class="ticker-inner">
-        <span>Silakan menunggu di area ruang tunggu poli masing-masing</span>
-        <span>Jaga kebersihan dan ketertiban ruang tunggu</span>
-        <span>Segera ke loket jika nomor Anda dipanggil</span>
-        <span>Bawa kartu berobat dan identitas diri yang valid</span>
-        <span>Pemeriksaan dilakukan sesuai urutan nomor antrian</span>
-        <span>Silakan menunggu di area ruang tunggu poli masing-masing</span>
-        <span>Jaga kebersihan dan ketertiban ruang tunggu</span>
-        <span>Segera ke loket jika nomor Anda dipanggil</span>
-        <span>Bawa kartu berobat dan identitas diri yang valid</span>
-        <span>Pemeriksaan dilakukan sesuai urutan nomor antrian</span>
-      </div>
-    </div>
-    <div class="ticker-status">
-      <span class="status-dot-green"></span>
-      <span id="lastUpdate">Live</span>
-    </div>
-  </div>
-
-</div>
-
-<script>
-  const REFRESH_MS = 5000;
-  const emojis = { UMUM:'🩺', GIGI:'🦷', JANTUNG:'❤️', ANAK:'👶', MATA:'👁️', ORTHO:'🦴', SARAF:'🧠', KULIT:'🌿' };
-
-  let poliList   = [];
-  let activePoli = 'all';
-  let prevNomor  = null;
-
-  // ── Clock ───────────────────────────────────
-  function updateClock() {
-    const now = new Date();
-    document.getElementById('clock').textContent =
-      now.toLocaleTimeString('id-ID', { hour:'2-digit', minute:'2-digit', second:'2-digit' });
-    document.getElementById('date').textContent =
-      now.toLocaleDateString('id-ID', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
-  }
-  updateClock();
-  setInterval(updateClock, 1000);
-
-  // ── Load daftar poli ─────────────────────────
-  async function loadPoli() {
-    try {
-      const res  = await fetch('http://localhost:5000/api/poli/list');
-      const json = await res.json();
-      poliList   = json.data;
-    } catch {
-      poliList = [
-        { id_poli:1, kode_poli:'UMUM',    nama_poli:'Poli Umum' },
-        { id_poli:2, kode_poli:'GIGI',    nama_poli:'Poli Gigi' },
-        { id_poli:3, kode_poli:'JANTUNG', nama_poli:'Poli Jantung' },
-        { id_poli:4, kode_poli:'ANAK',    nama_poli:'Poli Anak' },
-        { id_poli:5, kode_poli:'MATA',    nama_poli:'Poli Mata' },
-      ];
-    }
-    renderPoliTabs();
-    loadAntrian();
-  }
-
-  function renderPoliTabs() {
-    const tabs = document.getElementById('poliTabs');
-    tabs.innerHTML = `<div class="poli-tab active" data-id="all" onclick="selectPoli('all')">Semua Poli</div>`;
-    poliList.forEach(p => {
-      tabs.innerHTML += `<div class="poli-tab" data-id="${p.id_poli}" onclick="selectPoli(${p.id_poli})">
-        ${emojis[p.kode_poli] || '🏥'} ${p.nama_poli}
-      </div>`;
-    });
-  }
-
-  function selectPoli(id) {
-    activePoli = id;
-    document.querySelectorAll('.poli-tab').forEach(t => {
-      t.classList.toggle('active', t.dataset.id == String(id));
-    });
-    loadAntrian();
-  }
-
-  // ── Load antrian aktif ───────────────────────
-  async function loadAntrian() {
-    try {
-      let dilayani = null;
-      let menunggu = [];
-
-      if (activePoli === 'all') {
-        const results = await Promise.all(
-          poliList.map(p => fetch(`http://localhost:5000/api/antrian/aktif/${p.id_poli}`).then(r => r.json()))
+      /* ambient glow rings */
+      .ns-glow {
+        position: absolute;
+        border-radius: 50%;
+        pointer-events: none;
+      }
+      .ns-glow-1 {
+        width: 500px;
+        height: 500px;
+        background: radial-gradient(
+          circle,
+          rgba(37, 99, 235, 0.1) 0%,
+          transparent 65%
         );
-        results.forEach((r, i) => {
-          if (r.status === 'success') {
-            if (!dilayani && r.data.sedang_dilayani) {
-              dilayani = { nomor: r.data.sedang_dilayani, poli: poliList[i] };
-            }
-            r.data.antrian_menunggu.forEach((n, idx) => {
-              menunggu.push({ nomor: n, poli: poliList[i], posisi: idx + 1 });
-            });
-          }
-        });
-      } else {
-        const p    = poliList.find(p => p.id_poli === activePoli);
-        const res  = await fetch(`http://localhost:5000/api/antrian/aktif/${activePoli}`);
-        const json = await res.json();
-        if (json.status === 'success') {
-          if (json.data.sedang_dilayani) dilayani = { nomor: json.data.sedang_dilayani, poli: p };
-          menunggu = json.data.antrian_menunggu.map((n, i) => ({ nomor: n, poli: p, posisi: i + 1 }));
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+      .ns-glow-2 {
+        width: 280px;
+        height: 280px;
+        background: radial-gradient(
+          circle,
+          rgba(96, 165, 250, 0.06) 0%,
+          transparent 70%
+        );
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+
+      /* corner accents */
+      .ns-corner {
+        position: absolute;
+        width: 60px;
+        height: 60px;
+        pointer-events: none;
+      }
+      .ns-corner-tl {
+        top: 20px;
+        left: 20px;
+        border-top: 1.5px solid rgba(37, 99, 235, 0.3);
+        border-left: 1.5px solid rgba(37, 99, 235, 0.3);
+        border-radius: 4px 0 0 0;
+      }
+      .ns-corner-tr {
+        top: 20px;
+        right: 20px;
+        border-top: 1.5px solid rgba(37, 99, 235, 0.3);
+        border-right: 1.5px solid rgba(37, 99, 235, 0.3);
+        border-radius: 0 4px 0 0;
+      }
+      .ns-corner-bl {
+        bottom: 20px;
+        left: 20px;
+        border-bottom: 1.5px solid rgba(37, 99, 235, 0.3);
+        border-left: 1.5px solid rgba(37, 99, 235, 0.3);
+        border-radius: 0 0 0 4px;
+      }
+      .ns-corner-br {
+        bottom: 20px;
+        right: 20px;
+        border-bottom: 1.5px solid rgba(37, 99, 235, 0.3);
+        border-right: 1.5px solid rgba(37, 99, 235, 0.3);
+        border-radius: 0 0 4px 0;
+      }
+
+      .ns-eyebrow {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--blue-400);
+        margin-bottom: 20px;
+        position: relative;
+        z-index: 1;
+      }
+      .ns-eyebrow-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--blue-500);
+        box-shadow: 0 0 8px rgba(59, 130, 246, 0.7);
+        animation: eyebrowBlink 1.5s ease-in-out infinite;
+      }
+      @keyframes eyebrowBlink {
+        0%,
+        100% {
+          opacity: 1;
+          box-shadow: 0 0 8px rgba(59, 130, 246, 0.7);
+        }
+        50% {
+          opacity: 0.4;
+          box-shadow: none;
         }
       }
 
-      renderDisplay(dilayani, menunggu);
-      updateLastRefresh();
-
-    } catch {
-      // Demo fallback
-      renderDisplay(
-        { nomor: 'UMUM-003', poli: { kode_poli:'UMUM', nama_poli:'Poli Umum' } },
-        [
-          { nomor:'UMUM-004', poli:{ kode_poli:'UMUM',    nama_poli:'Poli Umum' },    posisi:1 },
-          { nomor:'GIGI-002', poli:{ kode_poli:'GIGI',    nama_poli:'Poli Gigi' },    posisi:2 },
-          { nomor:'UMUM-005', poli:{ kode_poli:'UMUM',    nama_poli:'Poli Umum' },    posisi:3 },
-          { nomor:'ANAK-001', poli:{ kode_poli:'ANAK',    nama_poli:'Poli Anak' },    posisi:4 },
-          { nomor:'JANTUNG-002', poli:{ kode_poli:'JANTUNG', nama_poli:'Poli Jantung' }, posisi:5 },
-        ]
-      );
-    }
-  }
-
-  function renderDisplay(dilayani, menunggu) {
-    // ── Nomor sedang dilayani ──
-    const nomor   = dilayani ? dilayani.nomor : '—';
-    const nomorEl = document.getElementById('nsNomor');
-    const idleEl  = document.getElementById('nsIdle');
-
-    if (nomor !== prevNomor) {
-      nomorEl.textContent = nomor;
-      nomorEl.classList.remove('flash', 'has-value');
-      void nomorEl.offsetWidth; // reflow
-      if (dilayani) {
-        nomorEl.classList.add('flash', 'has-value');
+      .ns-nomor {
+        font-size: clamp(72px, 10vw, 128px);
+        font-weight: 900;
+        color: var(--text-100);
+        line-height: 0.95;
+        letter-spacing: -4px;
+        position: relative;
+        z-index: 1;
+        font-variant-numeric: tabular-nums;
+        transition: color 0.3s;
       }
-      prevNomor = nomor;
-    }
+      /* subtle text glow */
+      .ns-nomor.has-value {
+        text-shadow: 0 0 60px rgba(96, 165, 250, 0.15);
+      }
+      .ns-nomor.flash {
+        animation: nFlash 0.55s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+      @keyframes nFlash {
+        0% {
+          transform: scale(1);
+          color: var(--text-100);
+        }
+        35% {
+          transform: scale(1.06);
+          color: var(--blue-400);
+          text-shadow: 0 0 40px rgba(96, 165, 250, 0.6);
+        }
+        100% {
+          transform: scale(1);
+          color: var(--text-100);
+        }
+      }
 
-    if (dilayani) {
-      const kode = dilayani.poli.kode_poli;
-      document.getElementById('nsPoli').textContent = (emojis[kode] || '🏥') + ' ' + dilayani.poli.nama_poli;
-      document.getElementById('hSub').textContent   = `${poliList.length} poli aktif · ${menunggu.length} menunggu`;
-      idleEl.style.display = 'none';
-    } else {
-      document.getElementById('nsPoli').textContent = '🏥 Menunggu Antrian';
-      document.getElementById('hSub').textContent   = 'Belum ada yang dilayani';
-      idleEl.style.display = '';
-      idleEl.textContent = 'Pilih poli atau tunggu panggilan berikutnya';
-    }
+      .ns-poli-badge {
+        margin-top: 20px;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(37, 99, 235, 0.15);
+        border: 1px solid rgba(37, 99, 235, 0.3);
+        color: var(--blue-400);
+        font-size: 14px;
+        font-weight: 600;
+        padding: 9px 22px;
+        border-radius: 30px;
+        position: relative;
+        z-index: 1;
+        letter-spacing: 0.2px;
+      }
 
-    // ── Daftar menunggu ──
-    document.getElementById('qCount').textContent = menunggu.length;
-    const list = document.getElementById('queueList');
+      .ns-idle-text {
+        font-size: 16px;
+        color: var(--text-25);
+        margin-top: 16px;
+        position: relative;
+        z-index: 1;
+        letter-spacing: -0.2px;
+      }
 
-    if (menunggu.length === 0) {
-      list.innerHTML = `<div class="q-empty">
+      /* ═══════════════════════════════════════════════
+   SIDEBAR
+═══════════════════════════════════════════════ */
+      .sidebar {
+        grid-area: sidebar;
+        background: var(--bg-panel);
+        border-left: 1px solid var(--border);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+
+      .sidebar-head {
+        padding: 22px 22px 18px;
+        border-bottom: 1px solid var(--border);
+        flex-shrink: 0;
+      }
+
+      .sidebar-eyebrow {
+        font-size: 10px;
+        font-weight: 600;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        color: var(--text-25);
+        margin-bottom: 8px;
+      }
+
+      .sidebar-count-row {
+        display: flex;
+        align-items: baseline;
+        gap: 8px;
+      }
+      .sidebar-count {
+        font-size: 36px;
+        font-weight: 800;
+        letter-spacing: -1.5px;
+        color: var(--text-100);
+        font-variant-numeric: tabular-nums;
+        line-height: 1;
+      }
+      .sidebar-count-label {
+        font-size: 13px;
+        color: var(--text-45);
+      }
+
+      .queue-list {
+        flex: 1;
+        overflow-y: auto;
+        padding: 10px;
+        scrollbar-width: thin;
+        scrollbar-color: rgba(255, 255, 255, 0.08) transparent;
+      }
+      .queue-list::-webkit-scrollbar {
+        width: 3px;
+      }
+      .queue-list::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.08);
+        border-radius: 2px;
+      }
+
+      /* Queue item */
+      .q-item {
+        display: flex;
+        align-items: center;
+        gap: 11px;
+        padding: 11px 13px;
+        border-radius: var(--radius-sm);
+        margin-bottom: 5px;
+        transition: all 0.2s;
+        border: 1px solid transparent;
+        cursor: default;
+      }
+
+      .q-item.next-up {
+        background: rgba(37, 99, 235, 0.12);
+        border-color: rgba(37, 99, 235, 0.25);
+      }
+      .q-item.next-up .q-rank-badge {
+        background: var(--blue-600);
+        color: white;
+        box-shadow: 0 2px 8px rgba(37, 99, 235, 0.4);
+      }
+      .q-item.next-up .q-nomor-text {
+        color: var(--text-100);
+      }
+
+      .q-item.regular {
+        background: rgba(255, 255, 255, 0.03);
+      }
+      .q-item.regular:hover {
+        background: var(--bg-hover);
+      }
+      .q-item.regular .q-rank-badge {
+        background: rgba(255, 255, 255, 0.07);
+        color: var(--text-45);
+      }
+      .q-item.regular .q-nomor-text {
+        color: var(--text-70);
+      }
+
+      .q-rank-badge {
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 11px;
+        font-weight: 700;
+        flex-shrink: 0;
+        transition: all 0.2s;
+      }
+
+      .q-item-info {
+        flex: 1;
+        min-width: 0;
+      }
+      .q-nomor-text {
+        font-size: 14.5px;
+        font-weight: 700;
+        letter-spacing: 0.3px;
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .q-poli-text {
+        font-size: 11px;
+        color: var(--text-25);
+        margin-top: 1px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .q-item.next-up .q-poli-text {
+        color: rgba(147, 197, 253, 0.5);
+      }
+
+      .q-wait-badge {
+        font-size: 10.5px;
+        font-weight: 500;
+        color: var(--text-25);
+        white-space: nowrap;
+        flex-shrink: 0;
+      }
+      .q-item.next-up .q-wait-badge {
+        color: var(--blue-400);
+      }
+
+      .q-empty {
+        text-align: center;
+        padding: 44px 20px;
+      }
+      .q-empty svg {
+        width: 38px;
+        height: 38px;
+        stroke: rgba(255, 255, 255, 0.1);
+        fill: none;
+        stroke-width: 1.5;
+        margin: 0 auto 12px;
+        display: block;
+      }
+      .q-empty-text {
+        font-size: 13px;
+        color: var(--text-25);
+        line-height: 1.6;
+      }
+
+      /* ═══════════════════════════════════════════════
+   TICKER / FOOTER
+═══════════════════════════════════════════════ */
+      .ticker-bar {
+        grid-area: ticker;
+        background: var(--bg-panel);
+        border-top: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        gap: 0;
+        overflow: hidden;
+        height: 52px;
+      }
+
+      .ticker-label {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        padding: 0 20px 0 28px;
+        flex-shrink: 0;
+        border-right: 1px solid var(--border);
+        height: 100%;
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        color: var(--blue-400);
+        white-space: nowrap;
+      }
+      .ticker-label svg {
+        width: 14px;
+        height: 14px;
+        stroke: currentColor;
+        stroke-width: 2;
+        fill: none;
+        flex-shrink: 0;
+      }
+
+      .ticker-track {
+        flex: 1;
+        overflow: hidden;
+        white-space: nowrap;
+        position: relative;
+      }
+      /* fade edges */
+      .ticker-track::before,
+      .ticker-track::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 40px;
+        z-index: 2;
+        pointer-events: none;
+      }
+      .ticker-track::before {
+        left: 0;
+        background: linear-gradient(to right, var(--bg-panel), transparent);
+      }
+      .ticker-track::after {
+        right: 0;
+        background: linear-gradient(to left, var(--bg-panel), transparent);
+      }
+
+      .ticker-inner {
+        display: inline-block;
+        animation: ticker 28s linear infinite;
+        padding-left: 20px;
+      }
+      .ticker-inner span {
+        font-size: 12.5px;
+        color: var(--text-45);
+        margin-right: 64px;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .ticker-inner span::before {
+        content: "•";
+        color: rgba(37, 99, 235, 0.5);
+        font-size: 16px;
+      }
+      @keyframes ticker {
+        from {
+          transform: translateX(0);
+        }
+        to {
+          transform: translateX(-50%);
+        }
+      }
+
+      .ticker-status {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        padding: 0 28px 0 20px;
+        flex-shrink: 0;
+        border-left: 1px solid var(--border);
+        height: 100%;
+        font-size: 11.5px;
+        color: var(--text-25);
+        white-space: nowrap;
+        font-variant-numeric: tabular-nums;
+      }
+      .status-dot-green {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: var(--green-500);
+        box-shadow: 0 0 6px rgba(34, 197, 94, 0.6);
+        flex-shrink: 0;
+        animation: livePulse 2s ease-in-out infinite;
+      }
+
+      /* ═══════════════════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════════════════ */
+      @media (max-width: 900px) {
+        .screen {
+          grid-template-columns: 1fr;
+          grid-template-rows: 60px 1fr auto auto;
+          grid-template-areas:
+            "header"
+            "main"
+            "sidebar"
+            "ticker";
+          height: auto;
+          overflow-y: auto;
+        }
+        html,
+        body {
+          overflow: auto;
+        }
+        .sidebar {
+          border-left: none;
+          border-top: 1px solid var(--border);
+          max-height: 300px;
+        }
+        .header-center {
+          display: none;
+        }
+        .ns-nomor {
+          font-size: clamp(56px, 18vw, 96px);
+          letter-spacing: -2px;
+        }
+        .ns-corner {
+          display: none;
+        }
+        .header {
+          padding: 0 20px;
+        }
+        .main {
+          padding: 18px;
+        }
+        .ticker-label {
+          padding: 0 14px;
+        }
+        .ticker-status {
+          padding: 0 16px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .clock-time {
+          font-size: 20px;
+        }
+        .poli-tab {
+          padding: 6px 12px;
+          font-size: 12px;
+        }
+        .brand-sep,
+        .header-subtitle {
+          display: none;
+        }
+        .sidebar {
+          max-height: 240px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="screen">
+      <!-- ── HEADER ─────────────────────────────── -->
+      <header class="header">
+        <div class="header-brand">
+          <div class="brand-icon">
+            <svg viewBox="0 0 24 24">
+              <path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20z" />
+              <path d="M12 8v8M8 12h8" />
+            </svg>
+          </div>
+          <span class="brand-name">MedQ</span>
+          <div class="brand-sep"></div>
+          <span class="header-subtitle">Display Antrian</span>
+        </div>
+
+        <div class="header-center">
+          <div class="live-indicator">
+            <span class="live-dot"></span>
+            LIVE
+          </div>
+          <div class="header-info-sub" id="hSub">Memuat data...</div>
+        </div>
+
+        <div class="header-clock">
+          <div class="clock-time" id="clock">—</div>
+          <div class="clock-date" id="date">—</div>
+        </div>
+      </header>
+
+      <!-- ── MAIN ───────────────────────────────── -->
+      <main class="main">
+        <!-- Poli filter -->
+        <div class="poli-tabs" id="poliTabs">
+          <div
+            class="poli-tab active"
+            data-id="all"
+            onclick="selectPoli('all')"
+          >
+            Semua Poli
+          </div>
+        </div>
+
+        <!-- Now Serving -->
+        <div class="now-serving-wrap">
+          <div class="ns-card">
+            <!-- Ambient -->
+            <div class="ns-glow ns-glow-1"></div>
+            <div class="ns-glow ns-glow-2"></div>
+            <!-- Corner accents -->
+            <div class="ns-corner ns-corner-tl"></div>
+            <div class="ns-corner ns-corner-tr"></div>
+            <div class="ns-corner ns-corner-bl"></div>
+            <div class="ns-corner ns-corner-br"></div>
+
+            <div class="ns-eyebrow">
+              <span class="ns-eyebrow-dot"></span>
+              Sedang Dilayani
+            </div>
+
+            <div class="ns-nomor" id="nsNomor">—</div>
+            <div class="ns-poli-badge" id="nsPoli">🏥 Menunggu Data</div>
+            <div class="ns-idle-text" id="nsIdle">
+              Pilih poli atau tunggu panggilan
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <!-- ── SIDEBAR ─────────────────────────────── -->
+      <aside class="sidebar">
+        <div class="sidebar-head">
+          <div class="sidebar-eyebrow">Antrian Menunggu</div>
+          <div class="sidebar-count-row">
+            <div class="sidebar-count" id="qCount">0</div>
+            <div class="sidebar-count-label">pasien</div>
+          </div>
+        </div>
+        <div class="queue-list" id="queueList">
+          <div class="q-empty">
+            <svg viewBox="0 0 24 24">
+              <rect x="3" y="4" width="18" height="18" rx="2" />
+              <line x1="16" y1="2" x2="16" y2="6" />
+              <line x1="8" y1="2" x2="8" y2="6" />
+              <line x1="3" y1="10" x2="21" y2="10" />
+            </svg>
+            <div class="q-empty-text">Belum ada antrian<br />yang menunggu</div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- ── TICKER BAR ───────────────────────────── -->
+      <div class="ticker-bar">
+        <div class="ticker-label">
+          <svg viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="10" />
+            <line x1="12" y1="8" x2="12" y2="12" />
+            <line x1="12" y1="16" x2="12.01" y2="16" />
+          </svg>
+          Info
+        </div>
+        <div class="ticker-track">
+          <div class="ticker-inner">
+            <span
+              >Silakan menunggu di area ruang tunggu poli masing-masing</span
+            >
+            <span>Jaga kebersihan dan ketertiban ruang tunggu</span>
+            <span>Segera ke loket jika nomor Anda dipanggil</span>
+            <span>Bawa kartu berobat dan identitas diri yang valid</span>
+            <span>Pemeriksaan dilakukan sesuai urutan nomor antrian</span>
+            <span
+              >Silakan menunggu di area ruang tunggu poli masing-masing</span
+            >
+            <span>Jaga kebersihan dan ketertiban ruang tunggu</span>
+            <span>Segera ke loket jika nomor Anda dipanggil</span>
+            <span>Bawa kartu berobat dan identitas diri yang valid</span>
+            <span>Pemeriksaan dilakukan sesuai urutan nomor antrian</span>
+          </div>
+        </div>
+        <div class="ticker-status">
+          <span class="status-dot-green"></span>
+          <span id="lastUpdate">Live</span>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const REFRESH_MS = 5000;
+      const emojis = {
+        UMUM: "🩺",
+        GIGI: "🦷",
+        JANTUNG: "❤️",
+        ANAK: "👶",
+        MATA: "👁️",
+        ORTHO: "🦴",
+        SARAF: "🧠",
+        KULIT: "🌿",
+      };
+
+      let poliList = [];
+      let activePoli = "all";
+      let prevNomor = null;
+
+      // ── Clock ───────────────────────────────────
+      function updateClock() {
+        const now = new Date();
+        document.getElementById("clock").textContent = now.toLocaleTimeString(
+          "id-ID",
+          { hour: "2-digit", minute: "2-digit", second: "2-digit" },
+        );
+        document.getElementById("date").textContent = now.toLocaleDateString(
+          "id-ID",
+          { weekday: "long", day: "numeric", month: "long", year: "numeric" },
+        );
+      }
+      updateClock();
+      setInterval(updateClock, 1000);
+
+      // ── Load daftar poli ─────────────────────────
+      async function loadPoli() {
+        try {
+          const res = await fetch("http://localhost:5000/api/poli/list");
+          const json = await res.json();
+          poliList = json.data;
+        } catch {
+          poliList = [
+            { id_poli: 1, kode_poli: "UMUM", nama_poli: "Poli Umum" },
+            { id_poli: 2, kode_poli: "GIGI", nama_poli: "Poli Gigi" },
+            { id_poli: 3, kode_poli: "JANTUNG", nama_poli: "Poli Jantung" },
+            { id_poli: 4, kode_poli: "ANAK", nama_poli: "Poli Anak" },
+            { id_poli: 5, kode_poli: "MATA", nama_poli: "Poli Mata" },
+          ];
+        }
+        renderPoliTabs();
+        loadAntrian();
+      }
+
+      function renderPoliTabs() {
+        const tabs = document.getElementById("poliTabs");
+        tabs.innerHTML = `<div class="poli-tab active" data-id="all" onclick="selectPoli('all')">Semua Poli</div>`;
+        poliList.forEach((p) => {
+          tabs.innerHTML += `<div class="poli-tab" data-id="${p.id_poli}" onclick="selectPoli(${p.id_poli})">
+        ${emojis[p.kode_poli] || "🏥"} ${p.nama_poli}
+      </div>`;
+        });
+      }
+
+      function selectPoli(id) {
+        activePoli = id;
+        document.querySelectorAll(".poli-tab").forEach((t) => {
+          t.classList.toggle("active", t.dataset.id == String(id));
+        });
+        loadAntrian();
+      }
+
+      // ── Load antrian aktif ───────────────────────
+      async function loadAntrian() {
+        try {
+          let dilayani = null;
+          let menunggu = [];
+
+          if (activePoli === "all") {
+            const results = await Promise.all(
+              poliList.map((p) =>
+                fetch(
+                  `http://localhost:5000/api/antrian/aktif/${p.id_poli}`,
+                ).then((r) => r.json()),
+              ),
+            );
+            results.forEach((r, i) => {
+              if (r.status === "success") {
+                if (!dilayani && r.data.sedang_dilayani) {
+                  dilayani = {
+                    nomor: r.data.sedang_dilayani.nomor_antrian,
+
+                    pasien: r.data.sedang_dilayani.nama_pasien,
+
+                    dokter: r.data.sedang_dilayani.nama_dokter,
+
+                    poli: {
+                      kode_poli:
+                        r.data.sedang_dilayani.nama_poli
+                          .split(" ")[1]
+                          ?.toUpperCase() || "",
+                      nama_poli: r.data.sedang_dilayani.nama_poli,
+                    },
+
+                    data: r.data.sedang_dilayani,
+                  };
+                }
+
+                (r.data.antrian || [])
+                  .filter((item) => item.status === "Menunggu")
+                  .forEach((item, idx) => {
+                    menunggu.push({
+                      id_antrian: item.id_antrian,
+
+                      nomor: item.nomor_antrian,
+
+                      pasien: item.nama_pasien,
+
+                      dokter: item.nama_dokter,
+
+                      poli: poliList[i],
+
+                      posisi: idx + 1,
+
+                      status: item.status,
+                    });
+                  });
+              }
+            });
+          } else {
+            const p = poliList.find((p) => p.id_poli === activePoli);
+            const res = await fetch(
+              `http://localhost:5000/api/antrian/aktif/${activePoli}`,
+            );
+            const json = await res.json();
+            if (json.status === "success") {
+              if (json.data.sedang_dilayani) {
+                dilayani = {
+                  nomor: json.data.sedang_dilayani.nomor_antrian,
+                  pasien: json.data.sedang_dilayani.nama_pasien,
+                  dokter: json.data.sedang_dilayani.nama_dokter,
+                  poli: p,
+                  data: json.data.sedang_dilayani,
+                };
+              }
+
+              (json.data.antrian || [])
+              .filter(item => item.status === "Menunggu")
+              .forEach((item, idx) => {
+                
+                menunggu.push({
+                  id_antrian: item.id_antrian,
+
+                  nomor: item.nomor_antrian,
+
+                  pasien: item.nama_pasien,
+
+                  dokter: item.nama_dokter,
+
+                  poli: {
+                    kode_poli: p.kode_poli,
+                    nama_poli: p.nama_poli,
+                  },
+
+                  posisi: idx + 1,
+
+                  status: item.status,
+                });
+              });
+            }
+          }
+
+          renderDisplay(dilayani, menunggu);
+          updateLastRefresh();
+        } catch (err) {
+          console.error("Gagal memuat antrian:", err);
+          // tidak ada renderDisplay demo di sini
+        }
+      }
+
+      function renderDisplay(dilayani, menunggu) {
+        // ── Nomor sedang dilayani ──
+        const nomor = dilayani ? dilayani.nomor : "—";
+        const nomorEl = document.getElementById("nsNomor");
+        const idleEl = document.getElementById("nsIdle");
+
+        if (nomor !== prevNomor) {
+          nomorEl.textContent = nomor;
+          nomorEl.classList.remove("flash", "has-value");
+          void nomorEl.offsetWidth; // reflow
+          if (dilayani) {
+            nomorEl.classList.add("flash", "has-value");
+          }
+          prevNomor = nomor;
+        }
+
+        if (dilayani) {
+          const kode = dilayani.poli.kode_poli;
+          document.getElementById("nsPoli").textContent =
+            (emojis[kode] || "🏥") + " " + dilayani.poli.nama_poli;
+          document.getElementById("hSub").textContent =
+            `${poliList.length} poli aktif · ${menunggu.length} menunggu`;
+          idleEl.style.display = "none";
+        } else {
+          document.getElementById("nsPoli").textContent = "🏥 Menunggu Antrian";
+          document.getElementById("hSub").textContent =
+            "Belum ada yang dilayani";
+          idleEl.style.display = "";
+          idleEl.textContent = "Pilih poli atau tunggu panggilan berikutnya";
+        }
+
+        // ── Daftar menunggu ──
+        document.getElementById("qCount").textContent = menunggu.length;
+        const list = document.getElementById("queueList");
+
+        if (menunggu.length === 0) {
+          list.innerHTML = `<div class="q-empty">
         <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
         <div class="q-empty-text">Tidak ada antrian<br>yang menunggu</div>
       </div>`;
-      return;
-    }
+          return;
+        }
 
-    list.innerHTML = menunggu.map((item, i) => {
-      const isNext = i === 0;
-      const estMnt = (i + 1) * 10;
-      return `<div class="q-item ${isNext ? 'next-up' : 'regular'}">
+        list.innerHTML = menunggu
+          .map((item, i) => {
+            const isNext = i === 0;
+            const estMnt = (i + 1) * 10;
+            return `<div class="q-item ${isNext ? "next-up" : "regular"}">
         <div class="q-rank-badge">${i + 1}</div>
         <div class="q-item-info">
           <div class="q-nomor-text">${item.nomor}</div>
@@ -888,18 +1155,23 @@ html, body {
         </div>
         <div class="q-wait-badge">~${estMnt} mnt</div>
       </div>`;
-    }).join('');
-  }
+          })
+          .join("");
+      }
 
-  function updateLastRefresh() {
-    const t = new Date();
-    document.getElementById('lastUpdate').textContent =
-      t.toLocaleTimeString('id-ID', { hour:'2-digit', minute:'2-digit', second:'2-digit' });
-  }
+      function updateLastRefresh() {
+        const t = new Date();
+        document.getElementById("lastUpdate").textContent =
+          t.toLocaleTimeString("id-ID", {
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+          });
+      }
 
-  // ── Init & auto refresh ──────────────────────
-  loadPoli();
-  setInterval(loadAntrian, REFRESH_MS);
-</script>
-</body>
+      // ── Init & auto refresh ──────────────────────
+      loadPoli();
+      setInterval(loadAntrian, REFRESH_MS);
+    </script>
+  </body>
 </html>

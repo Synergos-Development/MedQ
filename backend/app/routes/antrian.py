@@ -58,6 +58,45 @@ def panggil():
 
     return ok(data=hasil, message='Pasien berhasil dipanggil.')
 
+# POST /api/antrian/diperiksa
+@antrian_bp.route('/diperiksa', methods=['POST'])
+def diperiksa():
+    data = request.get_json()
+
+    if not data or not data.get('id_antrian'):
+        return err('Field id_antrian wajib diisi.')
+
+    hasil, error = AntrianService.mulai_periksa(
+        data['id_antrian']
+    )
+
+    if error:
+        return err(error)
+
+    return ok(
+        data=hasil,
+        message='Pasien mulai diperiksa.'
+    )
+    
+# POST /api/antrian/selesai
+@antrian_bp.route('/selesai', methods=['POST'])
+def selesai():
+    data = request.get_json()
+
+    if not data or not data.get('id_antrian'):
+        return err('Field id_antrian wajib diisi.')
+
+    hasil, error = AntrianService.selesaikan(
+        data['id_antrian']
+    )
+
+    if error:
+        return err(error)
+
+    return ok(
+        data=hasil,
+        message='Pemeriksaan selesai.'
+    )
 
 # POST /api/antrian/batal
 @antrian_bp.route('/batal', methods=['POST'])
