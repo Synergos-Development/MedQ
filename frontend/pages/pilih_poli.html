@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <title>Pilih Poli — MedQ</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" />
+  <link rel="stylesheet" href="../css/pages/poli.css" />
+</head>
+<body>
+
+<!-- ── TOPBAR ── -->
+<nav class="topbar">
+  <button class="back-btn" onclick="history.back()" aria-label="Kembali">
+    <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+  </button>
+  <div class="topbar-brand">
+    <div class="topbar-brand-icon">
+      <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20z"/><path d="M12 8v8M8 12h8"/></svg>
+    </div>
+    <span class="topbar-brand-name">MedQ</span>
+  </div>
+  <span class="topbar-title">Pilih Poli</span>
+</nav>
+
+<!-- ── PAGE GRID ── -->
+<div class="page">
+
+  <!-- HERO STRIP -->
+  <div class="hero-strip">
+    <div class="hero-eyebrow">Langkah 2 dari 3</div>
+    <div class="hero-title">Pilih Poli Tujuan<br><span>Sesuai kebutuhan pemeriksaan Anda</span></div>
+  </div>
+
+  <!-- STEP INDICATOR -->
+  <div class="steps-wrap">
+    <div class="steps-card">
+      <div class="step done">
+        <div class="step-circle">✓</div>
+        <span class="step-label">Data Diri</span>
+      </div>
+      <div class="step active">
+        <div class="step-circle">2</div>
+        <span class="step-label">Pilih Poli</span>
+      </div>
+      <div class="step">
+        <div class="step-circle">3</div>
+        <span class="step-label">Tiket</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- BODY -->
+  <div class="body">
+
+    <div class="section-head">
+      <h2>Poli Tersedia</h2>
+      <p>Tap poli yang ingin Anda kunjungi</p>
+    </div>
+
+    <!-- Search -->
+    <div class="search-wrap">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input
+        type="text"
+        class="search-input"
+        id="searchInput"
+        placeholder="Cari poli..."
+      />
+    </div>
+
+    <!-- Poli grid -->
+    <div class="poli-grid" id="poliGrid">
+      <div class="skeleton" style="height:110px"></div>
+      <div class="skeleton" style="height:110px"></div>
+      <div class="skeleton" style="height:110px"></div>
+      <div class="skeleton" style="height:110px"></div>
+    </div>
+
+    <!-- Empty state -->
+    <div class="empty-state" id="emptyState">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      Poli tidak ditemukan. Coba kata kunci lain.
+    </div>
+
+    <div class="form-divider" id="dokterDivider" style="display:none"></div>
+
+    <!-- Dokter section -->
+    <div class="dokter-section" id="dokterSection">
+      <div class="section-head">
+        <h2>Pilih Dokter</h2>
+        <p>Pilih dokter yang tersedia untuk poli ini</p>
+      </div>
+      <div class="dokter-list" id="dokterList"></div>
+    </div>
+
+  </div><!-- /body -->
+
+  <!-- CTA -->
+  <div class="cta-wrap">
+    <button class="btn-primary" id="btnAmbil" disabled>
+      <span class="btn-label" style="display:flex;align-items:center;gap:8px;">
+        Ambil Nomor Antrian
+        <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+      </span>
+      <div class="spinner"></div>
+    </button>
+  </div>
+
+  <!-- ── SIDEBAR (desktop only) ── -->
+  <aside class="sidebar">
+
+    <!-- Progress tracker -->
+    <div class="sidebar-section">
+      <div class="sidebar-title">Progress Pendaftaran</div>
+      <div class="progress-list">
+        <div class="progress-item">
+          <div class="progress-ico done">
+            <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <div class="progress-text">
+            <div class="progress-name">Data Diri</div>
+            <div class="progress-desc">Sudah diisi</div>
+          </div>
+        </div>
+        <div class="progress-item">
+          <div class="progress-ico active">2</div>
+          <div class="progress-text">
+            <div class="progress-name active">Pilih Poli</div>
+            <div class="progress-desc">Sedang dipilih</div>
+          </div>
+        </div>
+        <div class="progress-item">
+          <div class="progress-ico">3</div>
+          <div class="progress-text">
+            <div class="progress-name muted">Tiket Antrian</div>
+            <div class="progress-desc">Nomor antrian Anda</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ringkasan pilihan -->
+    <div class="sidebar-section">
+      <div class="sidebar-title">Pilihan Anda</div>
+      <p class="summary-empty" id="summaryEmpty">Pilih poli dan dokter untuk melihat ringkasan.</p>
+      <div class="summary-selected" id="summarySelected">
+        <div class="summary-row" id="summaryPoliRow" style="display:none">
+          <div class="summary-ico" id="summaryPoliEmoji">🏥</div>
+          <div>
+            <div class="summary-lbl">Poli</div>
+            <div class="summary-val" id="summaryPoliName">—</div>
+          </div>
+        </div>
+        <div class="summary-row" id="summaryDokterRow" style="display:none">
+          <div class="summary-ico" style="font-size:13px;font-weight:700;color:var(--blue-700)" id="summaryDokterAvatar">—</div>
+          <div>
+            <div class="summary-lbl">Dokter</div>
+            <div class="summary-val" id="summaryDokterName">—</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Note -->
+    <div class="sidebar-note">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <p>Nomor antrian hanya berlaku hari ini. Harap hadir sesuai estimasi waktu yang tertera di tiket.</p>
+    </div>
+
+  </aside>
+
+</div><!-- /page -->
+
+<div class="toast" id="toast"></div>
+<script type="module" src="../js/pages/pilihPoli.js"></script>
+</body>
+</html>

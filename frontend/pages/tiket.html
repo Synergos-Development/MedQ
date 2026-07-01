@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0"
+    />
+    <title>Tiket Antrian — MedQ</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+    />
+    <link rel="stylesheet" href="../css/pages/tiket.css" />
+  </head>
+  <body>
+    <!-- ── TOPBAR ── -->
+    <nav class="topbar">
+      <div class="topbar-brand">
+        <div class="topbar-brand-icon">
+          <svg viewBox="0 0 24 24">
+            <path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20z" />
+            <path d="M12 8v8M8 12h8" />
+          </svg>
+        </div>
+        <span class="topbar-brand-name">MedQ</span>
+      </div>
+      <div class="topbar-right">
+        <span class="live-dot"></span>
+        <span class="clock" id="clock">—</span>
+      </div>
+    </nav>
+
+    <!-- ── PAGE GRID ── -->
+    <div class="page">
+      <!-- SUCCESS BANNER -->
+      <div class="success-banner">
+        <div class="check-circle">
+          <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12" /></svg>
+        </div>
+        <div class="success-banner-text">
+          <h1 class="success-title">Antrian Berhasil!</h1>
+          <p class="success-sub">Nomor antrian Anda sudah terdaftar</p>
+        </div>
+      </div>
+
+      <!-- STEP INDICATOR -->
+      <div class="steps-wrap-mobile">
+        <div class="steps-card">
+          <div class="step done">
+            <div class="step-circle">✓</div>
+            <span class="step-label">Data Diri</span>
+          </div>
+          <div class="step done">
+            <div class="step-circle">✓</div>
+            <span class="step-label">Pilih Poli</span>
+          </div>
+          <div class="step active">
+            <div class="step-circle">3</div>
+            <span class="step-label">Tiket</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- TICKET CARD -->
+      <div class="ticket-wrap">
+        <div class="ticket">
+          <!-- Nomor antrian -->
+          <div class="ticket-top">
+            <p class="ticket-label">Nomor Antrian</p>
+            <div class="nomor" id="nomorAntrian">—</div>
+            <div class="poli-badge" id="poliName">🏥 —</div>
+          </div>
+
+          <!-- Info rows -->
+          <div class="ticket-body">
+            <div class="info-row">
+              <span class="info-key">
+                <svg viewBox="0 0 24 24">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                  <circle cx="12" cy="7" r="4" />
+                </svg>
+                Dokter
+              </span>
+              <span class="info-val" id="dokterName">—</span>
+            </div>
+            <div class="info-row">
+              <span class="info-key">
+                <svg viewBox="0 0 24 24">
+                  <rect x="3" y="4" width="18" height="18" rx="2" />
+                  <line x1="16" y1="2" x2="16" y2="6" />
+                  <line x1="8" y1="2" x2="8" y2="6" />
+                  <line x1="3" y1="10" x2="21" y2="10" />
+                </svg>
+                Nomor RM
+              </span>
+              <span class="info-val" id="nomorRM">—</span>
+            </div>
+            <div class="info-row">
+              <span class="info-key">
+                <svg viewBox="0 0 24 24">
+                  <rect x="3" y="4" width="18" height="18" rx="2" />
+                  <line x1="16" y1="2" x2="16" y2="6" />
+                  <line x1="8" y1="2" x2="8" y2="6" />
+                  <line x1="3" y1="10" x2="21" y2="10" />
+                </svg>
+                Tanggal
+              </span>
+              <span class="info-val" id="tanggal">—</span>
+            </div>
+            <div class="info-row">
+              <span class="info-key">
+                <svg viewBox="0 0 24 24">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                  <circle cx="9" cy="7" r="4" />
+                  <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                  <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                </svg>
+                Posisi Antrian
+              </span>
+              <span class="info-val" id="posisi">—</span>
+            </div>
+          </div>
+
+          <!-- Estimasi -->
+          <div class="estimasi-card">
+            <div class="est-icon">
+              <svg viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="10" />
+                <polyline points="12 6 12 12 16 14" />
+              </svg>
+            </div>
+            <div>
+              <div class="est-label">ESTIMASI WAKTU TUNGGU</div>
+              <div class="est-val" id="estimasi">—</div>
+              <div class="est-sub">Harap standby di ruang tunggu</div>
+            </div>
+          </div>
+
+          <!-- Posisi bar -->
+          <div class="posisi-wrap">
+            <div class="posisi-label">
+              <span>Posisi dalam antrian</span>
+              <span id="posisiLabel">— / —</span>
+            </div>
+            <div class="posisi-bar">
+              <div class="posisi-fill" id="posisiFill" style="width: 0%"></div>
+            </div>
+          </div>
+        </div>
+        <!-- /ticket -->
+      </div>
+      <!-- /ticket-wrap -->
+
+      <!-- ACTIONS -->
+      <div class="actions">
+        <button class="btn-white" onclick="window.print()">
+          <svg viewBox="0 0 24 24">
+            <polyline points="6 9 6 2 18 2 18 9" />
+            <path
+              d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"
+            />
+            <rect x="6" y="14" width="12" height="8" />
+          </svg>
+          Cetak Tiket
+        </button>
+        <button
+          class="btn-outline-white"
+          onclick="window.location.href = 'index.html'"
+        >
+          Kembali ke Beranda
+        </button>
+      </div>
+
+      <!-- ── SIDEBAR (desktop only) ── -->
+      <aside class="sidebar">
+        <!-- Langkah selanjutnya -->
+        <div class="sidebar-section">
+          <div class="sidebar-title">Apa Selanjutnya?</div>
+          <div class="next-list">
+            <div class="next-item">
+              <div class="next-num">1</div>
+              <div class="next-text">
+                <p>Cetak atau simpan tiket ini</p>
+                <span>Sebagai bukti antrian Anda</span>
+              </div>
+            </div>
+            <div class="next-item">
+              <div class="next-num">2</div>
+              <div class="next-text">
+                <p>Hadir ke ruang tunggu poli</p>
+                <span>Sebelum estimasi waktu habis</span>
+              </div>
+            </div>
+            <div class="next-item">
+              <div class="next-num">3</div>
+              <div class="next-text">
+                <p>Tunggu panggilan nomor Anda</p>
+                <span>Petugas akan memanggil sesuai urutan</span>
+              </div>
+            </div>
+            <div class="next-item">
+              <div class="next-num">4</div>
+              <div class="next-text">
+                <p>Masuk ke ruang periksa</p>
+                <span>Bawa kartu identitas &amp; kartu berobat</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Ringkasan data pasien -->
+        <div class="sidebar-section">
+          <div class="sidebar-title">Ringkasan Kunjungan</div>
+          <div class="pasien-row">
+            <span class="pasien-key">Nama</span>
+            <span class="pasien-val" id="sNama">—</span>
+          </div>
+          <div class="pasien-row">
+            <span class="pasien-key">Poli</span>
+            <span class="pasien-val" id="sPoli">—</span>
+          </div>
+          <div class="pasien-row">
+            <span class="pasien-key">Dokter</span>
+            <span class="pasien-val" id="sDokter">—</span>
+          </div>
+          <div class="pasien-row">
+            <span class="pasien-key">No. Antrian</span>
+            <span class="pasien-val" id="sNomor">—</span>
+          </div>
+          <div class="pasien-row">
+            <span class="pasien-key">Estimasi</span>
+            <span class="pasien-val" id="sEstimasi">—</span>
+          </div>
+        </div>
+
+        <!-- Catatan -->
+        <div class="sidebar-note">
+          <svg viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="10" />
+            <line x1="12" y1="8" x2="12" y2="12" />
+            <line x1="12" y1="16" x2="12.01" y2="16" />
+          </svg>
+          <p>
+            Nomor antrian hanya berlaku hari ini. Jika tidak hadir saat
+            dipanggil, nomor antrian akan dilewati.
+          </p>
+        </div>
+      </aside>
+    </div>
+    <!-- /page -->
+
+    <script type="module" src="../js/pages/tiket.js"></script>
+  </body>
+</html>

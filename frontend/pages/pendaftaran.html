@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0"
+    />
+    <title>Pendaftaran Pasien Baru — MedQ</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+    />
+    <link rel="stylesheet" href="../css/pages/pendaftaran.css" />
+  </head>
+  <body>
+    <!-- ── TOPBAR (semua ukuran) ── -->
+    <nav class="topbar">
+      <button class="back-btn" onclick="history.back()" aria-label="Kembali">
+        <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6" /></svg>
+      </button>
+      <div class="topbar-brand">
+        <div class="topbar-brand-icon">
+          <svg viewBox="0 0 24 24">
+            <path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20z" />
+            <path d="M12 8v8M8 12h8" />
+          </svg>
+        </div>
+        <span class="topbar-brand-name">MedQ</span>
+      </div>
+      <span class="topbar-title">Pendaftaran Pasien Baru</span>
+    </nav>
+
+    <!-- ── PAGE (grid pada desktop) ── -->
+    <div class="page">
+      <!-- HERO STRIP -->
+      <div class="hero-strip">
+        <div class="hero-eyebrow">Langkah 1 dari 3</div>
+        <div class="hero-title">
+          Data Diri Pasien<br /><span>Isi sesuai dokumen KTP Anda</span>
+        </div>
+      </div>
+
+      <!-- STEP INDICATOR -->
+      <div class="steps-wrap">
+        <div class="steps-card">
+          <div class="step active">
+            <div class="step-circle">1</div>
+            <span class="step-label">Data Diri</span>
+          </div>
+          <div class="step">
+            <div class="step-circle">2</div>
+            <span class="step-label">Pilih Poli</span>
+          </div>
+          <div class="step">
+            <div class="step-circle">3</div>
+            <span class="step-label">Tiket</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- FORM BODY -->
+      <div class="form-body">
+        <div class="info-strip">
+          <svg viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="10" />
+            <line x1="12" y1="8" x2="12" y2="12" />
+            <line x1="12" y1="16" x2="12.01" y2="16" />
+          </svg>
+          <p>
+            Pastikan data yang diisi sesuai KTP. Data ini akan digunakan untuk
+            rekam medis Anda.
+          </p>
+        </div>
+
+        <div class="section-head">
+          <h2>Identitas Diri</h2>
+          <p>Data wajib sesuai kartu identitas resmi</p>
+        </div>
+
+        <!-- Nama Lengkap -->
+        <div class="field" id="f-nama">
+          <label>Nama Lengkap <span class="req">*</span></label>
+          <input
+            type="text"
+            id="nama"
+            placeholder="Sesuai KTP"
+            autocomplete="name"
+          />
+          <span class="err">
+            <svg viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="10" />
+              <line x1="12" y1="8" x2="12" y2="12" />
+              <line x1="12" y1="16" x2="12.01" y2="16" />
+            </svg>
+            Nama lengkap wajib diisi (min. 3 karakter)
+          </span>
+        </div>
+
+        <!-- NIK -->
+        <div class="field" id="f-nik">
+          <label>NIK <span class="req">*</span></label>
+          <input
+            type="text"
+            id="nik"
+            placeholder="16 digit nomor KTP"
+            maxlength="16"
+            inputmode="numeric"
+          />
+          <span class="hint">
+            <svg viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="10" />
+              <line x1="12" y1="8" x2="12" y2="12" />
+              <line x1="12" y1="16" x2="12.01" y2="16" />
+            </svg>
+            Nomor Induk Kependudukan (16 digit)
+          </span>
+          <span class="err">
+            <svg viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="10" />
+              <line x1="12" y1="8" x2="12" y2="12" />
+              <line x1="12" y1="16" x2="12.01" y2="16" />
+            </svg>
+            NIK harus 16 digit angka
+          </span>
+        </div>
+
+        <!-- Tanggal Lahir & Jenis Kelamin -->
+        <div class="row-2">
+          <div class="field" id="f-tgl">
+            <label>Tanggal Lahir <span class="req">*</span></label>
+            <input type="date" id="tgl_lahir" />
+            <span class="err">
+              <svg viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="10" />
+                <line x1="12" y1="8" x2="12" y2="12" />
+                <line x1="12" y1="16" x2="12.01" y2="16" />
+              </svg>
+              Wajib diisi
+            </span>
+          </div>
+          <div class="field" id="f-jk">
+            <label>Jenis Kelamin <span class="req">*</span></label>
+            <select id="jenis_kelamin">
+              <option value="">Pilih</option>
+              <option value="L">Laki-laki</option>
+              <option value="P">Perempuan</option>
+            </select>
+            <span class="err">
+              <svg viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="10" />
+                <line x1="12" y1="8" x2="12" y2="12" />
+                <line x1="12" y1="16" x2="12.01" y2="16" />
+              </svg>
+              Wajib dipilih
+            </span>
+          </div>
+        </div>
+
+        <div class="form-divider"></div>
+
+        <div class="section-head">
+          <h2>Kontak &amp; Alamat</h2>
+          <p>Untuk konfirmasi dan keperluan komunikasi</p>
+        </div>
+
+        <!-- Nomor HP -->
+        <div class="field" id="f-hp">
+          <label>Nomor HP <span class="req">*</span></label>
+          <input
+            type="tel"
+            id="nomor_hp"
+            placeholder="08xxxxxxxxxx"
+            inputmode="tel"
+          />
+          <span class="err">
+            <svg viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="10" />
+              <line x1="12" y1="8" x2="12" y2="12" />
+              <line x1="12" y1="16" x2="12.01" y2="16" />
+            </svg>
+            Nomor HP wajib diisi (min. 8 digit)
+          </span>
+        </div>
+
+        <!-- Alamat -->
+        <div class="field">
+          <label>Alamat</label>
+          <textarea
+            id="alamat"
+            placeholder="Jl. nama jalan, RT/RW, Kelurahan, Kecamatan..."
+          ></textarea>
+        </div>
+      </div>
+      <!-- /form-body -->
+
+      <!-- CTA -->
+      <div class="cta-wrap">
+        <button class="btn-primary" id="btnLanjut">
+          <span
+            class="btn-text"
+            style="display: flex; align-items: center; gap: 8px"
+          >
+            Lanjut Pilih Poli
+            <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6" /></svg>
+          </span>
+          <div class="spinner"></div>
+        </button>
+      </div>
+
+      <!-- ── SIDEBAR (desktop only) ── -->
+      <aside class="sidebar">
+        <!-- Progress tracker -->
+        <div class="sidebar-section">
+          <div class="sidebar-title">Progress Pendaftaran</div>
+          <div class="progress-list">
+            <div class="progress-item">
+              <div class="progress-ico active">1</div>
+              <div class="progress-text">
+                <div class="progress-name active">Data Diri</div>
+                <div class="progress-desc">Sedang diisi</div>
+              </div>
+            </div>
+            <div class="progress-item">
+              <div class="progress-ico">2</div>
+              <div class="progress-text">
+                <div class="progress-name muted">Pilih Poli</div>
+                <div class="progress-desc">Pilih poliklinik tujuan</div>
+              </div>
+            </div>
+            <div class="progress-item">
+              <div class="progress-ico">3</div>
+              <div class="progress-text">
+                <div class="progress-name muted">Tiket Antrian</div>
+                <div class="progress-desc">Nomor antrian Anda</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tips -->
+        <div class="sidebar-section">
+          <div class="sidebar-title">Tips Pengisian</div>
+          <div class="tips-list">
+            <div class="tip-item">
+              <div class="tip-dot">
+                <svg viewBox="0 0 24 24">
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+              </div>
+              <p>Isi nama sesuai KTP, termasuk gelar jika ada.</p>
+            </div>
+            <div class="tip-item">
+              <div class="tip-dot">
+                <svg viewBox="0 0 24 24">
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+              </div>
+              <p>NIK terdiri dari 16 digit angka yang tertera di KTP.</p>
+            </div>
+            <div class="tip-item">
+              <div class="tip-dot">
+                <svg viewBox="0 0 24 24">
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+              </div>
+              <p>Pastikan nomor HP aktif untuk menerima konfirmasi antrian.</p>
+            </div>
+            <div class="tip-item">
+              <div class="tip-dot">
+                <svg viewBox="0 0 24 24">
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+              </div>
+              <p>Data Anda aman dan hanya digunakan untuk keperluan medis.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Note -->
+        <div class="sidebar-note">
+          <svg viewBox="0 0 24 24">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+          </svg>
+          <p>
+            Data Anda dilindungi dan tidak akan dibagikan kepada pihak ketiga
+            tanpa izin Anda.
+          </p>
+        </div>
+      </aside>
+    </div>
+    <!-- /page -->
+
+    <div class="toast" id="toast"></div>
+    <script type="module" src="../js/pages/pendaftaran.js"></script>
+  </body>
+</html>

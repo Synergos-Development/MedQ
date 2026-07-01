@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0"
+    />
+    <title>MedQ — Sistem Antrian Digital</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="../css/pages/index.css" />
+  </head>
+  <body>
+    <div class="shell">
+      <!-- TOPBAR (desktop) -->
+      <nav class="topbar">
+        <div class="brand">
+          <div class="brand-icon">
+            <svg viewBox="0 0 24 24">
+              <path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20z" />
+              <path d="M12 8v8M8 12h8" />
+            </svg>
+          </div>
+          <span class="brand-name">MedQ</span>
+        </div>
+        <div class="topbar-right">
+          <div class="time-chip">
+            <span class="live-dot"></span>
+            <span id="topTime">—</span>
+          </div>
+        </div>
+      </nav>
+
+      <!-- MOBILE HERO -->
+      <div class="mobile-hero">
+        <div class="m-hero-nav">
+          <div class="m-brand">
+            <div class="m-brand-icon">
+              <svg viewBox="0 0 24 24">
+                <path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20z" />
+                <path d="M12 8v8M8 12h8" />
+              </svg>
+            </div>
+            <span class="m-brand-name">MedQ</span>
+          </div>
+          <div class="m-time">
+            <span class="live-dot"></span>
+            <span id="heroTime">—</span>
+          </div>
+        </div>
+        <div class="m-hero-body">
+          <div class="eyebrow">Sistem Antrian Digital</div>
+          <h1 class="hero-title">
+            Selamat Datang,<br /><span>Pilih Jenis Kunjungan</span>
+          </h1>
+          <p class="hero-desc">
+            Daftar antrian online cepat, mudah, dan tanpa antre di loket.
+          </p>
+        </div>
+      </div>
+
+      <!-- STATS (mobile overlap) -->
+      <div class="stats-wrap-mobile">
+        <div class="stats-card">
+          <div class="stat-item">
+            <div class="stat-val blue" id="mStatW">—</div>
+            <div class="stat-lbl">Menunggyyu</div>
+          </div>
+          <div class="stat-div"></div>
+          <div class="stat-item">
+            <div class="stat-val" id="mStatD">—</div>
+            <div class="stat-lbl">Dilayani</div>
+          </div>
+          <div class="stat-div"></div>
+          <div class="stat-item">
+            <div class="stat-val green" id="mStatS">—</div>
+            <div class="stat-lbl">Selesai</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MAIN -->
+      <div class="main">
+        <!-- LEFT COL -->
+        <div class="main-left">
+          <!-- Desktop welcome banner -->
+          <div class="desktop-banner">
+            <div class="banner-text">
+              <div class="eyebrow-d">Sistem Antrian Digital</div>
+              <h1>
+                Selamat Datang di MedQ<br /><span
+                  style="
+                    font-weight: 400;
+                    color: rgba(255, 255, 255, 0.65);
+                    font-size: 0.88em;
+                  "
+                  >Pilih jenis kunjungan Anda</span
+                >
+              </h1>
+              <p>
+                Daftar antrian online cepat, mudah, dan tanpa antre di loket.
+              </p>
+            </div>
+            <div class="banner-stats">
+              <div class="bs-item">
+                <div class="bs-val blue" id="dStatW">—</div>
+                <div class="bs-lbl">Menunggu</div>
+              </div>
+              <div class="bs-div"></div>
+              <div class="bs-item">
+                <div class="bs-val" id="dStatD">—</div>
+                <div class="bs-lbl">Dilayani</div>
+              </div>
+              <div class="bs-div"></div>
+              <div class="bs-item">
+                <div class="bs-val red" id="dStatS">—</div>
+                <div class="bs-lbl">Selesai</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Jenis Kunjungan -->
+          <div>
+            <div class="sec-lbl">Jenis Kunjungan</div>
+            <div class="nav-cards">
+              <a href="pendaftaran.html" class="nav-card bc">
+                <div class="card-ico">
+                  <svg viewBox="0 0 24 24">
+                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                    <circle cx="9" cy="7" r="4" />
+                    <line x1="19" y1="8" x2="19" y2="14" />
+                    <line x1="22" y1="11" x2="16" y2="11" />
+                  </svg>
+                </div>
+                <div class="card-body">
+                  <div class="card-title">Pasien Baru</div>
+                  <div class="card-desc">
+                    Belum pernah berobat di sini, daftar sekarang
+                  </div>
+                  <div class="card-tag">Buat akun baru</div>
+                </div>
+                <div class="card-arr">
+                  <svg viewBox="0 0 24 24">
+                    <polyline points="9 18 15 12 9 6" />
+                  </svg>
+                </div>
+              </a>
+              <a href="verifikasi.html" class="nav-card gc">
+                <div class="card-ico">
+                  <svg viewBox="0 0 24 24">
+                    <rect x="2" y="5" width="20" height="14" rx="3" />
+                    <path d="M2 10h20M7 15h2M11 15h6" />
+                  </svg>
+                </div>
+                <div class="card-body">
+                  <div class="card-title">Sudah Punya Nomor RM</div>
+                  <div class="card-desc">
+                    Input atau scan kartu berobat Anda
+                  </div>
+                  <div class="card-tag">Masuk dengan kartu</div>
+                </div>
+                <div class="card-arr">
+                  <svg viewBox="0 0 24 24">
+                    <polyline points="9 18 15 12 9 6" />
+                  </svg>
+                </div>
+              </a>
+            </div>
+          </div>
+
+          <!-- Info strip -->
+          <div class="info-strip">
+            <svg viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="10" />
+              <line x1="12" y1="8" x2="12" y2="12" />
+              <line x1="12" y1="16" x2="12.01" y2="16" />
+            </svg>
+            <p>
+              Nomor antrian hanya berlaku untuk hari ini. Harap hadir sesuai
+              jadwal yang tertera di tiket.
+            </p>
+          </div>
+
+          <!-- Poli tersedia
+          <div>
+            <div class="sec-lbl">Poli Tersedia</div>
+            <div class="poli-grid" id="poliGrid"></div>
+          </div> -->
+
+          <!-- Footer -->
+          <div class="footer-note">
+            <span class="fdot"></span>
+            <span class="ftxt">Sistem aktif · diperbarui otomatis</span>
+          </div>
+        </div>
+
+        <!-- RIGHT COL (sidebar) -->
+        <div class="main-right">
+          <!-- Statistik hari ini -->
+          <div class="panel">
+            <div class="panel-title">
+              <svg viewBox="0 0 24 24">
+                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+              </svg>
+              Statistik Hari Ini
+            </div>
+            <div class="stat-row">
+              <div class="stat-row-lbl">
+                <div class="stat-row-ico ico-blue">
+                  <svg viewBox="0 0 24 24">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                    <circle cx="9" cy="7" r="4" />
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                  </svg>
+                </div>
+                Menunggu
+              </div>
+              <div class="stat-row-val blue" id="sStatW">—</div>
+            </div>
+            <div class="stat-row">
+              <div class="stat-row-lbl">
+                <div class="stat-row-ico ico-gray">
+                  <svg viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="10" />
+                    <polyline points="12 6 12 12 16 14" />
+                  </svg>
+                </div>
+                Sedang Dilayani
+              </div>
+              <div class="stat-row-val gray" id="sStatD">—</div>
+            </div>
+            <div class="stat-row">
+              <div class="stat-row-lbl">
+                <div class="stat-row-ico ico-green">
+                  <svg viewBox="0 0 24 24">
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                </div>
+                Selesai
+              </div>
+              <div class="stat-row-val green" id="sStatS">—</div>
+            </div>
+            <!-- Poli panel (desktop) -->
+            <div class="panel">
+              <div class="panel-title">
+                <svg viewBox="0 0 24 24">
+                  <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                  <polyline points="9 22 9 12 15 12 15 22" />
+                </svg>
+                Poli Tersedia
+              </div>
+              <div class="poli-grid" id="poliGridSide"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script type="module" src="../js/pages/index.js"></script>
+  </body>
+</html>

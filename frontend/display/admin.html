@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="id" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+    <title>Admin Panel — MedQ</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="../css/admin.css" />
+  </head>
+  <body>
+    <div class="shell">
+      <nav class="topnav">
+        <div class="topnav-inner">
+          <div class="nav-brand">
+            <div class="brand-icon">
+              <svg viewBox="0 0 24 24">
+                <path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20z" />
+                <path d="M12 8v8M8 12h8" />
+              </svg>
+            </div>
+            <span class="brand-name">MedQ</span>
+          </div>
+          <div class="nav-right">
+            <span class="nav-chip">Admin Panel</span>
+            <button class="dark-toggle" id="darkToggle" title="Toggle dark mode">
+              <svg id="iconSun" viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="5" />
+                <line x1="12" y1="1" x2="12" y2="3" />
+                <line x1="12" y1="21" x2="12" y2="23" />
+                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+                <line x1="1" y1="12" x2="3" y2="12" />
+                <line x1="21" y1="12" x2="23" y2="12" />
+                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+              </svg>
+              <svg id="iconMoon" viewBox="0 0 24 24" style="display: none">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </nav>
+
+      <main class="main-content">
+        <div class="hero">
+          <div class="hero-top">
+            <div>
+              <div class="hero-greet-label">SELAMAT DATANG</div>
+              <div class="hero-greet-title">Panel Dashboard Admin</div>
+              <div class="hero-date" id="heroDate">Memuat tanggal...</div>
+            </div>
+            <div class="hero-live-badge">
+              <span class="live-dot"></span> Live Monitoring
+            </div>
+          </div>
+
+          <div class="kpi-strip">
+            <div class="kpi-item">
+              <div class="kpi-value" id="statMenunggu">0</div>
+              <div class="kpi-label">Menunggu</div>
+              <div class="kpi-icon">
+                <svg viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="10" />
+                  <polyline points="12 6 12 12 16 14" />
+                </svg>
+              </div>
+            </div>
+            <div class="kpi-item">
+              <div class="kpi-value" id="statDilayani">0</div>
+              <div class="kpi-label">Sedang Dilayani</div>
+              <div class="kpi-icon">
+                <svg viewBox="0 0 24 24">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                  <circle cx="12" cy="7" r="4" />
+                </svg>
+              </div>
+            </div>
+            <div class="kpi-item">
+              <div class="kpi-value" id="statSelesai">0</div>
+              <div class="kpi-label">Selesai</div>
+              <div class="kpi-icon">
+                <svg viewBox="0 0 24 24">
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="poli-section">
+          <div class="section-label">Pilih Poli</div>
+          <div class="poli-pills" id="poliPills">
+            <div class="skeleton-pill"></div>
+            <div class="skeleton-pill"></div>
+            <div class="skeleton-pill"></div>
+          </div>
+        </div>
+
+        <div class="dashboard-grid">
+          
+          <div class="next-patient-card card">
+            <div class="npc-header">
+              <div>
+                <div class="npc-title">Panggil Berikutnya</div>
+                <div class="npc-poli-name" id="callingPoliName">Pilih poli terlebih dahulu</div>
+              </div>
+              <div class="npc-badge"><span class="npc-badge-dot"></span> Antrian</div>
+            </div>
+            <div class="npc-body">
+              <div class="npc-label">Nomor Antrian</div>
+              <div class="npc-nomor" id="nextNomor">—</div>
+              <div class="npc-pasien" id="nextPasien">
+                <span class="npc-empty">Pilih poli untuk memulai</span>
+              </div>
+            </div>
+            <div class="npc-footer">
+              <button class="call-btn" id="callBtn" disabled>
+                <span class="btn-label">
+                  <svg viewBox="0 0 24 24">
+                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2A19.79 19.79 0 0 1 11.61 19a19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 3.12 4.18 2 2 0 0 1 5.08 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L9.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" />
+                  </svg>
+                  Panggil Sekarang
+                </span>
+                <div class="spinner"></div>
+              </button>
+            </div>
+          </div>
+
+          <div class="queue-card card">
+            <div class="card-head">
+              <div>
+                <div class="card-title">Daftar Antrian</div>
+                <div class="card-subtitle">Hari ini</div>
+              </div>
+            </div>
+            <div class="queue-scroll" id="qTbody">
+              <div class="q-empty">
+                <svg viewBox="0 0 24 24">
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                  <line x1="16" y1="2" x2="16" y2="6" />
+                  <line x1="8" y1="2" x2="8" y2="6" />
+                  <line x1="3" y1="10" x2="21" y2="10" />
+                </svg>
+                <div class="q-empty-text">Belum ada data antrian aktif</div>
+              </div>
+            </div>
+            <div class="queue-footer">
+              <span class="queue-count-text" id="queueCount">0 antrian</span>
+              <button class="refresh-btn-sm" id="refreshQueueBtn">
+                <svg viewBox="0 0 24 24">
+                  <polyline points="23 4 23 10 17 10" />
+                  <polyline points="1 20 1 14 7 14" />
+                  <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15" />
+                </svg>
+                Perbarui
+              </button>
+            </div>
+          </div>
+
+          <div class="timeline-card card">
+            <div class="card-head">
+              <div>
+                <div class="card-title">Aktivitas Pemanggilan Terakhir</div>
+                <div class="card-subtitle">Riwayat sesi ini</div>
+              </div>
+            </div>
+            <div id="calledList">
+              <div class="tl-empty">Belum ada riwayat pemanggilan</div>
+            </div>
+          </div>
+          
+        </div>
+      </main>
+    </div>
+
+    <div class="modal-overlay" id="batalModal">
+      <div class="modal-box">
+        <div class="modal-icon">
+          <svg viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="10" />
+            <line x1="12" y1="8" x2="12" y2="12" />
+            <line x1="12" y1="16" x2="12.01" y2="16" />
+          </svg>
+        </div>
+        <div class="modal-title">Batalkan Antrian?</div>
+        <div class="modal-desc" id="batalDesc">Antrian ini akan dibatalkan dan tidak bisa dikembalikan.</div>
+        <div class="modal-actions">
+          <button class="btn-cancel" id="closeBatalBtn">Tidak, Kembali</button>
+          <button class="btn-danger" id="batalConfirm">
+            <span class="btn-label">Ya, Batalkan</span>
+            <div class="spinner"></div>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script src="../js/admin.js" defer></script>
+  </body>
+</html>
